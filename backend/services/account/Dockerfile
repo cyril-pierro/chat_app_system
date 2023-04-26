@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY poetry.lock pyproject.toml ./
 
 # hadolint ignore=DL3013
-RUN pip install --no-cache-dir --upgrade pip && pip install --no-cachdir poetry==1.4.0 \
+RUN apt install redis -y && pip install --no-cache-dir --upgrade pip && pip install --no-cachdir poetry==1.4.0 \
     && poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --without dev
 
