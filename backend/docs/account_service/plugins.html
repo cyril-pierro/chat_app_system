@@ -48,7 +48,12 @@
 <li class="toctree-l2"><a class="reference internal" href="interfaces.html">Interfaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Plugins</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-plugins.producer">Producer Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#plugins.producer.app_settings"><code class="docutils literal notranslate"><span class="pre">app_settings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plugins.producer.consumer_logger"><code class="docutils literal notranslate"><span class="pre">consumer_logger</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plugins.producer.Producer"><code class="docutils literal notranslate"><span class="pre">Producer</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-plugins.redis">Redis Plugin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#plugins.redis.settings"><code class="docutils literal notranslate"><span class="pre">settings</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#plugins.redis.DenyListStorage"><code class="docutils literal notranslate"><span class="pre">DenyListStorage</span></code></a></li>
@@ -95,8 +100,75 @@
              
   <section id="plugins">
 <h1>Plugins<a class="headerlink" href="#plugins" title="Permalink to this heading"></a></h1>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<section id="module-plugins.producer">
+<span id="producer-plugin"></span><h2>Producer Plugin<a class="headerlink" href="#module-plugins.producer" title="Permalink to this heading"></a></h2>
+<p>Register all Producers in the system</p>
+<p>This module demonstrates how a list of producers
+send to a particular message on a topic</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="plugins.producer.app_settings">
+<span class="sig-prename descclassname"><span class="pre">plugins.producer.</span></span><span class="sig-name descname"><span class="pre">app_settings</span></span><a class="headerlink" href="#plugins.producer.app_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Application Settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="plugins.producer.consumer_logger">
+<span class="sig-prename descclassname"><span class="pre">plugins.producer.</span></span><span class="sig-name descname"><span class="pre">consumer_logger</span></span><a class="headerlink" href="#plugins.producer.consumer_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Logger instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="plugins.producer.Producer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">plugins.producer.</span></span><span class="sig-name descname"><span class="pre">Producer</span></span><a class="reference internal" href="_modules/plugins/producer.html#Producer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plugins.producer.Producer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ProducerInterface</span></code></p>
+<p>Consumer for New Users in the System</p>
+<p>This class describes the operations performed
+for users that just joined the system</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="plugins.producer.Producer.send_message">
+<span class="sig-name descname"><span class="pre">send_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/plugins/producer.html#Producer.send_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plugins.producer.Producer.send_message" title="Permalink to this definition"></a></dt>
+<dd><p>Start the producer process
+.. attribute:: _action</p>
+<blockquote>
+<div><p>An action to perform or topic</p>
+<dl class="field-list simple">
+<dt class="field-odd">type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="plugins.producer.Producer._message">
+<span class="sig-name descname"><span class="pre">_message</span></span><a class="headerlink" href="#plugins.producer.Producer._message" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><p>The message to send with the action</p>
+<dl class="field-list simple">
+<dt class="field-odd">type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>Args:</dt><dd><p>action (str): An action to perform or topic
+message (str): The message to send with the action</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-plugins.redis">
 <span id="redis-plugin"></span><h2>Redis Plugin<a class="headerlink" href="#module-plugins.redis" title="Permalink to this heading"></a></h2>
