@@ -1,6 +1,6 @@
 """Authentication Service
 
-This module demonstrates how to authenticate a 
+This module demonstrates how to authenticate a
 user in the system
 
 Attributes:

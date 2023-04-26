@@ -6,7 +6,6 @@ for redis
 Attributes:
     settings (object): Application settings
 """
-from typing import Any
 
 import redis
 
@@ -18,7 +17,7 @@ settings = setting.AppSettings()
 class DenyListStorage:
     """Deny List Memory Storage
 
-    This class is responsible for 
+    This class is responsible for
     storing revoked tokens
 
     Attributes:
@@ -26,8 +25,7 @@ class DenyListStorage:
     """
 
     def __init__(self) -> None:
-        """Construct a Deny list storage instance
-        """
+        """Construct a Deny list storage instance"""
         self._redis_server = redis.Redis(
             host=settings.REDIS_HOST,
             port=settings.REDIS_PORT,
@@ -36,9 +34,9 @@ class DenyListStorage:
         )
 
     def set_value(self, key: str, value) -> None:
-        """Set value 
+        """Set value
 
-        This method sets a key and value pair to 
+        This method sets a key and value pair to
         the deny list storage database
         """
         self._redis_server.set(
@@ -48,7 +46,7 @@ class DenyListStorage:
     def get_value(self, key: str) -> str:
         """Get value
 
-        This method returns the value from 
+        This method returns the value from
         the deny list storage database
 
         Args:

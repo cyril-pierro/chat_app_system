@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from controller import auth as authorized
 from controller.account import AccountOperations
 from controller.users import UserOperations
+from plugins import producer
 from schemas import error, users
 from utils import session
 
@@ -26,12 +27,17 @@ async def register_user(
 
     It takes the following:
      - username: str
+     - email: str
      - password: str
     """
     user_operation = UserOperations(db)
     account_operation = AccountOperations(db)
     user = user_operation.register_user(login)
     account_operation.create_account(user.id)
+    msg_sender = producer.Producer()
+    msg_sender.send_message(
+        "new_users", {"username": login.username, "email": login.email}
+    )
     return user
 
 

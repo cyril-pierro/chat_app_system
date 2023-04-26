@@ -15,7 +15,7 @@ from utils import sql
 
 
 class UserOperations(UserOperationsInterface):
-    """User operations 
+    """User operations
 
     This class contains the various functions
     available to a user

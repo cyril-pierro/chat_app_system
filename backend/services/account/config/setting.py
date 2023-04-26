@@ -15,17 +15,19 @@ class AppSettings(pydantic.BaseSettings):
             LOG_FILENAME (str): Log file name
             API_PREFIX (str): API router prefix name
             authjwt_secret_key (str): Secret key for access token
-            authjwt_access_token_expires (int): Expiration date for the access token
-            authjwt_refresh_token_expires (int): Expiration date for the refresh token
+            authjwt_access_token_expires (int): Expiration of the access token
+            authjwt_refresh_token_expires (int): Expiration of refresh token
             authjwt_access_cookie_key (str): Secret key for cookie access token
-            authjwt_refresh_cookie_key (str): Secret key for cookie refresh token
-            authjwt_denylist_enabled (bool): Allow deny list enabled 
+            authjwt_refresh_cookie_key (str): key for cookie refresh token
+            authjwt_denylist_enabled (bool): Allow deny list enabled
             authjwt_denylist_token_checks (set): Tokens to check for deny list
-            REDIS_HOST (str): The host name of the redis 
+            REDIS_HOST (str): The host name of the redis
             REDIS_PORT (int): The port number of the redis
             APP_TITLE (str): Application title
             APP_DESCRIPTION (str): Application description
+            BROKER_URL (str): Kafka broker to connect to
     """
+
     DATABASE_URL: str
     TEST_DATABASE_URL: str
     TESTING: bool
@@ -44,8 +46,9 @@ class AppSettings(pydantic.BaseSettings):
     REDIS_PORT: int
     APP_TITLE: str = "Chat Application"
     APP_DESCRIPTION: str = "Management service for chat application"
+    BROKER_URL: str
 
     class Config:
-        """Meta configuration
-        """
+        """Meta configuration"""
+
         env_file = ".env"
