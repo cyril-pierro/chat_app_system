@@ -1,3 +1,1 @@
-=============
-**Chat Service**
-==============
+# Chat Service
