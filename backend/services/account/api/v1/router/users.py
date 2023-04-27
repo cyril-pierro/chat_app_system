@@ -19,7 +19,8 @@ router = APIRouter()
     },
 )
 async def register_user(
-    login: users.RegisterUser, db: Session = Depends(session.create)
+    login: users.RegisterUser,
+    db: Session = Depends(session.create),
 ):
     """
     This API is used to register
@@ -34,9 +35,16 @@ async def register_user(
     account_operation = AccountOperations(db)
     user = user_operation.register_user(login)
     account_operation.create_account(user.id)
+    auth = authorized.Auth()
+    token = auth.create_access_token(subject=user.id)
     msg_sender = producer.Producer()
     msg_sender.send_message(
-        "new_users", {"username": login.username, "email": login.email}
+        "new_users",
+        {
+            "username": login.username,  # type: ignore
+            "email": login.email,
+            "token": token,
+        },
     )
     return user
 
