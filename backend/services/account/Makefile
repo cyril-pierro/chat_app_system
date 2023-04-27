@@ -15,4 +15,4 @@ run_application_locally:
 	uvicorn main:app --reload --port 8000
 
 
-.PHONY: all
+.PHONY: al
