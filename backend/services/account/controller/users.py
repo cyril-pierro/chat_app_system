@@ -182,3 +182,17 @@ class UserOperations(UserOperationsInterface):
             raise exceptions.UserOperationsError(
                 msg="Email not verified", status_code=400
             )
+
+    @sql.sql_error_handler
+    def set_user_as_admin(self, user_id: int) -> None:
+        """Sets a user as an administrator
+        Args:
+            id (int): id of the user of the system
+        Returns:
+            None
+        Raises:
+            ServerError: Error occurred in sql
+        """
+        user_found = self.get_user_by(user_id)
+        user_found.is_admin = True
+        sql.add_object_to_database(user_found)

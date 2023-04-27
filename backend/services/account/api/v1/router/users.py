@@ -190,3 +190,30 @@ async def get_username(
     return responses.JSONResponse(
         content={"message": username}, status_code=200  # type: ignore
     )
+
+
+@router.post(
+    "/admin",
+    response_model=users.ChangeOut,
+    responses={
+        401: {"model": error.UserNotFound},
+        404: {"model": error.UnAuthorizedError},
+    },
+)
+async def add_an_administrator(
+    _: str = Depends(authorized.bearerschema),
+    authorize: authorized.Auth = Depends(),
+    db: Session = Depends(session.create),
+):
+    """
+    This API is used to get
+    add of an administrator
+    """
+    authorize.jwt_required()
+    user_id = authorize.get_jwt_subject()
+    user_operation = UserOperations(db)
+    user_operation.check_if_email_is_verified(user_id)
+    user_operation.set_user_as_admin(user_id)
+    return responses.JSONResponse(
+        content={"message": "you now an admin"}, status_code=200  # type: ignore
+    )
