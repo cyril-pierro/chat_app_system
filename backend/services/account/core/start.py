@@ -10,12 +10,13 @@ from interfaces import factory
 
 
 class AppFactory(factory.AppFactoryInterface):
-    """Application factory to generate 
+    """Application factory to generate
     fully bundled fastapi application
 
     Returns:
         object: fastapi instance
     """
+
     @staticmethod
     def initialize_app() -> fastapi.FastAPI:
         app_instance = AppBuilder()

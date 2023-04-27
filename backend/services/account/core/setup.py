@@ -1,6 +1,6 @@
 """Setup Database for usage
 
-This module shows how to setup and 
+This module shows how to setup and
 instantiate a database connection
 
 Attributes:
@@ -24,9 +24,9 @@ class DatabaseSetup:
     performing database setup and
     granting sessions
     """
+
     def __init__(self) -> None:
-        """Construct an Database Operator
-        """
+        """Construct an Database Operator"""
         if settings.TESTING:
             self._engine = create_engine(
                 settings.TEST_DATABASE_URL,  # type: ignore
@@ -53,7 +53,7 @@ class DatabaseSetup:
     def get_base(self) -> Any:
         """Grant Base
 
-            This method returns the 
+            This method returns the
             database Base
         Returns:
             object: database base
@@ -63,9 +63,9 @@ class DatabaseSetup:
     @property
     def get_engine(self) -> Any:
         """Grant engine
-            This method returns the 
+            This method returns the
             database engine
-            
+
         Returns:
             object: database engine
         """
