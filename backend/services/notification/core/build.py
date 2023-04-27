@@ -7,13 +7,15 @@ with a consumer
 
 Attributes:
     app_settings (object): Application Settings
-    app_logger (object): Logger instance 
+    app_logger (object): Logger instance
 """
 
 import celery
+
 from config import settings
 from plugins import consumer as cm
 from tools import log
+
 app_settings = settings.Settings()
 app_logger = log.Log(__file__)
 
@@ -24,6 +26,7 @@ class AppSingleton:
     Attributes:
         _app(object): Celery application
     """
+
     _app = None
 
     @classmethod
@@ -47,8 +50,7 @@ class AppSingleton:
 
 
 class AppBuilder:
-    """Application builder
-    """
+    """Application builder"""
 
     def __init__(self):
         self._app = AppSingleton.get_app()
@@ -59,6 +61,7 @@ class AppBuilder:
         This method registers all tasks that
         the celery uses
         """
+
         @self._app.task(name="send_email_to_users")
         def send_email():
             cm.NewUsersConsumer.start_process()

@@ -6,7 +6,8 @@ performed on that topic
 
 Attributes:
     app_settings (object): Application Settings
-    consumer_logger (object): Logger instance 
+    consumer_logger (object): Logger instance
+    CLICK_URL (str): Url for verified account
 """
 
 import asyncio
@@ -24,6 +25,8 @@ app_settings = settings.Settings()
 
 consumer_logger = log.Log(__file__)
 
+CLICK_URL = f"{app_settings.auth_service_url}/api/v1/verify/account"
+
 
 class NewUsersConsumer(consumer.NotificationConsumer):
     """Consumer for New Users in the System
@@ -31,12 +34,13 @@ class NewUsersConsumer(consumer.NotificationConsumer):
     This class describes the operations performed
     for users that just joined the system
     """
+
     @staticmethod
     async def consume(consume_with: nt.NotificationController = None):
         """Listen to a particular topic
 
         Args:
-            consume_with (class): The operation controller 
+            consume_with (class): The operation controller
                 The controller to use when you are listening
                 to a particular topic
         """
@@ -52,8 +56,14 @@ class NewUsersConsumer(consumer.NotificationConsumer):
                 payload = json.loads(msg.value)
                 username = payload.get("username")
                 user_email = payload.get("email")
+                token = payload.get("token")
                 subject = "Welcome to Chat App"
-                message = f"Welcome to our family {str(username).capitalize()}"
+                message = (
+                    "Welcome to our Chat Platform,"
+                    f"{str(username).capitalize()},"
+                    "Click on the link to verify your email \n"
+                    f"{CLICK_URL}?token={token}"
+                )
                 if consume_with is not None:
                     consume_with.send(subject, user_email, message)
 
@@ -65,7 +75,6 @@ class NewUsersConsumer(consumer.NotificationConsumer):
 
     @staticmethod
     def start_process():
-        """Start the consumer process
-        """
+        """Start the consumer process"""
         email_controller = mail.Email()
         asyncio.run(NewUsersConsumer.consume(consume_with=email_controller))

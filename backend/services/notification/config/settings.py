@@ -69,3 +69,4 @@ class Settings:
     topic_to_listen_on = Parser.get(kafka_name, "topic")
     consumer_group_id = Parser.get(kafka_name, "group_id")
     log_file_name = Parser.get(application_name, "log_file_name")
+    auth_service_url = Parser.get(application_name, "account_server_url")

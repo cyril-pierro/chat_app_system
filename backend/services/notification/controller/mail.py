@@ -1,11 +1,11 @@
 """Mail Controller
 
-This module demonstrates how to setup and 
+This module demonstrates how to setup and
 send an email message to a user
 
 Attributes:
     app_settings (object): Application Settings
-    email_logger (object): Logger instance 
+    email_logger (object): Logger instance
 """
 
 
@@ -24,7 +24,7 @@ email_logger = log.Log(__file__)
 
 
 class Email(notification.NotificationController):
-    """Email Controller 
+    """Email Controller
 
     This consist of the operations to send and email
     """
@@ -36,7 +36,7 @@ class Email(notification.NotificationController):
         """Process email initial stages of the email body
 
         Returns:
-            object 
+            object
         """
         message = multipart.MIMEMultipart()
         message["Subject"] = subject
