@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("TESTING")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 REDIS_HOST = os.environ.get("REDIS_HOST")
 REDIS_PORT = os.environ.get("REDIS_PORT")
@@ -71,6 +71,7 @@ else:
     LOGFILE_NAME = os.environ.get("LOGFILE_NAME")
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -78,6 +79,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -110,7 +112,8 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
+        # "ENGINE": "django.db.backends.sqlite3",
+        "ENGINE": 'django_prometheus.db.backends.sqlite3',
         "NAME": BASE_DIR / "db.sqlite3",
         "TEST": {"NAME": BASE_DIR / "test_db.sqlite3"},
     }
