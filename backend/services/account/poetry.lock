@@ -860,6 +860,21 @@ dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
+name = "prometheus-client"
+version = "0.16.0"
+description = "Python client for the Prometheus monitoring system."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "prometheus_client-0.16.0-py3-none-any.whl", hash = "sha256:0836af6eb2c8f4fed712b2f279f6c0a8bbab29f9f4aa15276b91c7cb0d1616ab"},
+    {file = "prometheus_client-0.16.0.tar.gz", hash = "sha256:a03e35b359f14dd1630898543e2120addfdeacd1a6069c1367ae90fd93ad3f48"},
+]
+
+[package.extras]
+twisted = ["twisted"]
+
+[[package]]
 name = "pycodestyle"
 version = "2.10.0"
 description = "Python style guide checker"
@@ -1339,6 +1354,22 @@ typing-extensions = {version = ">=3.10.0", markers = "python_version < \"3.10\""
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart", "pyyaml"]
 
 [[package]]
+name = "starlette-exporter"
+version = "0.15.1"
+description = "Prometheus metrics exporter for Starlette applications."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "starlette_exporter-0.15.1-py3-none-any.whl", hash = "sha256:24eeaef01f05ef973984704427f6e6a93d468f487b8b26ad77548d963affc9fe"},
+    {file = "starlette_exporter-0.15.1.tar.gz", hash = "sha256:3bde5d863effb26684210fe016a1ebf2b383efedf21a4b2f28585ec5064f4033"},
+]
+
+[package.dependencies]
+prometheus-client = ">=0.12"
+starlette = "*"
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -1417,4 +1448,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "a6b95a8df55ce181a26a4be011193d0ff85063ad0d18b37af28658d4b9030208"
+content-hash = "cf9da7f5809a2af2edc4ce6b21709e1a446eb91f61f4b4014e1585937a6a40aa"
