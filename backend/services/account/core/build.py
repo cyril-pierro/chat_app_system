@@ -1,7 +1,7 @@
 """Application Builder and App Instance
 
 This module is responsible for creating fastapi
-application instances and configurating the 
+application instances and configurating the
 instance with the neccessary features
 
 Attributes:
@@ -11,6 +11,7 @@ from typing import Union
 
 import fastapi
 from fastapi_jwt_auth import exceptions as exc_jwt
+from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 from api.v1.router import account, users
 from config import setting
@@ -31,14 +32,15 @@ class AppSingleton:
         _app_instance (object, None): Application instance
 
     """
+
     _app_instance = None
 
     @classmethod
     def get_app_instance(cls) -> Union[fastapi.FastAPI, None]:
-        """Instantiate a fastapi application 
+        """Instantiate a fastapi application
 
         This method generates a fastapi application
-        instance 
+        instance
 
         Returns:
             object: fastapi application instance
@@ -55,13 +57,12 @@ class AppBuilder(builder.AppBuilderInterface):
     existing fastapi application instance
 
     Attributes:
-        _app (object): The fastapi application 
+        _app (object): The fastapi application
 
     """
 
     def __init__(self) -> None:
-        """Construct a new application
-        """
+        """Construct a new application"""
         self._app = AppSingleton.get_app_instance()
 
     def register_exceptions(self) -> None:
@@ -90,6 +91,27 @@ class AppBuilder(builder.AppBuilderInterface):
         This method is used to handle all
         middlewares for the application
         """
+        self._app.add_middleware(
+            PrometheusMiddleware,
+            app_name=settings.APP_TITLE,
+            prefix="account_service",
+            group_paths=True,
+            buckets=[
+                0.01,
+                0.025,
+                0.05,
+                0.075,
+                0.1,
+                0.25,
+                0.5,
+                0.75,
+                1.0,
+                2.5,
+                5.0,
+                7.5,
+                10.0,
+            ],
+        )
 
     def register_routes(
         self,
@@ -105,6 +127,7 @@ class AppBuilder(builder.AppBuilderInterface):
         self._app.include_router(
             account.router, prefix=settings.API_PREFIX, tags=["Account"]
         )
+        self._app.add_route("/metrics", handle_metrics)
 
         @self._app.get("/", include_in_schema=False)
         def index() -> fastapi.responses.RedirectResponse:
@@ -118,8 +141,7 @@ class AppBuilder(builder.AppBuilderInterface):
         return index()
 
     def register_database(self) -> None:
-        """Register all databases
-        """
+        """Register all databases"""
         db_setup.Base.metadata.create_all(
             bind=db_setup.database.get_engine  # type : ignore
         )
@@ -129,7 +151,7 @@ class AppBuilder(builder.AppBuilderInterface):
     ) -> None:
         """Append features to the fastapi instance
 
-        This method is responsible for including 
+        This method is responsible for including
         details to the fastapi instance
 
         Args:
@@ -146,14 +168,14 @@ class AppBuilder(builder.AppBuilderInterface):
         application
 
         Returns:
-            object: fastapi instance 
+            object: fastapi instance
         """
+        self.register_middlewares()
         self.register_database()
         self.register_exceptions()
         self.add_app_details(
             title=settings.APP_TITLE,
             description=settings.APP_DESCRIPTION,
         )
-        self.register_middlewares()
         self.register_routes()
         return self._app
