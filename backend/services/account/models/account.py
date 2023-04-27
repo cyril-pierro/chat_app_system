@@ -11,8 +11,6 @@ class UserAccount(setup.Base):
     id = sq.Column(sq.Integer, primary_key=True)
     profile_pic = sq.Column(sq.String, nullable=True)
     is_active = sq.Column(sq.Boolean, default=True)
-    is_admin = sq.Column(sq.Boolean, default=False)
-    is_star = sq.Column(sq.Boolean, default=False)
     user_id = sq.Column(sq.Integer, sq.ForeignKey("users.id"))
     user = relationship("Users", backref="users")
     created_at = sq.Column(sq.DateTime, default=datetime.now())

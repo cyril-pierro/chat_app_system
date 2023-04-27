@@ -16,6 +16,9 @@ class Users(setup.Base):
     )
     email = sq.Column(sq.String, nullable=False)
     hash_password = sq.Column(sq.String, nullable=False)
+    is_admin = sq.Column(sq.Boolean, default=False)
+    is_a_star = sq.Column(sq.Boolean, default=False)
+    is_email_verified = sq.Column(sq.Boolean, default=False)
     joined_at = sq.Column(sq.DateTime, nullable=False, default=datetime.now())
 
     def __str__(self) -> str:
