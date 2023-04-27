@@ -96,6 +96,7 @@
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;login_data&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="n">test_data</span><span class="o">.</span><span class="n">test_login_data</span><span class="p">)])</span>
 <span class="k">def</span> <span class="nf">test_verify_user</span><span class="p">(</span><span class="n">user_operations</span><span class="p">,</span> <span class="n">already_registered_user</span><span class="p">,</span> <span class="n">login_data</span><span class="p">):</span>
     <span class="n">login_user_scheme</span> <span class="o">=</span> <span class="n">Login</span><span class="p">(</span><span class="o">**</span><span class="n">login_data</span><span class="p">)</span>
+    <span class="n">user_operations</span><span class="o">.</span><span class="n">set_email_as_verified</span><span class="p">(</span><span class="n">already_registered_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
     <span class="n">login_user_id</span> <span class="o">=</span> <span class="n">user_operations</span><span class="o">.</span><span class="n">verify_user</span><span class="p">(</span><span class="n">login_user_scheme</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">login_user_id</span> <span class="o">==</span> <span class="n">already_registered_user</span><span class="o">.</span><span class="n">id</span></div>
 
@@ -153,6 +154,21 @@
     <span class="n">found_username</span> <span class="o">=</span> <span class="n">user_operations</span><span class="o">.</span><span class="n">get_username</span><span class="p">(</span><span class="n">already_registered_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
     <span class="k">assert</span> <span class="n">already_registered_user</span><span class="o">.</span><span class="n">username</span> <span class="o">==</span> <span class="n">found_username</span></div>
+
+
+<div class="viewcode-block" id="test_set_email_as_verified"><a class="viewcode-back" href="../../../../tests.unit.operations.html#tests.unit.operations.test_users_operations.test_set_email_as_verified">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">user_operations</span>
+<span class="k">def</span> <span class="nf">test_set_email_as_verified</span><span class="p">(</span><span class="n">user_operations</span><span class="p">,</span> <span class="n">already_registered_user</span><span class="p">):</span>
+    <span class="n">user_operations</span><span class="o">.</span><span class="n">set_email_as_verified</span><span class="p">(</span><span class="n">already_registered_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+    <span class="n">found_user</span> <span class="o">=</span> <span class="n">user_operations</span><span class="o">.</span><span class="n">get_user_by</span><span class="p">(</span><span class="n">already_registered_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">found_user</span><span class="o">.</span><span class="n">is_email_verified</span></div>
+
+
+<div class="viewcode-block" id="test_check_if_email_is_verified_error"><a class="viewcode-back" href="../../../../tests.unit.operations.html#tests.unit.operations.test_users_operations.test_check_if_email_is_verified_error">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">user_operations</span>
+<span class="k">def</span> <span class="nf">test_check_if_email_is_verified_error</span><span class="p">(</span><span class="n">user_operations</span><span class="p">,</span> <span class="n">already_registered_user</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">exceptions</span><span class="o">.</span><span class="n">UserOperationsError</span><span class="p">):</span>
+        <span class="n">user_operations</span><span class="o">.</span><span class="n">check_if_email_is_verified</span><span class="p">(</span><span class="n">already_registered_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

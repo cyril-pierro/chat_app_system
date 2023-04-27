@@ -75,7 +75,6 @@
 <span class="sd">Attributes:</span>
 <span class="sd">    settings (object): Application settings</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">redis</span>
 
@@ -87,7 +86,7 @@
 <div class="viewcode-block" id="DenyListStorage"><a class="viewcode-back" href="../../plugins.html#plugins.redis.DenyListStorage">[docs]</a><span class="k">class</span> <span class="nc">DenyListStorage</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Deny List Memory Storage</span>
 
-<span class="sd">    This class is responsible for </span>
+<span class="sd">    This class is responsible for</span>
 <span class="sd">    storing revoked tokens</span>
 
 <span class="sd">    Attributes:</span>
@@ -95,8 +94,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a Deny list storage instance</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a Deny list storage instance&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_redis_server</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">Redis</span><span class="p">(</span>
             <span class="n">host</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">REDIS_HOST</span><span class="p">,</span>
             <span class="n">port</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">REDIS_PORT</span><span class="p">,</span>
@@ -105,9 +103,9 @@
         <span class="p">)</span>
 
 <div class="viewcode-block" id="DenyListStorage.set_value"><a class="viewcode-back" href="../../plugins.html#plugins.redis.DenyListStorage.set_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set value </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set value</span>
 
-<span class="sd">        This method sets a key and value pair to </span>
+<span class="sd">        This method sets a key and value pair to</span>
 <span class="sd">        the deny list storage database</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_redis_server</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
@@ -117,7 +115,7 @@
 <div class="viewcode-block" id="DenyListStorage.get_value"><a class="viewcode-back" href="../../plugins.html#plugins.redis.DenyListStorage.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get value</span>
 
-<span class="sd">        This method returns the value from </span>
+<span class="sd">        This method returns the value from</span>
 <span class="sd">        the deny list storage database</span>
 
 <span class="sd">        Args:</span>

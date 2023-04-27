@@ -224,6 +224,22 @@ Session for database operations</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="controller.users.UserOperations.check_if_email_is_verified">
+<span class="sig-name descname"><span class="pre">check_if_email_is_verified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/controller/users.html#UserOperations.check_if_email_is_verified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.users.UserOperations.check_if_email_is_verified" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if the user email is verified
+:param id: id of the user of the system
+:type id: int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>UserOperationError</strong> – Email not verified</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="controller.users.UserOperations.get_user_by">
 <span class="sig-name descname"><span class="pre">get_user_by</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_or_username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#models.users.Users" title="models.users.Users"><span class="pre">Users</span></a></span></span><a class="reference internal" href="_modules/controller/users.html#UserOperations.get_user_by"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.users.UserOperations.get_user_by" title="Permalink to this definition"></a></dt>
 <dd><p>Get a user by either username or id</p>
@@ -292,10 +308,10 @@ Session for database operations</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="controller.users.UserOperations.reset_user_password">
-<span class="sig-name descname"><span class="pre">reset_user_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/controller/users.html#UserOperations.reset_user_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.users.UserOperations.reset_user_password" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset_user_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/controller/users.html#UserOperations.reset_user_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.users.UserOperations.reset_user_password" title="Permalink to this definition"></a></dt>
 <dd><p>Change the password of a new User in the system
-:param id: id of the user of the system
-:type id: int
+:param user_id: id of the user of the system
+:type user_id: int
 :param password: password to use
 :type password: str</p>
 <dl class="field-list simple">
@@ -321,6 +337,19 @@ Session for database operations</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="controller.users.UserOperations.set_email_as_verified">
+<span class="sig-name descname"><span class="pre">set_email_as_verified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/controller/users.html#UserOperations.set_email_as_verified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.users.UserOperations.set_email_as_verified" title="Permalink to this definition"></a></dt>
+<dd><p>Sets user email as verified
+:param id: id of the user of the system
+:type id: int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="controller.users.UserOperations.verify_user">
 <span class="sig-name descname"><span class="pre">verify_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.account.Login" title="schemas.account.Login"><span class="pre">Login</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/controller/users.html#UserOperations.verify_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.users.UserOperations.verify_user" title="Permalink to this definition"></a></dt>
 <dd><p>Check if a user exists in the system</p>
@@ -328,11 +357,11 @@ Session for database operations</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>user</strong> (<em>object</em>) – consist of the properties</p></li>
-<li><p><strong>provide</strong> (<em>a user suppose to</em>) – </p></li>
+<li><p><strong>login</strong> (<em>a user suppose to provide during</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>object</p>
+<dd class="field-even"><p>int</p>
 </dd>
 </dl>
 </dd></dl>

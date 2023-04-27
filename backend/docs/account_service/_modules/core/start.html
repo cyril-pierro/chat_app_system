@@ -79,12 +79,13 @@
 
 
 <div class="viewcode-block" id="AppFactory"><a class="viewcode-back" href="../../core.html#core.start.AppFactory">[docs]</a><span class="k">class</span> <span class="nc">AppFactory</span><span class="p">(</span><span class="n">factory</span><span class="o">.</span><span class="n">AppFactoryInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Application factory to generate </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Application factory to generate</span>
 <span class="sd">    fully bundled fastapi application</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        object: fastapi instance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="AppFactory.initialize_app"><a class="viewcode-back" href="../../core.html#core.start.AppFactory.initialize_app">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">initialize_app</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">fastapi</span><span class="o">.</span><span class="n">FastAPI</span><span class="p">:</span>
         <span class="n">app_instance</span> <span class="o">=</span> <span class="n">AppBuilder</span><span class="p">()</span>
