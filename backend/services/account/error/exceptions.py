@@ -25,15 +25,12 @@ class BaseException(Exception):
 
 
 class UserOperationsError(BaseException):
-    """User Operations Exceptions
-    """
+    """User Operations Exceptions"""
 
 
 class AccountOperationsError(BaseException):
-    """Account Operations Exceptions
-    """
+    """Account Operations Exceptions"""
 
 
 class ServerError(BaseException):
-    """Server Error Exception
-    """
+    """Server Error Exception"""
