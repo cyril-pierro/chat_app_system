@@ -1,6 +1,6 @@
 """Sql Utility
 Sql module to handle all sql operations
-as a decorator or function 
+as a decorator or function
 """
 
 from functools import wraps

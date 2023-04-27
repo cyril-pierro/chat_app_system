@@ -5,8 +5,8 @@ from abc import ABCMeta, abstractmethod
 
 
 class AppBuilderInterface(metaclass=ABCMeta):
-    """Builder Interface definition
-    """
+    """Builder Interface definition"""
+
     @abstractmethod
     def register_exceptions(self):
         """

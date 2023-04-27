@@ -4,8 +4,7 @@ build_packages:
 	pip install --no-cache-dir --upgrade pip && pip install --no-cachdir poetry \
     && poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --without dev && \
-    sudo apt install redis -y
-
+      sudo apt install redis -y
 
 build_docker_application:
 	docker build --no-cache -t chat_application_account .
@@ -15,4 +14,4 @@ run_application_locally:
 	uvicorn main:app --reload --port 8000
 
 
-.PHONY: al
+.PHONY: all

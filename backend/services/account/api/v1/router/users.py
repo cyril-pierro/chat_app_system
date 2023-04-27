@@ -215,5 +215,8 @@ async def add_an_administrator(
     user_operation.check_if_email_is_verified(user_id)
     user_operation.set_user_as_admin(user_id)
     return responses.JSONResponse(
-        content={"message": "you now an admin"}, status_code=200  # type: ignore
+        content={
+            "message": "you now an admin",
+        },  # type: ignore
+        status_code=200,
     )

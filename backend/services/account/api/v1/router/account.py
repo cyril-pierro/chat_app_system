@@ -1,5 +1,6 @@
 import fastapi
 from fastapi import responses
+from prometheus_client import Gauge
 from sqlalchemy.orm import Session
 
 from controller import account as acc
@@ -9,6 +10,10 @@ from schemas import account, error
 from utils import session
 
 router = fastapi.APIRouter()
+gauge = Gauge(
+    name="number_of_active_users_total",  # type: ignore
+    documentation="Number of active users",
+)
 
 
 @router.post(
@@ -35,6 +40,7 @@ async def login(
     auth = authorized.Auth()
     access_token = auth.create_access_token(subject=user_id)
     refresh_token = auth.create_refresh_token(subject=user_id)
+    gauge.inc()
     payload = {"access_token": access_token, "refresh_token": refresh_token}
     return responses.JSONResponse(content=payload, status_code=200)
 
@@ -58,6 +64,7 @@ async def logout(
     user_operation.check_if_email_is_verified(user_id)
     authorized.redis_connection.set_value(token_id, "true")
     acc.AccountOperations(db).set_account_as_inactive(user_id)
+    gauge.dec()
     return responses.JSONResponse(
         content={"message": "logout successfully"}, status_code=200
     )

@@ -16,8 +16,8 @@ logger = Log(__file__)
 
 
 class AppExceptionHandler:
-    """Application Exception Handler
-    """
+    """Application Exception Handler"""
+
     @staticmethod
     def operations(
         request: fastapi.Request,
