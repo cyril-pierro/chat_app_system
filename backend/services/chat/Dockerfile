@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY poetry.lock pyproject.toml ./
 
 # hadolint ignore=DL3013
-RUN apt install redis -y && pip install --no-cache-dir --upgrade pip && pip install --no-cachdir poetry==1.4.0 \
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cachdir poetry==1.4.0 \
     && poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --without dev
 
@@ -16,5 +16,5 @@ RUN apt install redis -y && pip install --no-cache-dir --upgrade pip && pip inst
 COPY ./ ./
 
 # Expose port and run application
-EXPOSE 8000
+EXPOSE 8001
 ENTRYPOINT ["/bin/sh", "-c", "gunicorn --env DJANGO_SETTINGS_MODULE=core.settings core.wsgi -b :8001"]
