@@ -27,6 +27,7 @@ def test_register_user(user_operations, register_user_data):
 @pytest.mark.parametrize("login_data", [(test_data.test_login_data)])
 def test_verify_user(user_operations, already_registered_user, login_data):
     login_user_scheme = Login(**login_data)
+    user_operations.set_email_as_verified(already_registered_user.id)
     login_user_id = user_operations.verify_user(login_user_scheme)
     assert login_user_id == already_registered_user.id
 
@@ -84,3 +85,18 @@ def test_get_username(user_operations, already_registered_user):
     found_username = user_operations.get_username(already_registered_user.id)
 
     assert already_registered_user.username == found_username
+
+
+@pytest.mark.user_operations
+def test_set_email_as_verified(user_operations, already_registered_user):
+    user_operations.set_email_as_verified(already_registered_user.id)
+
+    found_user = user_operations.get_user_by(already_registered_user.id)
+
+    assert found_user.is_email_verified
+
+
+@pytest.mark.user_operations
+def test_check_if_email_is_verified_error(user_operations, already_registered_user):
+    with pytest.raises(exceptions.UserOperationsError):
+        user_operations.check_if_email_is_verified(already_registered_user.id)
