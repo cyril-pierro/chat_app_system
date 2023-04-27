@@ -60,11 +60,13 @@ class UserOperations(UserOperationsInterface):
 
         Args:
             user (object): consist of the properties
-            a user suppose to provide
+            a user suppose to provide during login
         Returns:
-            object
+            int
         """
         user_found = self.get_user_by(user.username)
+        self.check_if_email_is_verified(user_found.id)
+
         verify_password = Users.verify_password(
             user_found.hash_password, user.password  # type: ignore
         )
@@ -103,16 +105,16 @@ class UserOperations(UserOperationsInterface):
         return user_found
 
     @sql.sql_error_handler
-    def reset_user_password(self, id: int, password: str) -> None:
+    def reset_user_password(self, user_id: int, password: str) -> None:
         """Change the password of a new User in the system
         Args:
-            id (int): id of the user of the system
+            user_id (int): id of the user of the system
             password (str): password to use
         Returns:
             None
         """
         hash_password = Users.generate_hash_password(password)
-        user_found = self.get_user_by(id)
+        user_found = self.get_user_by(user_id)
         user_found.hash_password = hash_password
         sql.add_object_to_database(self._db, user_found)
 
@@ -153,3 +155,30 @@ class UserOperations(UserOperationsInterface):
         """
         user_found = self.get_user_by(user_id)
         return user_found.username
+
+    @sql.sql_error_handler
+    def set_email_as_verified(self, user_id: int) -> None:
+        """Sets user email as verified
+        Args:
+            id (int): id of the user of the system
+        Returns:
+            None
+        """
+        user_found = self.get_user_by(user_id)
+        user_found.is_email_verified = True
+        sql.add_object_to_database(self._db, user_found)
+
+    def check_if_email_is_verified(self, user_id: int) -> None:
+        """Checks if the user email is verified
+        Args:
+            id (int): id of the user of the system
+        Returns:
+            None
+        Raises:
+            UserOperationError: Email not verified
+        """
+        user_found = self.get_user_by(user_id)
+        if not user_found.is_email_verified:
+            raise exceptions.UserOperationsError(
+                msg="Email not verified", status_code=400
+            )
