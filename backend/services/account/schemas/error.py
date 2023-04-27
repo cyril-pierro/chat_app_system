@@ -10,6 +10,7 @@ class UserNotFound(pydantic.BaseModel):
     Attributes:
         error (str): error for the payload
     """
+
     error: str
 
 
@@ -18,6 +19,7 @@ class UnAuthorizedError(pydantic.BaseModel):
     Attributes:
         error (str): error for the payload
     """
+
     error: str
 
 
@@ -26,4 +28,5 @@ class InvalidRefreshToken(pydantic.BaseModel):
     Attributes:
         error (str): error for the payload
     """
+
     error: str

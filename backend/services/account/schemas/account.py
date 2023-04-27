@@ -12,6 +12,7 @@ class CreateAccount(BaseModel):
         username (str): username for the payload
         profile_pic (str): profile_pic for the payload
     """
+
     email: EmailStr
     username: str
     profile_pic: str
@@ -26,6 +27,7 @@ class Login(BaseModel):
         email (str): email for the payload
         password (str): password for the payload
     """
+
     username: str
     password: str
 
@@ -42,5 +44,6 @@ class LoginOut(BaseModel):
         access_token (str): access_token for the payload
         refresh_token (str): refresh for the payload
     """
+
     access_token: str
     refresh_token: str

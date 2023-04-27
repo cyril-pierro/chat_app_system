@@ -11,8 +11,9 @@ class RegisterUser(BaseModel):
     Attributes:
         email (str): email for the payload
         username (str): username for the payload
-        profile_pic (str): profile_pic for the payload
+        password (str): password for the payload
     """
+
     username: str
     email: EmailStr
     password: str
@@ -27,6 +28,7 @@ class User(BaseModel):
         email (str): email for the payload
         username (str): username for the payload
     """
+
     username: str
     email: EmailStr
 
@@ -39,14 +41,16 @@ class ChangeEmail(BaseModel):
     Attributes:
         email (str): email for the payload
     """
+
     email: EmailStr
 
 
 class ChangeUsername(BaseModel):
     """Change Username Schema
-    Attributes:     
+    Attributes:
         username (str): username for the payload
     """
+
     username: str
 
 
@@ -56,6 +60,7 @@ class ChangePassword(BaseModel):
         password (str): password for the payload
 
     """
+
     password: str
 
 
@@ -71,4 +76,5 @@ class ChangeOut(BaseModel):
     Attributes:
         message (str): message for the payload
     """
+
     message: str
