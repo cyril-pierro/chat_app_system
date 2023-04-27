@@ -8,18 +8,25 @@ Attributes:
     app_settings (object): Application Settings
     consumer_logger (object): Logger instance
     CLICK_URL (str): Url for verified account
+    count (object): Counts the messages sent
 """
 
 import asyncio
 import json
 
 from aiokafka import AIOKafkaConsumer
+from prometheus_client import Counter
 
 from config import settings
 from controller import mail
 from interfaces import consumer
 from interfaces import notification as nt
 from tools import log
+
+count = Counter(
+    name="new_user_messages_sent",  # type: ignore
+    documentation="Number of new user messages",
+)
 
 app_settings = settings.Settings()
 
@@ -76,5 +83,6 @@ class NewUsersConsumer(consumer.NotificationConsumer):
     @staticmethod
     def start_process():
         """Start the consumer process"""
+        count.inc()
         email_controller = mail.Email()
         asyncio.run(NewUsersConsumer.consume(consume_with=email_controller))

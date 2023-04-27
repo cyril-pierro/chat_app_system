@@ -16,6 +16,8 @@ from config import settings
 from plugins import consumer as cm
 from tools import log
 
+from . import start
+
 app_settings = settings.Settings()
 app_logger = log.Log(__file__)
 
@@ -66,5 +68,10 @@ class AppBuilder:
         def send_email():
             cm.NewUsersConsumer.start_process()
 
+        @self._app.task(name="send_metrics_data")
+        def send_metrics():
+            start.start_metrics()
+
         send_email.delay()
+        send_metrics.delay()
         return self._app
