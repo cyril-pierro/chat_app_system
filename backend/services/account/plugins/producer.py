@@ -44,7 +44,6 @@ class Producer(producer.ProducerInterface):
         except Exception as e:
             producer_logger.exception(e.args[0])
         finally:
-            print("sent the message")
             await producer.stop()
 
     def send_message(self, action: str, message: dict[Any, Any]) -> bool:
