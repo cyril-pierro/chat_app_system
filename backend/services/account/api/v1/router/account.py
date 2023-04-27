@@ -54,6 +54,8 @@ async def logout(
     authorize.jwt_required()
     user_id = authorize.get_jwt_subject()
     token_id = authorize.get_raw_jwt().get("jti")
+    user_operation = users.UserOperations(db)
+    user_operation.check_if_email_is_verified(user_id)
     authorized.redis_connection.set_value(token_id, "true")
     acc.AccountOperations(db).set_account_as_inactive(user_id)
     return responses.JSONResponse(
@@ -80,4 +82,30 @@ async def get_new_access_token(
     access_token = authorize.create_access_token(user_id)
     return responses.JSONResponse(
         content={"access_token": access_token}, status_code=200
+    )
+
+
+@router.get(
+    "/verify/account",
+    responses={404: {"model": error.UnAuthorizedError}},
+)
+async def verify_user_account(
+    token: str,
+    db: Session = fastapi.Depends(session.create),
+    authorize: authorized.Auth = fastapi.Depends(),  # noqa: E501
+):
+    """
+    This API Route is used to verify a user account
+    through email verification
+
+    Takes a token parameter
+    """
+    user_id = authorize.get_raw_jwt(token)["sub"]
+    user_operation = users.UserOperations(db)
+    user_operation.set_email_as_verified(user_id)
+    return responses.JSONResponse(
+        content={
+            "account_verified": True,
+        },
+        status_code=200,
     )
