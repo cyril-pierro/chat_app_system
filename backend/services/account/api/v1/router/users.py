@@ -206,8 +206,8 @@ async def add_an_administrator(
     db: Session = Depends(session.create),
 ):
     """
-    This API is used to get
-    add of an administrator
+    This API is used to
+    add of an administrator user
     """
     authorize.jwt_required()
     user_id = authorize.get_jwt_subject()
