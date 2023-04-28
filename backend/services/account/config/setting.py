@@ -26,6 +26,9 @@ class AppSettings(pydantic.BaseSettings):
             APP_TITLE (str): Application title
             APP_DESCRIPTION (str): Application description
             BROKER_URL (str): Kafka broker to connect to
+            ADMIN_USERNAME (str): The administrator username
+            ADMIN_PASSWORD (str): The administrator password
+            ADMIN_EMAIL (str): The administrator email
     """
 
     DATABASE_URL: str
@@ -47,6 +50,9 @@ class AppSettings(pydantic.BaseSettings):
     APP_TITLE: str = "Chat Application"
     APP_DESCRIPTION: str = "Management service for chat application"
     BROKER_URL: str
+    ADMIN_USERNAME: str
+    ADMIN_PASSWORD: str
+    ADMIN_EMAIL: str
 
     class Config:
         """Meta configuration"""
