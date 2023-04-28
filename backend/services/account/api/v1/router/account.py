@@ -110,9 +110,8 @@ async def verify_user_account(
     user_id = authorize.get_raw_jwt(token)["sub"]
     user_operation = users.UserOperations(db)
     user_operation.set_email_as_verified(user_id)
-    return responses.JSONResponse(
-        content={
-            "account_verified": True,
-        },
+    return responses.FileResponse(
+        "static/index.html",
+        media_type="text/html",
         status_code=200,
     )

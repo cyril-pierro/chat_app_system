@@ -10,6 +10,8 @@ Attributes:
 from typing import Union
 
 import fastapi
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from fastapi_jwt_auth import exceptions as exc_jwt
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
@@ -113,6 +115,14 @@ class AppBuilder(builder.AppBuilderInterface):
             ],
         )
 
+        self._app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+
     def register_routes(
         self,
     ) -> Union[None, fastapi.responses.RedirectResponse]:  # type: ignore
@@ -146,6 +156,18 @@ class AppBuilder(builder.AppBuilderInterface):
             bind=db_setup.database.get_engine  # type : ignore
         )
 
+    def mount_static_files(self):
+        """Mount static folder to application
+
+        This method is used to mount static
+        files
+        """
+        self._app.mount(
+            "/static",
+            StaticFiles(directory="static", html=True),  # type: ignore
+            name="static",
+        )
+
     def add_app_details(
         self, title: str = None, description: str = None  # type: ignore
     ) -> None:
@@ -173,6 +195,7 @@ class AppBuilder(builder.AppBuilderInterface):
         self.register_middlewares()
         self.register_database()
         self.register_exceptions()
+        self.mount_static_files()
         self.add_app_details(
             title=settings.APP_TITLE,
             description=settings.APP_DESCRIPTION,
