@@ -1,8 +1,13 @@
 Plugins
 ===============
 
-Submodules
-----------
+Producer Plugin
+-----------------------
+
+.. automodule:: plugins.producer
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Redis Plugin
 --------------------
