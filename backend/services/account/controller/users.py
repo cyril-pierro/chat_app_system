@@ -190,7 +190,7 @@ class UserOperations(UserOperationsInterface):
         Returns:
             None
         Raises:
-            ServerError: Error occurred in sql
+            UserOperationsError: Error occurred
         """
         user_found = self.get_user_by(user_id)
         if not user_found.is_admin:
