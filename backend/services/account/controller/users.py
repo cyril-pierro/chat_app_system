@@ -199,5 +199,5 @@ class UserOperations(UserOperationsInterface):
                 status_code=401,
             )
         assigned_admin = self.get_user_by(admin_username)
-        assgned_admin.is_admin = True
+        assigned_admin.is_admin = True
         sql.add_object_to_database(assigned_admin)
