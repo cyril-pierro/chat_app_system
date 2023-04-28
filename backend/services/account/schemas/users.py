@@ -22,6 +22,19 @@ class RegisterUser(BaseModel):
         orm_mode = True
 
 
+class AdminUser(BaseModel):
+    """Admin Schema
+
+    Attributes:
+        username (str): username to be admin
+    """
+
+    username: str
+
+    class Config:
+        orm_mode = True
+
+
 class User(BaseModel):
     """User  Schema
     Attributes:

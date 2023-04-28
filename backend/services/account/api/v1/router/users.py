@@ -201,6 +201,7 @@ async def get_username(
     },
 )
 async def add_an_administrator(
+    data: users.AdminUser,
     _: str = Depends(authorized.bearerschema),
     authorize: authorized.Auth = Depends(),
     db: Session = Depends(session.create),
@@ -213,7 +214,7 @@ async def add_an_administrator(
     user_id = authorize.get_jwt_subject()
     user_operation = UserOperations(db)
     user_operation.check_if_email_is_verified(user_id)
-    user_operation.set_user_as_admin(user_id)
+    user_operation.set_user_as_admin(user_id, data.username)
     return responses.JSONResponse(
         content={
             "message": "you now an admin",
