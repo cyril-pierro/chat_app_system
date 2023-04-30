@@ -82,9 +82,6 @@ MIDDLEWARE = [
     'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(__file__))
-DOCUMENTATION_ROOT = PROJECT_DIR + '/docs'
-DOCUMENTATION_HTML_ROOT = DOCUMENTATION_ROOT + '/site'
 
 ROOT_URLCONF = "core.urls"
 
