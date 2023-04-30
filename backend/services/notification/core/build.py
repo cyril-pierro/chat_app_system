@@ -13,7 +13,7 @@ Attributes:
 import celery
 
 from config import settings
-from plugins import consumer as cm
+from consumers import new_users as cm
 from tools import log
 
 from . import start
