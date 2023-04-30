@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY poetry.lock pyproject.toml ./
 
 # hadolint ignore=DL3013
-RUN apt install redis -y && pip install --no-cache-dir --upgrade pip && pip install --no-cachdir poetry==1.4.0 \
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cachdir poetry==1.4.0 \
     && poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --without dev
 
@@ -17,4 +17,4 @@ COPY ./ ./
 
 # Expose port and run application
 EXPOSE 8000
-ENTRYPOINT ["/bin/sh", "-c", "uvicorn main:app --host 0.0.0.0"]
+ENTRYPOINT ["/bin/sh", "-c", "bash scripts/startup.sh"]
