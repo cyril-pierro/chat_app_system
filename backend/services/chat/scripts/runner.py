@@ -20,9 +20,9 @@ Examples:
 """
 import os
 import subprocess
+from typing import Any
 
 import click
-from typing import Any
 
 os.environ.setdefault("TESTING", "False")
 
@@ -52,7 +52,8 @@ def cli(port: Any, host: Any, command: Any) -> None:
 
     command_action = {
         "run": (
-            f"gunicorn --env DJANGO_SETTINGS_MODULE=core.settings core.wsgi -b {host}:{port}"
+            "gunicorn --env DJANGO_SETTINGS_MODULE=core.settings core.wsgi -b"
+            f" {host}:{port}"
         ),
         "migrate": "python manage.py migrate --pythonpath .",
     }
@@ -74,4 +75,4 @@ def cli(port: Any, host: Any, command: Any) -> None:
 
 # comment after testing locally
 # if __name__ == "__main__":
-   # cli()
+# cli()

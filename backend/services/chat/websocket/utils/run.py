@@ -10,7 +10,7 @@ def async_return(result):
     Args:
         result (object): variable to run in async mode
     Returns:
-        object : async variable 
+        object : async variable
     """
     f = asyncio.Future()
     f.set_result(result)

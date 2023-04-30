@@ -1,4 +1,5 @@
 import pytest
+
 """Configuration for test
 
 This module shows the configuration

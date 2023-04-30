@@ -1,3 +1,5 @@
+from django.http import JsonResponse
+
 """Websocket View
 
 This module the endpoint view for websocket
@@ -12,15 +14,12 @@ def index(request, room_name):
 """
 
 
-
-
-from django.http import JsonResponse
 def index(request, room_name):
     """Index View
 
     Args:
-        request (object): request 
-        room_name (str): room name to join 
+        request (object): request
+        room_name (str): room name to join
 
     Returns:
         object : Json response

@@ -1,4 +1,4 @@
-"""Consumer 
+"""Consumer
 
 This module is demonstrates how the operations
 for connecting, accepting, sending and receiving
@@ -10,12 +10,12 @@ Attributes:
 
 """
 import json
+from typing import Any, Union
 from urllib.parse import parse_qs
 
 import requests
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.conf import settings
-from typing import Any, Union
 
 from websocket.tools.log import Log
 
@@ -31,6 +31,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     messages or websocket. It also authenticates
     a user who wants to connect.
     """
+
     _room_group_name = "default_group"
     _room_name = "default_name"
 
@@ -67,7 +68,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connection_established(self, event: Any) -> None:
         """Connection established
 
-        This connection is responsible for 
+        This connection is responsible for
         sending a success message when you are
         authenticated to the system
 
@@ -88,7 +89,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event: Any) -> None:
         """Chat Message
 
-        This method is responsible for 
+        This method is responsible for
         sending message to a group channel
 
         Args:
@@ -105,7 +106,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data: str) -> None:
         """Receive
 
-        This method is responsible for 
+        This method is responsible for
         receiving messages from a group channel
 
         Args:
@@ -143,7 +144,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def is_user_authenticated(self) -> Union[bool, None]:
         """User is authenticated
 
-        This method is responsible for 
+        This method is responsible for
         authenticating a user before joining
         a channel
 
@@ -164,7 +165,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.disconnect()
 
     def get_room_name(self):
-        """Get the room name 
+        """Get the room name
 
         Returns:
             str: the room name

@@ -35,7 +35,8 @@ class Log:
 
         self.__format = logging.Formatter(
             # type: ignore
-            "%(levelname)s: %(name)s: %(message)s: %(asctime)s", "%Y-%m-%d %H:%M:%S"
+            "%(levelname)s: %(name)s: %(message)s: %(asctime)s",
+            "%Y-%m-%d %H:%M:%S",
         )
         self.__logger = logging.getLogger(name)
         self.__logger.setLevel(self.__level_category.get(level.lower()))

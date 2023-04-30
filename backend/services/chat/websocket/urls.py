@@ -1,6 +1,6 @@
 """URl module
 
-This module defines the url route for testing 
+This module defines the url route for testing
 the websocket functionality
 """
 from django.urls import path
