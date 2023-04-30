@@ -18,7 +18,7 @@ from aiokafka import AIOKafkaConsumer
 from prometheus_client import Counter
 
 from config import settings
-from controller import mail
+from plugins import mail
 from interfaces import consumer
 from interfaces import notification as nt
 from tools import log
