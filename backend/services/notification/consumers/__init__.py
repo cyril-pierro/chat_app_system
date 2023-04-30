@@ -1,2 +1,2 @@
-"""Controller Package
+"""Consumer Package
 """
