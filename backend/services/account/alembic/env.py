@@ -34,7 +34,7 @@ if settings.TESTING:
     config.set_main_option("sqlalchemy.url", settings.TEST_DATABASE_URL)
 else:
     config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
-    
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
