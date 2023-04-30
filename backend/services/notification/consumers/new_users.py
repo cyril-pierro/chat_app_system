@@ -1,8 +1,8 @@
-"""Register all Consumers in the system
+"""New User Consumer in the system
 
-This module demonstrates how a list of consumers
+This module demonstrates how the consumers
 subscribe to a particular topic and the operation
-performed on that topic
+performed on that topic mainly new_users.
 
 Attributes:
     app_settings (object): Application Settings

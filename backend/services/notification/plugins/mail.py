@@ -1,4 +1,4 @@
-"""Mail Controller
+"""Mail Plugin
 
 This module demonstrates how to setup and
 send an email message to a user
