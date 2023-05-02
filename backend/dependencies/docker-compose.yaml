@@ -1,0 +1,104 @@
+services:
+  prometheus:
+    container_name: chat_app_prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - ./data/prometheus/:/etc/prometheus/
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - 7071:9090
+    restart: always
+    extra_hosts:
+      - "chatapplication:${PUBLIC_ADDRESS}"
+
+  grafana:
+    container_name: chat_app_grafana
+    image: grafana/grafana:7.5.6
+    ports:
+      - 7072:3000
+    restart: unless-stopped
+    volumes:
+      - "$PWD/data/grafana/provisioning/dashboards:/var/lib/grafana/dashboards:rw"
+      - "$PWD/data/grafana/provisioning/datasources:/var/lib/grafana/datasources:rw"
+      - "$PWD/data/grafana/grafana.ini:/etc/grafana/grafana.ini"
+      - grafana-data:/var/lib/grafana:rw
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+      prometheus:
+        condition: service_started
+
+  zookeeper:
+    container_name: chat_app_zoo_keeper
+    image: quay.io/debezium/zookeeper:2.1
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+
+  kafka:
+    container_name: chat_app_kafka
+    image: quay.io/debezium/kafka:2.1
+    ports:
+      - 9092:9092
+    environment:
+      - ZOOKEEPER_CONNECT=zookeeper:2181
+    depends_on:
+      - zookeeper
+
+
+  redis:
+    image: redis
+    container_name: chat_app_redis
+    ports:
+      - 6380:6379
+
+  postgres:
+    container_name: chat_app_postgres
+    image: postgres:13
+    restart: always
+    ports:
+      - "6381:5432"
+    volumes:
+      - "$PWD/data/postgres/postgres.conf:/etc/postgresql/postgres.conf:rw"
+      - "$PWD/data/postgres/hba_file.conf:/etc/postgresql/hba_file.conf:rw"
+
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-admin}
+      - POSTGRES_USER=${DATABASE_USER:-admin}
+      - POSTGRES_DB=chat_app_database
+    command:
+      - "-c"
+      - "config_file=/etc/postgresql/postgres.conf"
+      - "-c"
+      - "hba_file=/etc/postgresql/hba_file.conf"
+
+  mysqldb:
+    image: mysql:8.0
+    container_name: chat_app_mysqldb
+    restart: always
+    ports:
+      - 6382:3306
+    volumes:
+      - ${PWD}/data/my_cnf.cnf:/etc/mysql/conf.d/mysql.cnf:rw    
+    environment:
+      - MYSQL_USER=${DATABASE_USER:-admin}
+      - MYSQL_PASSWORD=${DATABASE_PASSWORD:-admin}
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD:-admin}
+      - MYSQL_DATABASE=chat_app_database
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+
+
+volumes:
+  grafana-data:
+
+networks:
+  default:
+    driver: bridge
+
