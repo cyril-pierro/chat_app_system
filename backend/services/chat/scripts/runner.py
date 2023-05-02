@@ -28,7 +28,7 @@ os.environ.setdefault("TESTING", "False")
 
 
 @click.command()
-@click.option("--port", default=8001, type=int, help="Port to run application on")
+@click.option("--port", default=8083, type=int, help="Port to run application on")
 @click.option("--host", default="0.0.0.0", type=str, help="host to run application")
 @click.argument("command", default="run")
 def cli(port: Any, host: Any, command: Any) -> None:
