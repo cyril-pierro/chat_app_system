@@ -25,6 +25,8 @@ celery_name: str = "celery_config"
 email_name: str = "email_config"
 kafka_name: str = "kafka_config"
 application_name: str = "application"
+grafana_name: str = "grafana_config"
+mysql_name = "mysql_config"
 CONFIG_INI = "config.ini"
 
 
@@ -66,7 +68,16 @@ class Settings:
     sender_email = Parser.get(email_name, "mail_username")
     email_password = Parser.get(email_name, "mail_password")
     app_name = Parser.get(application_name, "app_name")
-    topic_to_listen_on = Parser.get(kafka_name, "topic")
+    topic_for_new_users = Parser.get(kafka_name, "new_users_topic")
+    topic_for_admin = Parser.get(kafka_name, "admin_users_topic")
     consumer_group_id = Parser.get(kafka_name, "group_id")
     log_file_name = Parser.get(application_name, "log_file_name")
     auth_service_url = Parser.get(application_name, "account_server_url")
+    mysql_username = Parser.get(mysql_name, "mysql_username")
+    mysql_password = Parser.get(mysql_name, "mysql_password")
+    mysql_host = Parser.get(mysql_name, "mysql_host")
+    mysql_database = Parser.get(mysql_name, "mysql_database")
+    grafana_admin_user = Parser.get(grafana_name, "admin_user")
+    grafana_admin_password = Parser.get(grafana_name, "admin_password")
+    grafana_server_url = Parser.get(grafana_name, "grafana_url")
+    metrics_port = Parser.get(application_name, "metrics_port")

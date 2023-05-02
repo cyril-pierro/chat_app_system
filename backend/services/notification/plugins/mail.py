@@ -13,7 +13,6 @@ import smtplib
 import ssl
 from email.mime import multipart, text
 from typing import Any
-
 from config import settings
 from interfaces import notification
 from tools import log
@@ -64,27 +63,28 @@ class Email(notification.NotificationController):
         try:
             formatted_message = self._process_email(subject, recipient)
 
-            serialize_text = text.MIMEText(message, "plain")
-            formatted_message.attach(serialize_text)
-
             if html is not None:
                 serialize_html = text.MIMEText(html)
                 formatted_message.attach(serialize_html, "html")
-            with smtplib.SMTP_SSL(
-                host=app_settings.stmp_server,
-                port=app_settings.email_port,
-                context=self._context,
-            ) as email_server:
-                email_server.login(
-                    user=app_settings.sender_email,  # type: ignore
-                    password=app_settings.email_password,
-                )
-                email_server.sendmail(
-                    app_settings.sender_email,
-                    recipient,  # type : ignore
-                    formatted_message.as_string(),
-                )
-            email_logger.info(f"send email to the {recipient}")
+
+            if message is not None:
+                serialize_text = text.MIMEText(message, "plain")
+                formatted_message.attach(serialize_text)
+                with smtplib.SMTP_SSL(
+                    host=app_settings.stmp_server,
+                    port=app_settings.email_port,
+                    context=self._context,
+                ) as email_server:
+                    email_server.login(
+                        user=app_settings.sender_email,  # type: ignore
+                        password=app_settings.email_password,
+                    )
+                    email_server.sendmail(
+                        app_settings.sender_email,
+                        recipient,  # type : ignore
+                        formatted_message.as_string(),
+                    )
+                email_logger.info(f"send email to the {recipient}")
             return True
         except Exception as e:
             email_logger.exception(e.args[0])

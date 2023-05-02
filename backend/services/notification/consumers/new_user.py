@@ -1,8 +1,8 @@
-"""New User Consumer in the system
+"""New users Consumers in the system
 
-This module demonstrates how the consumers
+This module demonstrates how to consume or
 subscribe to a particular topic and the operation
-performed on that topic mainly new_users.
+performed on that topic, mainly new users topic
 
 Attributes:
     app_settings (object): Application Settings
@@ -15,7 +15,6 @@ import asyncio
 import json
 
 from aiokafka import AIOKafkaConsumer
-from prometheus_client import Counter
 
 from config import settings
 from plugins import mail
@@ -23,10 +22,6 @@ from interfaces import consumer
 from interfaces import notification as nt
 from tools import log
 
-count = Counter(
-    name="new_user_messages_sent",  # type: ignore
-    documentation="Number of new user messages",
-)
 
 app_settings = settings.Settings()
 
@@ -52,9 +47,9 @@ class NewUsersConsumer(consumer.NotificationConsumer):
                 to a particular topic
         """
         consumer = AIOKafkaConsumer(
-            app_settings.topic_to_listen_on,
+            app_settings.topic_for_new_users,
             bootstrap_servers=app_settings.broker_url,
-            group_id=app_settings.consumer_group_id,
+            group_id="users",
         )
 
         await consumer.start()
@@ -64,9 +59,9 @@ class NewUsersConsumer(consumer.NotificationConsumer):
                 username = payload.get("username")
                 user_email = payload.get("email")
                 token = payload.get("token")
-                subject = "Welcome to Chat App"
+                subject = "Welcome to Remcash App Integration"
                 message = (
-                    "Welcome to our Chat Platform,"
+                    "Welcome to our Remcash Platform,"
                     f"{str(username).capitalize()},"
                     "Click on the link to verify your email \n"
                     f"{CLICK_URL}?token={token}"
@@ -83,6 +78,5 @@ class NewUsersConsumer(consumer.NotificationConsumer):
     @staticmethod
     def start_process():
         """Start the consumer process"""
-        count.inc()
         email_controller = mail.Email()
         asyncio.run(NewUsersConsumer.consume(consume_with=email_controller))

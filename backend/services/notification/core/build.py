@@ -13,10 +13,8 @@ Attributes:
 import celery
 
 from config import settings
-from consumers import new_users as cm
+from consumers import new_user, add_admin
 from tools import log
-
-from . import start
 
 app_settings = settings.Settings()
 app_logger = log.Log(__file__)
@@ -66,12 +64,12 @@ class AppBuilder:
 
         @self._app.task(name="send_email_to_users")
         def send_email():
-            cm.NewUsersConsumer.start_process()
+            new_user.NewUsersConsumer.start_process()
 
-        @self._app.task(name="send_metrics_data")
-        def send_metrics():
-            start.start_metrics()
+        @self._app.task(name="add_admin_to_grafana")
+        def add_to_monitoring():
+            add_admin.AddAdminConsumer.start_process()
 
         send_email.delay()
-        send_metrics.delay()
+        add_to_monitoring.delay()
         return self._app
