@@ -6,6 +6,6 @@
 
 ## Command to use
 
-``bash
+```bash
   $ docker compose up 
-``
+```
