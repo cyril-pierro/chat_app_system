@@ -1,4 +1,5 @@
 import secrets
+
 from config import setting
 
 app_settings = setting.AppSettings()

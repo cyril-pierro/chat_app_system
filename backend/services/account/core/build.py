@@ -10,8 +10,8 @@ Attributes:
 from typing import Union
 
 import fastapi
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi import staticfiles
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi_jwt_auth import exceptions as exc_jwt
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
@@ -156,9 +156,10 @@ class AppBuilder(builder.AppBuilderInterface):
         )
 
     def mount_static_files(self) -> None:
-        self._app.mount("/static", staticfiles.StaticFiles(
-            directory="static"),  # type: ignore
-            name="static"
+        self._app.mount(
+            "/static",
+            staticfiles.StaticFiles(directory="static"),  # type: ignore
+            name="static",
         )
 
     def add_app_details(

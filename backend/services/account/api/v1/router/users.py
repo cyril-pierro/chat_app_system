@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, responses
+from prometheus_client import Counter
 from sqlalchemy.orm import Session
 
 from controller import auth as authorized
@@ -6,8 +7,7 @@ from controller.account import AccountOperations
 from controller.users import UserOperations
 from plugins import producer
 from schemas import error, users
-from utils import session, password
-from prometheus_client import Counter
+from utils import password, session
 
 router = APIRouter()
 
@@ -233,7 +233,7 @@ async def add_an_administrator(
     return responses.JSONResponse(
         content={
             "message": f"{data.username} is now an admin",
-            "password": admin_password
+            "password": admin_password,
         },  # type: ignore
         status_code=200,
     )
