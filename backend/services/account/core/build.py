@@ -11,7 +11,7 @@ from typing import Union
 
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
+from fastapi import staticfiles
 from fastapi_jwt_auth import exceptions as exc_jwt
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
@@ -114,7 +114,6 @@ class AppBuilder(builder.AppBuilderInterface):
                 10.0,
             ],
         )
-
         self._app.add_middleware(
             CORSMiddleware,
             allow_origins=["*"],
@@ -156,16 +155,10 @@ class AppBuilder(builder.AppBuilderInterface):
             bind=db_setup.database.get_engine  # type : ignore
         )
 
-    def mount_static_files(self):
-        """Mount static folder to application
-
-        This method is used to mount static
-        files
-        """
-        self._app.mount(
-            "/static",
-            StaticFiles(directory="static", html=True),  # type: ignore
-            name="static",
+    def mount_static_files(self) -> None:
+        self._app.mount("/static", staticfiles.StaticFiles(
+            directory="static"),  # type: ignore
+            name="static"
         )
 
     def add_app_details(

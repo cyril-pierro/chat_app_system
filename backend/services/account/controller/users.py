@@ -184,7 +184,9 @@ class UserOperations(UserOperationsInterface):
             )
 
     @sql.sql_error_handler
-    def set_user_as_admin(self, user_id: int, admin_username: str) -> None:
+    def set_user_as_admin(self,
+                          user_id: int,
+                          admin_username: str) -> None:
         """Sets a user as an administrator
         Args:
             id (int): id of the user of the system
@@ -201,4 +203,4 @@ class UserOperations(UserOperationsInterface):
             )
         assigned_admin = self.get_user_by(admin_username)
         assigned_admin.is_admin = True
-        sql.add_object_to_database(assigned_admin)
+        sql.add_object_to_database(self._db, assigned_admin)

@@ -25,7 +25,7 @@ producer_logger = log.Log(__file__)
 
 
 class Producer(producer.ProducerInterface):
-    """Consumer for New Users in the System
+    """Producer for the kafka Service in the System
 
     This class describes the operations performed
     for users that just joined the system

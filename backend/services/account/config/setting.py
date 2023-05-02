@@ -29,6 +29,7 @@ class AppSettings(pydantic.BaseSettings):
             ADMIN_USERNAME (str): The administrator username
             ADMIN_PASSWORD (str): The administrator password
             ADMIN_EMAIL (str): The administrator email
+            AUTO_PASSWORD_LENGTH (int): length of auto password
     """
 
     DATABASE_URL: str
@@ -53,6 +54,7 @@ class AppSettings(pydantic.BaseSettings):
     ADMIN_USERNAME: str
     ADMIN_PASSWORD: str
     ADMIN_EMAIL: str
+    AUTO_PASSWORD_LENGTH: int = 23
 
     class Config:
         """Meta configuration"""

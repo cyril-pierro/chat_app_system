@@ -6,9 +6,14 @@ from controller.account import AccountOperations
 from controller.users import UserOperations
 from plugins import producer
 from schemas import error, users
-from utils import session
+from utils import session, password
+from prometheus_client import Counter
 
 router = APIRouter()
+
+msg_sender = producer.Producer()
+
+admin_counter = Counter("new_admin_users", "Number of admin users")
 
 
 @router.post(
@@ -37,7 +42,6 @@ async def register_user(
     account_operation.create_account(user.id)
     auth = authorized.Auth()
     token = auth.create_access_token(subject=user.id)
-    msg_sender = producer.Producer()
     msg_sender.send_message(
         "new_users",
         {
@@ -194,7 +198,7 @@ async def get_username(
 
 @router.post(
     "/admin",
-    response_model=users.ChangeOut,
+    response_model=users.AdminOut,
     responses={
         401: {"model": error.UserNotFound},
         404: {"model": error.UnAuthorizedError},
@@ -215,9 +219,21 @@ async def add_an_administrator(
     user_operation = UserOperations(db)
     user_operation.check_if_email_is_verified(user_id)
     user_operation.set_user_as_admin(user_id, data.username)
+    user_details = user_operation.get_user_by(data.username)
+    admin_password = password.generate_password()
+    msg_sender.send_message(
+        "add_admin",
+        {
+            "username": data.username,  # type: ignore
+            "email": user_details.email,
+            "password": admin_password,
+        },
+    )
+    admin_counter.inc()
     return responses.JSONResponse(
         content={
-            "message": "you now an admin",
+            "message": f"{data.username} is now an admin",
+            "password": admin_password
         },  # type: ignore
         status_code=200,
     )

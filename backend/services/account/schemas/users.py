@@ -49,6 +49,19 @@ class User(BaseModel):
         orm_mode = True
 
 
+class AdminUser(BaseModel):
+    """Admin Schema
+
+    Attributes:
+        username (str): username to be admin
+    """
+
+    username: str
+
+    class Config:
+        orm_mode = True
+
+
 class ChangeEmail(BaseModel):
     """Change Email Schema
     Attributes:
@@ -91,3 +104,15 @@ class ChangeOut(BaseModel):
     """
 
     message: str
+
+
+class AdminOut(ChangeOut):
+    """
+    This schema is used for Admin
+
+    Note - Output Schema for add Admin
+
+    Attributes:
+        password (str): password for the payload
+    """
+    password: str
