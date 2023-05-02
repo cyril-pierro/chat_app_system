@@ -39,7 +39,7 @@ def cli(command) -> None:
         command (run): name of the command to use
     """
     command_action = {
-        "run": "celery -A main worker --loglevel=INFO ",
+        "run": "celery -A main worker --loglevel=INFO & celery -A main flower --loglevel=INFO --address=0.0.0.0 --port=8083",
     }
 
     action_to_run = command_action.get(command)
