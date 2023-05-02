@@ -13,6 +13,7 @@ import smtplib
 import ssl
 from email.mime import multipart, text
 from typing import Any
+
 from config import settings
 from interfaces import notification
 from tools import log

@@ -15,11 +15,10 @@ import json
 
 from aiokafka import AIOKafkaConsumer
 
-
 from config import settings
-from plugins import grafana
 from interfaces import consumer
 from interfaces import notification as nt
+from plugins import grafana
 from tools import log
 
 app_settings = settings.Settings()
@@ -46,7 +45,7 @@ class AddAdminConsumer(consumer.NotificationConsumer):
         consumer = AIOKafkaConsumer(
             app_settings.topic_for_admin,
             bootstrap_servers=app_settings.broker_url,
-            group_id="admins"
+            group_id="admins",
         )
 
         await consumer.start()

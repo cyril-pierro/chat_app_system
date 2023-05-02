@@ -17,11 +17,10 @@ import json
 from aiokafka import AIOKafkaConsumer
 
 from config import settings
-from plugins import mail
 from interfaces import consumer
 from interfaces import notification as nt
+from plugins import mail
 from tools import log
-
 
 app_settings = settings.Settings()
 

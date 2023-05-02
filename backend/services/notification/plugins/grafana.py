@@ -8,8 +8,10 @@ Attributes:
     grafana_logger (object): Logger instance
 """
 
-import requests
 import base64
+
+import requests
+
 from config import settings
 from interfaces import notification
 from tools import log
@@ -35,16 +37,10 @@ class Grafana(notification.NotificationController):
         Generate Base64 string from
         header authorization basic auth credentials
         """
-        value_bytes = base64.b64encode(
-            f"{user}:{password}".encode("utf-8"))
+        value_bytes = base64.b64encode(f"{user}:{password}".encode("utf-8"))
         return value_bytes.decode("ascii")
 
-    def send(
-        self,
-            username: str,
-            email: str,
-            password: str
-    ) -> bool:
+    def send(self, username: str, email: str, password: str) -> bool:
         """Send a request to grafana
 
         This method is to insert a user to grafana
@@ -57,11 +53,11 @@ class Grafana(notification.NotificationController):
         try:
             auth = self._generate_base64_string(
                 user=app_settings.grafana_admin_user,
-                password=app_settings.grafana_admin_password
+                password=app_settings.grafana_admin_password,
             )
             headers = {
-                'Authorization': f'Basic {auth}',
-                'Content-Type': 'application/json'
+                "Authorization": f"Basic {auth}",
+                "Content-Type": "application/json",
             }
             response = requests.post(
                 url=self._END_POINT,
@@ -71,15 +67,13 @@ class Grafana(notification.NotificationController):
                     "email": email,
                     "login": username,
                     "password": password,
-                    "OrgId":  1
-                }
+                    "OrgId": 1,
+                },
             )
             if response.status_code == 200:
                 grafana_logger.info(f"{username} added to grafana")
                 return True
-            grafana_logger.error(
-                f"{response.text}"
-            )
+            grafana_logger.error(f"{response.text}")
         except Exception as e:
             grafana_logger.exception(e.args[0])
 

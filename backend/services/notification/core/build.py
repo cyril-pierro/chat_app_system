@@ -13,7 +13,7 @@ Attributes:
 import celery
 
 from config import settings
-from consumers import new_user, add_admin
+from consumers import add_admin, new_user
 from tools import log
 
 app_settings = settings.Settings()
