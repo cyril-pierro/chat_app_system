@@ -8,8 +8,7 @@ WORKDIR /usr/src/app
 COPY poetry.lock pyproject.toml ./
 
 # hadolint ignore=DL3013
-RUN pip install --no-cache-dir poetry==1.4.0 && poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
-
+RUN pip install --no-cache-dir poetry==1.4.0 && poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi --no-root
 # Copy files
 COPY ./ ./
 
