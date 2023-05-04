@@ -16,5 +16,5 @@ RUN apt install redis -y && pip install --no-cache-dir --upgrade pip && pip inst
 COPY ./ ./
 
 # Expose port and run application
-EXPOSE 8000
-ENTRYPOINT ["/bin/sh", "-c", "celery -A main worker --loglevel=INFO"]
+EXPOSE 8082
+ENTRYPOINT ["/bin/sh", "-c", "bash scripts/startup.sh"]
