@@ -16,5 +16,5 @@ RUN pip install --no-cache-dir --upgrade pip && pip install --no-cachdir poetry=
 COPY ./ ./
 
 # Expose port and run application
-EXPOSE 8000
+EXPOSE 8081
 ENTRYPOINT ["/bin/sh", "-c", "bash scripts/startup.sh"]
