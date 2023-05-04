@@ -6,9 +6,8 @@ WORKDIR /usr/src/app
 
 #Install poetry env, project dependecny and model files
 COPY poetry.lock pyproject.toml ./
-RUN pip install --no-cache-dir poetry==1.4.0 \
-    && poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi --no-dev
+
+RUN pip install --no-cache-dir poetry==1.4.0 && poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi --no-root
 
 #Copy files
 COPY ./ ./
