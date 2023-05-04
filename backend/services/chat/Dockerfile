@@ -16,5 +16,5 @@ RUN pip install --no-cache-dir --upgrade pip && pip install --no-cachdir poetry=
 COPY ./ ./
 
 # Expose port and run application
-EXPOSE 8001
-ENTRYPOINT ["/bin/sh", "-c", "gunicorn --env DJANGO_SETTINGS_MODULE=core.settings core.wsgi -b :8001"]
+EXPOSE 8083
+ENTRYPOINT ["/bin/sh", "-c", "gunicorn --env DJANGO_SETTINGS_MODULE=core.settings core.wsgi -b :8083"]
