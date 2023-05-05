@@ -1,4 +1,4 @@
-# Dependencies
+# Project Dependencies
 
 
 Contains all the databases,search engines, monitoring services
