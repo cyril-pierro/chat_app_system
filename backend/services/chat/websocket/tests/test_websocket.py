@@ -72,4 +72,3 @@ async def test_websocket_disconnect(websocket_instance):
     websocket = await websocket_instance
     await websocket.disconnect()
     assert await websocket.receive_nothing()
-
