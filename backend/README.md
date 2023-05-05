@@ -9,14 +9,21 @@ This part of the project consists of the following:
 
 
 
+
+
+### **GENERAL WORKFLOW**
+
+
+
+![WORKFLOW](https://github.com/cyril-pierro/chat_app_system/blob/main/backend/resources/worfklow.jpg)
+
+
+
+
+
 ## **TECH STACKS**
 
 ![Tech Stack](https://github.com/cyril-pierro/chat_app_system/blob/main/backend/resources/resources.jpg)
 
 
 
-### GENERAL WORKFLOW
-
-
-
-![WORKFLOW](https://github.com/cyril-pierro/chat_app_system/blob/main/backend/resources/worfklow.jpg)
