@@ -34,6 +34,9 @@ ALLOWED_HOSTS = ["*"]
 REDIS_HOST = os.environ.get("REDIS_HOST")
 REDIS_PORT = os.environ.get("REDIS_PORT")
 
+ELASTICSEARCH_HOST = os.environ.get("ELASTICSEARCH_HOST")
+ELASTICSEARCH_PORT = os.environ.get("ELASTICSEARCH_PORT")
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,6 +49,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "websocket",
     "scripts",
+    "search",
+    "rest_framework"
 ]
 
 ASGI_APPLICATION = "core.asgi.application"
@@ -71,7 +76,7 @@ else:
     LOGFILE_NAME = os.environ.get("LOGFILE_NAME")
 
 MIDDLEWARE = [
-    "django_prometheus.middleware.PrometheusBeforeMiddleware",
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -79,7 +84,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_prometheus.middleware.PrometheusAfterMiddleware",
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 
@@ -110,7 +115,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     "default": {
         # "ENGINE": "django.db.backends.sqlite3",
-        "ENGINE": "django_prometheus.db.backends.sqlite3",
+        "ENGINE": 'django_prometheus.db.backends.sqlite3',
         "NAME": BASE_DIR / "db.sqlite3",
         "TEST": {"NAME": BASE_DIR / "test_db.sqlite3"},
     }
