@@ -72,3 +72,21 @@ def test_change_password_route(client, already_logged_in_response):
     assert change_password_confirm_response.json() == {
         "message": "changed password successfully"
     }
+
+
+@pytest.mark.route_users
+def test_admin_route(
+    client, already_logged_in_admin_response, already_logged_in_response
+):
+    headers = {
+        "Authorization": (
+            f"Bearer {already_logged_in_admin_response.json()['access_token']}"
+        )
+    }
+
+    add_admin_response = client.post(
+        "/admin",
+        json={"username": "test_user"},
+        headers=headers,
+    )
+    assert add_admin_response.status_code == 200

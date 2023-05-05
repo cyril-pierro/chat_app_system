@@ -1,3 +1,5 @@
+from unittest.mock import Mock, PropertyMock, patch
+
 import pytest
 from fastapi_jwt_auth.exceptions import RevokedTokenError
 
@@ -56,3 +58,17 @@ def test_access_route_after_logout(client, already_logged_in_response):
             "/username",
             headers=headers_1,
         )
+
+
+# @pytest.mark.route_account
+# def test_verify_account(client, already_registered_user_unverified):
+#     headers = {
+#         "Authorization": "Bearer mocked_token"
+#     }
+#     with patch("api.v1.router.account.authorized.Auth", return_value=Mock()) as mock_authorized:
+#         # mock_authorized.return_value = Mock()
+#         verify_response = client.get(
+#             "/verify/account?token=mocked_token",
+#             headers=headers,
+#         )
+#         assert verify_response.status_code == 200

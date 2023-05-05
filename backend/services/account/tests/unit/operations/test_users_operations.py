@@ -97,6 +97,21 @@ def test_set_email_as_verified(user_operations, already_registered_user):
 
 
 @pytest.mark.user_operations
-def test_check_if_email_is_verified_error(user_operations, already_registered_user):
+def test_check_if_email_is_verified_error(
+    user_operations, already_registered_user_unverified
+):
     with pytest.raises(exceptions.UserOperationsError):
-        user_operations.check_if_email_is_verified(already_registered_user.id)
+        user_operations.check_if_email_is_verified(
+            already_registered_user_unverified.id
+        )
+
+
+@pytest.mark.user_operations
+def test_set_user_as_admin(
+    user_operations, already_registered_admin, already_registered_user
+):
+    user_operations.set_user_as_admin(
+        already_registered_admin.id, already_registered_user.username
+    )
+    user_found = user_operations.get_user_by(already_registered_user.id)
+    assert user_found.is_admin == True

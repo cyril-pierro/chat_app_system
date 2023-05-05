@@ -11,6 +11,7 @@ Attributes:
 import os
 import sys
 from typing import Any, Generator
+from unittest.mock import Mock, patch
 
 import pytest
 from fastapi import FastAPI
@@ -23,12 +24,14 @@ from controller.account import AccountOperations
 from controller.users import UserOperations
 from core.setup import Base
 from schemas.users import RegisterUser
+from utils import sql
 from utils.session import create
 
 from . import test_data
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # this is to include backend dir in sys.path so that we can import from db,main.py
+os.environ.setdefault("TESTING", "True")
 
 
 def start_application():
@@ -105,6 +108,26 @@ def already_registered_user(user_operations):
     registered_user_data = test_data.test_user_data
     test_user = RegisterUser(**registered_user_data)
     registered_user = user_operations.register_user(test_user)
+    user_operations.set_email_as_verified(registered_user.id)
+    return registered_user
+
+
+@pytest.fixture(scope="function")
+def already_registered_user_unverified(user_operations):
+    registered_user_data = test_data.test_user_unverified
+    test_user = RegisterUser(**registered_user_data)
+    registered_user = user_operations.register_user(test_user)
+    return registered_user
+
+
+@pytest.fixture(scope="function")
+def already_registered_admin(db_session, user_operations):
+    registered_admin_data = test_data.test_admin_data
+    test_user = RegisterUser(**registered_admin_data)
+    registered_user = user_operations.register_user(test_user)
+    user_operations.set_email_as_verified(registered_user.id)
+    registered_user.is_admin = True
+    sql.add_object_to_database(db_session, registered_user)
     return registered_user
 
 
@@ -112,11 +135,23 @@ def already_registered_user(user_operations):
 def already_created_account(account_operations, already_registered_user):
     account_operations.create_account(already_registered_user.id)
     account = account_operations.get_account_with_user_id(already_registered_user.id)
+    return account
 
+
+@pytest.fixture(scope="function")
+def already_created_admin_account(account_operations, already_registered_admin):
+    account_operations.create_account(already_registered_admin.id)
+    account = account_operations.get_account_with_user_id(already_registered_admin.id)
     return account
 
 
 @pytest.fixture(scope="function")
 def already_logged_in_response(client, already_created_account):
     login_response = client.post("/login", json=test_data.test_login_data)
+    return login_response
+
+
+@pytest.fixture(scope="function")
+def already_logged_in_admin_response(client, already_created_admin_account):
+    login_response = client.post("/login", json=test_data.test_admin_login_data)
     return login_response
