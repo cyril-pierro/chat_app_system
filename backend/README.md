@@ -26,4 +26,11 @@ This part of the project consists of the following:
 ![Tech Stack](https://github.com/cyril-pierro/chat_app_system/blob/main/backend/resources/resources.jpg)
 
 
+## **Guidelines on how to start the application**
 
+**NOTE** This project assumes you have docker already installed and have 12G storage space
+
+- Navigate to the dependencies directory or folder and run the following command
+  ```bash
+     $ docker compose up 
+  ```
