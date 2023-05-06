@@ -34,3 +34,24 @@ This part of the project consists of the following:
   ```bash
      $ docker compose up 
   ```
+- Navigate to the streams directory and perform the following
+   - Send a post request to the kafka connect service using the sink connector json file
+   - Send a post request to the kafka connect service using the source connector json file
+   **Note** Before you send the post request using the sink connector make sure you have elasticsearch connector jar file downloaded
+      You can copy the binaries of the jar file to kafka connect using this copy
+      ```bash
+          docker cp {elasticsearch connector jar lib folder} kafka_connect:/kafka/lib
+      ```
+- Enter into the ksqldb server using the following command
+  ```bash
+      docker compose exec -it ksql_server bash ksql
+  ```
+
+- Copy  the contents of the streams.sql file in the sql directory and paste it in the ksql
+
+**NOTE** Make sure to check the logs of the dependencies if anything goes wrong using
+
+```bash
+    $ docker compose logs -f {service name}
+```
+  
