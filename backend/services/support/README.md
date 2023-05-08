@@ -1,4 +1,4 @@
-# Support
+# Support Service
 
 This is an AI model that interracts with users
 
