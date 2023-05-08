@@ -14,12 +14,12 @@
             <input type="text" name="message"></input>
         </form>
     </div>
-    
+
     <div id="messages"></div>
 
     <script type="text/javascript">
         const path = window.location.pathname
-        let username = "" 
+        let username = ""
         let use_path = `${path.split("chat")[1]}/`;
         const tokenPath = window.location.href.split("?")
         if (tokenPath.length === 2){
@@ -34,16 +34,22 @@
                 const message = document.getElementById("messages")
                 message.insertAdjacentHTML('beforeend', `<div> <p>${data.user} - ${data.message} </p></div>`)
             }
-        if (data.type == "start"){
-            username = data.username
-        }
+
+            if (data.type === 'chat_bot_message'){
+                const message = document.getElementById("messages")
+                message.insertAdjacentHTML('beforeend', `<div> <p>${data.user} - ${data.message} </p></div>`)
+            }
+
+            if (data.type == "start"){
+                username = data.username
+            }
         }
 
-    
-        
+
+
   const form = document.getElementById("form")
   form.addEventListener('submit', (e)=>{
-      
+
       e.preventDefault()
       const message = e.target.message.value;
       chatSocket.send(JSON.stringify({
@@ -52,8 +58,8 @@
       }))
       form.reset()
   })
-      
-        
+
+
     </script>
 </body>
 

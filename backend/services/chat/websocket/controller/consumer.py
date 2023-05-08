@@ -7,20 +7,42 @@ websocket operations
 Attributes:
     chat_consumer_logger (object): Logger
     AUTH_URL (str): Account service url
+    SUPPORT_URL (str): Support Service url
+    resource (object): Resource definition for trace metrics
+    jaeger_exporter (object): Jaeger Exportor for the trace metrics
 
 """
 import json
-from typing import Any, Union
+from typing import Any, Optional
 from urllib.parse import parse_qs
 
 import requests
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.conf import settings
-
+from opentelemetry import trace
+from opentelemetry.exporter.jaeger.thrift import JaegerExporter
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from websocket.tools.log import Log
 
 chat_consumer_logger = Log(__file__)
 AUTH_URL = settings.AUTH_MANAGEMENT_URL
+SUPPORT_URL = settings.SUPPORT_URL
+
+resource = Resource(attributes={SERVICE_NAME: "chat.service"})
+
+jaeger_exporter = JaegerExporter(
+    agent_host_name="localhost",
+    agent_port=6831,
+)
+
+trace.set_tracer_provider(TracerProvider(resource=resource))
+tracer = trace.get_tracer_provider().get_tracer(__name__)
+
+trace.get_tracer_provider().add_span_processor(
+    BatchSpanProcessor(jaeger_exporter)  # type: ignore
+)
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -86,8 +108,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
         )
 
+    async def chat_bot_message(self, event: Any) -> None:
+        """Chat Bot Stream
+
+        This method is responsible for
+        sending message to a group channel
+        for chat support
+
+        Args:
+            event (object): event raised by the socket
+        """
+        message = event.get("message")
+        user = event.get("user")
+        await self.send(
+            text_data=json.dumps(
+                {"type": "chat_bot_message", "message": message, "user": user}
+            )
+        )
+
     async def chat_message(self, event: Any) -> None:
-        """Chat Message
+        """Chat Stream
 
         This method is responsible for
         sending message to a group channel
@@ -116,10 +156,44 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json.get("message")
         user = text_data_json.get("user")
 
-        await self.channel_layer.group_send(
-            self._room_group_name,
-            {"type": "chat_message", "message": message, "user": user},
+        if self.get_room_name() == "support":
+            support_message = await self.get_reply(message)
+            await self.send(
+                text_data=json.dumps(
+                    {
+                        "type": "chat_bot_message",
+                        "message": support_message,
+                        "user": "Dave",
+                    }
+                )
+            )
+        else:
+            await self.channel_layer.group_send(
+                self._room_group_name,
+                {"type": "chat_message", "message": message, "user": user},
+            )
+
+    @tracer.start_as_current_span("support-request-time")
+    async def get_reply(self, message: str) -> str:
+        """Send Message to AI model
+
+        This method is used for maintaining a
+        conversation with a user
+
+        Args:
+            message (str): Message sent by the user
+        Returns
+            str : Reply from the AI model
+        """
+        response = requests.post(
+            f"{SUPPORT_URL}/api/v1/support", json={"question": message}
         )
+        support_message = (
+            response.json()["answer"]
+            if response.status_code == 200
+            else "Under Maintainance"
+        )
+        return support_message
 
     async def disconnect(self, close_code=None):
         """Disconnect from websocket
@@ -141,7 +215,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except AttributeError as exc:
             chat_consumer_logger.exception(exc.args[0])
 
-    async def is_user_authenticated(self) -> Union[bool, None]:
+    @tracer.start_as_current_span("auth-request-time")
+    async def is_user_authenticated(self) -> Optional[bool]:
         """User is authenticated
 
         This method is responsible for
