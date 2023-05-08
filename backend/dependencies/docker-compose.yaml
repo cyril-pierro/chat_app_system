@@ -66,7 +66,7 @@ services:
     ports:
       - 6382:3306
     volumes:
-      - ${PWD}/data/my_cnf.cnf:/etc/mysql/conf.d/mysql.cnf:rw    
+      - ${PWD}/data/my_cnf.cnf:/etc/mysql/conf.d/mysql.cnf:rw
     environment:
       - MYSQL_USER=${DATABASE_USER:-admin}
       - MYSQL_PASSWORD=${DATABASE_PASSWORD:-admin}
@@ -74,6 +74,25 @@ services:
       - MYSQL_DATABASE=chat_app_database
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: chat_app_jaeger
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=9411
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - 5775:5775/udp
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 16686:16686
+      - 14268:14268
+      - 14250:14250
+      - 9411:9411
+      - 4317:4317
+      - 4318:4318
 
   elasticsearch:
     container_name: chat_app_elasticsearch
@@ -134,7 +153,7 @@ services:
       - CONNECT_VALUE_CONVERTER_APICURIO_REGISTRY_FIND-LATEST=true
       - CONNECT_SCHEMA_NAME_ADJUSTMENT_MODE=avro
       - ENABLE_APICURIO_CONVERTERS=true
-      
+
 
 
     depends_on:
@@ -166,4 +185,3 @@ volumes:
 networks:
   default:
     driver: bridge
-
