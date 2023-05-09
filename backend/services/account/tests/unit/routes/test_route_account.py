@@ -1,5 +1,3 @@
-from unittest.mock import Mock, PropertyMock, patch
-
 import pytest
 import tests.test_data as test_data
 from fastapi_jwt_auth.exceptions import RevokedTokenError
