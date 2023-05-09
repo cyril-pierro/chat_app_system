@@ -11,19 +11,17 @@ Attributes:
 import os
 import sys
 from typing import Any, Generator
-from unittest.mock import Mock, patch
 
 import pytest
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
 from api.v1.router import account, users
 from controller.account import AccountOperations
 from controller.users import UserOperations
 from core.setup import Base
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
 from schemas.users import RegisterUser
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from utils import sql
 from utils.session import create
 
