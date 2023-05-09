@@ -1,4 +1,4 @@
-"""Testing Version
+"""Test Version
 """
 from consumers import __version__
 
