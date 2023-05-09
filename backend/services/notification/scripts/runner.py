@@ -3,13 +3,13 @@
 
 Attributes:
     cli (function)
-        This command utility function is 
+        This command utility function is
         used to run custom console scripts
         for notification service
-        
+
 Examples:
     Here is an example on how to run the script
-    
+
     $ python scripts/runner.py run
         >>> # Runs the application server
 
@@ -39,7 +39,10 @@ def cli(command) -> None:
         command (run): name of the command to use
     """
     command_action = {
-        "run": "celery -A main worker --loglevel=INFO & celery -A main flower --loglevel=INFO --address=0.0.0.0 --port=8083",
+        "run": (
+            "celery -A main worker --loglevel=INFO & celery -A main flower"
+            " --loglevel=INFO --address=0.0.0.0 --port=8083"
+        ),
     }
 
     action_to_run = command_action.get(command)
