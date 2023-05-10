@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "scripts",
     "search",
     "rest_framework",
+    "corsheaders",
 ]
 
 ASGI_APPLICATION = "core.asgi.application"
@@ -85,8 +86,10 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = "core.urls"
 
