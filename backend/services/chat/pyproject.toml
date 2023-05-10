@@ -25,6 +25,7 @@ django-prometheus = "^2.2.0"
 djangorestframework = "^3.14.0"
 markdown = "^3.4.3"
 elasticsearch = "^8.7.0"
+django-cors-headers = "^3.14.0"
 
 
 [tool.poetry.group.dev.dependencies]
