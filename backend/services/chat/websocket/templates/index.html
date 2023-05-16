@@ -30,11 +30,17 @@
         const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat${use_path}`)
         chatSocket.onmessage = function(e){
             const data = JSON.parse(e.data)
-            if (data.type === 'chat_message'){
+            console.log(`ws://${window.location.host}/ws/chat${use_path}`);
+            console.log(data);
+            if (data.type === 'chat_message' && data.command.length > 1){
                 const message = document.getElementById("messages")
-                message.insertAdjacentHTML('beforeend', `<div> <p>${data.user} - ${data.message} </p></div>`)
-            }
 
+                return data.message.map((msg)=> {
+
+                        message.insertAdjacentHTML('beforeend', `<div> <p>${msg.from_author} - ${msg.to_author} -> ${msg.messages}</p></div>`)
+                    })
+
+            }
             if (data.type === 'chat_bot_message'){
                 const message = document.getElementById("messages")
                 message.insertAdjacentHTML('beforeend', `<div> <p>${data.user} - ${data.message} </p></div>`)
@@ -53,8 +59,10 @@
       e.preventDefault()
       const message = e.target.message.value;
       chatSocket.send(JSON.stringify({
-          "message": message,
-          "user": username
+          "messages": message,
+          "from_author": "nana",
+          "to_author": "kofi",
+          "command": "new_message"
       }))
       form.reset()
   })
