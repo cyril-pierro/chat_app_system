@@ -7,16 +7,19 @@ websocket operations
 Attributes:
     chat_consumer_logger (object): Logger
     AUTH_URL (str): Account service url
-    SUPPORT_URL (str): Support Service url
     resource (object): Resource definition for trace metrics
     jaeger_exporter (object): Jaeger Exportor for the trace metrics
 
 """
+import asyncio
 import json
-from typing import Any, Optional
+from threading import Thread
+from typing import Any, Union
 from urllib.parse import parse_qs
 
 import requests
+from asgiref.sync import sync_to_async
+from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.conf import settings
 from opentelemetry import trace
@@ -26,23 +29,24 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from websocket.tools.log import Log
 
-chat_consumer_logger = Log(__file__)
-AUTH_URL = settings.AUTH_MANAGEMENT_URL
-SUPPORT_URL = settings.SUPPORT_URL
+from ..models import Message
 
 resource = Resource(attributes={SERVICE_NAME: "chat.service"})
 
 jaeger_exporter = JaegerExporter(
-    agent_host_name="localhost",
-    agent_port=6831,
+    agent_host_name=settings.JAEGER_HOST,
+    agent_port=settings.JAEGER_PORT,
 )
 
 trace.set_tracer_provider(TracerProvider(resource=resource))
 tracer = trace.get_tracer_provider().get_tracer(__name__)
 
-trace.get_tracer_provider().add_span_processor(
-    BatchSpanProcessor(jaeger_exporter)  # type: ignore
-)
+trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(jaeger_exporter))
+
+
+chat_consumer_logger = Log(__file__)
+AUTH_URL = settings.AUTH_MANAGEMENT_URL
+SUPPORT_URL = settings.SUPPORT_URL
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -56,6 +60,85 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     _room_group_name = "default_group"
     _room_name = "default_name"
+    _user = ""
+
+    async def fetch_messages(self, data):
+        from_author = data["from_author"]
+        to_author = data["to_author"]
+
+        messages = await database_sync_to_async(
+            Message.last_20_messages_from_author_to_author
+        )(from_author=from_author, to_author=to_author)
+        if len(messages) < 1:
+            content = {
+                "messages": [{"messages": None}],
+                "from_author": from_author,
+                "to_author": to_author,
+            }
+        else:
+            content = {
+                "messages": self.messages_to_json(messages),
+                "from_author": from_author,
+                "command": data.get("command"),
+            }
+        await self.send_chat_message(content)
+
+    def messages_to_json(self, messages: list[Message]):
+        result = []
+        for message in messages:
+            result.append(self.message_to_json(message))
+        return result
+
+    def message_to_json(self, message: Message):
+        return {
+            "messages": message.message,
+            "message_id": message.id,
+            "created_at": str(message.created_at),
+            "from_author": message.from_author,
+            "to_author": message.to_author,
+        }
+
+    async def new_messages(self, data):
+        from_author = data.get("from_author")
+        to_author = data.get("to_author")
+        messages = data.get("messages")
+
+        created_message = await sync_to_async(Message.objects.create)(
+            from_author=from_author, to_author=to_author, message=messages
+        )
+        content = {
+            "messages": [self.message_to_json(created_message)],
+            "from_author": from_author,
+            "command": data.get("command"),
+        }
+        await self.send_chat_message(content)
+
+    async def new_bot_message(self, issuer: str, message: str):
+        from_author = "DaveAI"
+        support_message = await self.get_reply(message)
+        content = {
+            "from_author": from_author,
+            "to_author": issuer,
+            "messages": support_message,
+            "command": "new_message",
+        }
+        await self.new_messages(content)
+
+    async def command_centre(self, data: dict[str, str]):
+        """Command Centre
+
+        This method is responsible for
+        executing the commands
+        """
+        command = data.get("command")
+
+        commands = {
+            "fetch_messages": self.fetch_messages,
+            "new_message": self.new_messages,
+            "bot_message": self.new_bot_message,
+        }
+
+        await commands.get(command)(data)
 
     async def connect(self) -> None:
         """Connect
@@ -75,7 +158,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_add(
                 self._room_group_name, self.channel_name  # type: ignore
             )
-
             # send a message to the group when they are connected
             await self.channel_layer.group_send(
                 self._room_group_name,
@@ -101,7 +183,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(
             text_data=json.dumps(
                 {
-                    "message": message,
+                    "messages": message,
                     "username": str(self.scope.get("user")),
                     "type": "start",
                 }
@@ -119,12 +201,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
             event (object): event raised by the socket
         """
         message = event.get("message")
-        user = event.get("user")
+        issuer = event.get("issuer")
+        command = event.get("command")
         await self.send(
             text_data=json.dumps(
-                {"type": "chat_bot_message", "message": message, "user": user}
+                {
+                    "type": "chat_bot_message",
+                    "message": message,
+                    "issuer": issuer,
+                    "command": command,
+                }
             )
         )
+
+    def between_callback_for_bot(self, issuer, message):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(self.new_bot_message(issuer, message))
+        loop.close()
 
     async def chat_message(self, event: Any) -> None:
         """Chat Stream
@@ -136,12 +230,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
             event (object): event raised by the socket
         """
         message = event.get("message")
-        user = event.get("user")
-        await self.send(
-            text_data=json.dumps(
-                {"type": "chat_message", "message": message, "user": user}
-            )
+        issuer = event.get("issuer")
+        command = event.get("command")
+
+        json_data = json.dumps(
+            {
+                "type": "chat_message",
+                "message": message,
+                "issuer": issuer,
+                "command": command,
+            }
         )
+
+        await self.send(text_data=json_data)
 
     async def receive(self, text_data: str) -> None:
         """Receive
@@ -153,37 +254,52 @@ class ChatConsumer(AsyncWebsocketConsumer):
             text_data (str): data sent through the channel
         """
         text_data_json = json.loads(text_data)
-        message = text_data_json.get("message")
-        user = text_data_json.get("user")
+        self._user = text_data_json.get("from_author")
+        try:
+            await self.command_centre(text_data_json)
+            thread_for_bot = Thread(
+                target=self.between_callback_for_bot,
+                args=(text_data_json.get("from_author"), text_data_json["messages"]),
+            )
 
-        if self.get_room_name() == "support":
-            support_message = await self.get_reply(message)
-            await self.send(
-                text_data=json.dumps(
-                    {
-                        "type": "chat_bot_message",
-                        "message": support_message,
-                        "user": "Dave",
-                    }
-                )
-            )
-        else:
-            await self.channel_layer.group_send(
-                self._room_group_name,
-                {"type": "chat_message", "message": message, "user": user},
-            )
+            thread_for_bot.start()
+
+        except Exception as e:
+            print(e)
+
+    async def send_chat_message(
+        self,
+        data: dict[str, Any],
+        channel_type: str = "chat_message",
+    ) -> None:
+        message = data.get("messages")
+        issuer = data.get("from_author")
+        command = data.get("command")
+        to_author = data.get("to_author")
+        await self.channel_layer.group_send(
+            self._room_group_name,
+            {
+                "type": channel_type,
+                "message": message,
+                "issuer": issuer,
+                "command": command,
+                "to_author": to_author,
+            },
+        )
 
     @tracer.start_as_current_span("support-request-time")
     async def get_reply(self, message: str) -> str:
-        """Send Message to AI model
+        """Get Reply
 
-        This method is used for maintaining a
-        conversation with a user
+        This method is responsible for
+        getting a reply from a support
+        system
 
         Args:
-            message (str): Message sent by the user
-        Returns
-            str : Reply from the AI model
+            message (str): message to be replied
+
+        Returns:
+            str: reply from the system
         """
         response = requests.post(
             f"{SUPPORT_URL}/api/v1/support", json={"question": message}
@@ -216,7 +332,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             chat_consumer_logger.exception(exc.args[0])
 
     @tracer.start_as_current_span("auth-request-time")
-    async def is_user_authenticated(self) -> Optional[bool]:
+    async def is_user_authenticated(self) -> Union[bool, None]:
         """User is authenticated
 
         This method is responsible for
