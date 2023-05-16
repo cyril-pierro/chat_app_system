@@ -11,12 +11,16 @@ from ..utils.run import async_return
 
 CUSTOMER_MODULE_LOC = "websocket.controller.consumer.ChatConsumer"
 
-test_message = "hello there"
-patch_get_request_path = "websocket.controller.consumer.requests.get"
+TEST_MESSAGE = "hello there"
+PATCH_GET_REQUEST_PATH = "websocket.controller.consumer.requests.get"
 
 
 @pytest.mark.asyncio
 async def test_websocket_connect(websocket_instance):
+    """Test websocket connection
+
+    This function test the websocket connection
+    """
     websocket = await websocket_instance
     with patch(
         f"{CUSTOMER_MODULE_LOC}.is_user_authenticated",
@@ -28,6 +32,11 @@ async def test_websocket_connect(websocket_instance):
 
 @pytest.mark.asyncio
 async def test_websocket_connection_message(websocket_instance):
+    """Test websocket connection message
+
+    This function test the websocket success
+    connection message
+    """
     websocket = await websocket_instance
 
     with patch(
@@ -47,9 +56,10 @@ async def test_websocket_connection_message(websocket_instance):
 @pytest.mark.asyncio
 @pytest.mark.django_db
 async def test_websocket_send_new_message(websocket_instance):
+    """Test Send new messages"""
     websocket = await websocket_instance
 
-    with patch(patch_get_request_path) as mock_request:
+    with patch(PATCH_GET_REQUEST_PATH) as mock_request:
         mock_response = Mock()
         mock_request.return_value = mock_response
         mock_response.json.return_value = {"message": "test_user"}
@@ -60,7 +70,7 @@ async def test_websocket_send_new_message(websocket_instance):
             _ = await websocket.receive_json_from()
             await websocket.send_json_to(
                 {
-                    "messages": test_message,
+                    "messages": TEST_MESSAGE,
                     "from_author": "test_user_sender",
                     "to_author": "test_user_receiver",
                     "command": "new_message",
@@ -70,7 +80,7 @@ async def test_websocket_send_new_message(websocket_instance):
             assert response.get("type") == "chat_message"
             assert response.get("issuer") == "test_user_sender"
             assert len(response.get("message")) == 1
-            assert response.get("message")[0].get("messages") == test_message
+            assert response.get("message")[0].get("messages") == TEST_MESSAGE
             assert response.get("message")[0].get("from_author") == "test_user_sender"
             assert response.get("command") == "new_message"
 
@@ -80,9 +90,10 @@ async def test_websocket_send_new_message(websocket_instance):
 @pytest.mark.asyncio
 @pytest.mark.django_db
 async def test_websocket_send_fetch_message(websocket_instance):
+    """Test Send Fetch message request to websocket"""
     websocket = await websocket_instance
 
-    with patch(patch_get_request_path) as mock_request:
+    with patch(PATCH_GET_REQUEST_PATH) as mock_request:
         mock_response = Mock()
         mock_request.return_value = mock_response
         mock_response.json.return_value = {"message": "test_user"}
@@ -102,7 +113,7 @@ async def test_websocket_send_fetch_message(websocket_instance):
             assert response.get("type") == "chat_message"
             assert response.get("issuer") == "test_user_sender"
             assert len(response.get("message")) == 1
-            assert response.get("message")[0].get("messages") == test_message
+            assert response.get("message")[0].get("messages") == TEST_MESSAGE
             assert response.get("message")[0].get("from_author") == "test_user_sender"
             assert response.get("message")[0].get("to_author") == "test_user_receiver"
             assert response.get("command") == "fetch_messages"
@@ -113,9 +124,14 @@ async def test_websocket_send_fetch_message(websocket_instance):
 @pytest.mark.asyncio
 @pytest.mark.django_db
 async def test_websocket_support_route(websocket_instance):
+    """Test Chat Functionality with Support AI
+
+    This function is used to test the interaction
+    of the ai model
+    """
     websocket = await websocket_instance
 
-    with patch(patch_get_request_path) as mock_request:
+    with patch(PATCH_GET_REQUEST_PATH) as mock_request:
         mock_response = Mock()
         mock_request.return_value = mock_response
         mock_response.json.return_value = {"message": "test_user"}
