@@ -10,14 +10,14 @@ Attributes:
 from typing import Union
 
 import fastapi
-from fastapi.middleware.cors import CORSMiddleware
-from starlette_exporter import PrometheusMiddleware, handle_metrics
-
 from api.v1.router import support
 from config import setting
+from core import model
 from error import exceptions
+from fastapi.middleware.cors import CORSMiddleware
 from handlers.exceptions import AppExceptionHandler
 from interfaces import builder
+from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 settings = setting.Settings()
 
@@ -134,6 +134,16 @@ class AppBuilder(builder.AppBuilderInterface):
 
         return index()
 
+    def load_application_model(self) -> None:
+        """Load the AI model on Start of the application"""
+
+        @self._app.on_event("startup")
+        def load_model() -> None:
+            """Load the AI model"""
+            model.DaveModel()
+
+        return load_model()
+
     def add_app_details(
         self, title: str = None, description: str = None  # type: ignore
     ) -> None:
@@ -164,5 +174,6 @@ class AppBuilder(builder.AppBuilderInterface):
             title=settings.APP_TITLE,
             description=settings.APP_DESCRIPTION,
         )
+        self.load_application_model()
         self.register_routes()
         return self._app

@@ -1,10 +1,9 @@
 from typing import Any
 
 import torch
+from interfaces import model
 from torch import Tensor
 from transformers import AutoModelForCausalLM, AutoTokenizer
-
-from interfaces import model
 from utils import model as model_deco
 
 MODEL_NAME = "deepparag/Aeona"
@@ -67,7 +66,7 @@ class DaveModel(model.DaveModelInterface):
 
             response: str = "{}".format(
                 self._tokenizer.decode(
-                    chat_history_ids[:, dave_input_ids.shape[-1]:][  # noqa: E203,E501
+                    chat_history_ids[:, dave_input_ids.shape[-1] :][  # noqa: E203,E501
                         0
                     ],  # type: ignore
                     skip_special_tokens=True,
