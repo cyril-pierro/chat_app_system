@@ -11,6 +11,9 @@ from ..utils.run import async_return
 
 CUSTOMER_MODULE_LOC = "websocket.controller.consumer.ChatConsumer"
 
+test_message = "hello there"
+patch_get_request_path = "websocket.controller.consumer.requests.get"
+
 
 @pytest.mark.asyncio
 async def test_websocket_connect(websocket_instance):
@@ -38,14 +41,15 @@ async def test_websocket_connection_message(websocket_instance):
             _, _ = await websocket.connect()
             response = await websocket.receive_json_from()
             assert response.get("type") == "start"
-            assert response.get("message") == "You are now connected"
+            assert response.get("messages") == "You are now connected"
 
 
 @pytest.mark.asyncio
-async def test_websocket_send_and_recieve(websocket_instance):
+@pytest.mark.django_db
+async def test_websocket_send_new_message(websocket_instance):
     websocket = await websocket_instance
 
-    with patch("websocket.controller.consumer.requests.get") as mock_request:
+    with patch(patch_get_request_path) as mock_request:
         mock_response = Mock()
         mock_request.return_value = mock_response
         mock_response.json.return_value = {"message": "test_user"}
@@ -55,23 +59,63 @@ async def test_websocket_send_and_recieve(websocket_instance):
             # skip connection message
             _ = await websocket.receive_json_from()
             await websocket.send_json_to(
-                {"message": "hello there", "user": "test_user"}
+                {
+                    "messages": test_message,
+                    "from_author": "test_user_sender",
+                    "to_author": "test_user_receiver",
+                    "command": "new_message",
+                }
             )
             response = await websocket.receive_json_from()
-            assert response == {
-                "type": "chat_message",
-                "message": "hello there",
-                "user": "test_user",
-            }
+            assert response.get("type") == "chat_message"
+            assert response.get("issuer") == "test_user_sender"
+            assert len(response.get("message")) == 1
+            assert response.get("message")[0].get("messages") == test_message
+            assert response.get("message")[0].get("from_author") == "test_user_sender"
+            assert response.get("command") == "new_message"
 
             await websocket.disconnect()
 
 
 @pytest.mark.asyncio
-async def test_websocket_support_route(websocket_support_instance):
-    websocket = await websocket_support_instance
+@pytest.mark.django_db
+async def test_websocket_send_fetch_message(websocket_instance):
+    websocket = await websocket_instance
 
-    with patch("websocket.controller.consumer.requests.get") as mock_request:
+    with patch(patch_get_request_path) as mock_request:
+        mock_response = Mock()
+        mock_request.return_value = mock_response
+        mock_response.json.return_value = {"message": "test_user"}
+        mock_response.status_code = 200
+        with patch(f"{CUSTOMER_MODULE_LOC}.get_room_name", return_value="ghana"):
+            _, _ = await websocket.connect()
+            # skip connection message
+            _ = await websocket.receive_json_from()
+            await websocket.send_json_to(
+                {
+                    "from_author": "test_user_sender",
+                    "to_author": "test_user_receiver",
+                    "command": "fetch_messages",
+                }
+            )
+            response = await websocket.receive_json_from()
+            assert response.get("type") == "chat_message"
+            assert response.get("issuer") == "test_user_sender"
+            assert len(response.get("message")) == 1
+            assert response.get("message")[0].get("messages") == test_message
+            assert response.get("message")[0].get("from_author") == "test_user_sender"
+            assert response.get("message")[0].get("to_author") == "test_user_receiver"
+            assert response.get("command") == "fetch_messages"
+
+            await websocket.disconnect()
+
+
+@pytest.mark.asyncio
+@pytest.mark.django_db
+async def test_websocket_support_route(websocket_instance):
+    websocket = await websocket_instance
+
+    with patch(patch_get_request_path) as mock_request:
         mock_response = Mock()
         mock_request.return_value = mock_response
         mock_response.json.return_value = {"message": "test_user"}
@@ -85,14 +129,25 @@ async def test_websocket_support_route(websocket_support_instance):
                 mock_response = Mock()
                 m_post.return_value = mock_response
                 mock_response.status_code = 200
-                mock_response.json.return_value = {"answer": "Hey"}
-                await websocket.send_json_to({"message": "hello", "user": "test_user"})
+                mock_response.json.return_value = {"answer": "Hey, what's up"}
+                await websocket.send_json_to(
+                    {
+                        "from_author": "test_user_sender",
+                        "to_author": "DaveAI",
+                        "messages": "Hey",
+                        "command": "new_message",
+                    }
+                )
                 response = await websocket.receive_json_from()
-                assert response == {
-                    "type": "chat_bot_message",
-                    "message": "Hey",
-                    "user": "Dave",
-                }
+                assert response.get("type") == "chat_message"
+                assert response.get("issuer") == "test_user_sender"
+                assert len(response.get("message")) == 1
+                assert response.get("message")[0].get("messages") == "Hey"
+                assert (
+                    response.get("message")[0].get("from_author") == "test_user_sender"
+                )
+                assert response.get("message")[0].get("to_author") == "DaveAI"
+                assert response.get("command") == "new_message"
 
                 await websocket.disconnect()
 
