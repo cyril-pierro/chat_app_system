@@ -24,7 +24,7 @@ import { createWebSocket } from "../utils/websocket";
 export default function Chat() {
   /** Define all states in the Chat Page */
   const navigate = useNavigate();
-  const [username, setUsername] = useState("kofi");
+  const [username, setUsername] = useState("");
   const [chatWith, setChatWith] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -58,22 +58,22 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    //   async function fetchData() {
-    //     const response = await getUsername();
-    //     if (response !== null) {
-    //       setUsername(response);
-    //     } else if (response === undefined) {
-    //       window.location.reload();
-    //     } else {
-    //       navigate("/login");
-    //     }
-    //   }
-    //   fetchData();
+    async function fetchData() {
+    const response = await getUsername();
+         if (response !== null) {
+           setUsername(response);
+         } else if (response === undefined) {
+           window.location.reload();
+         } else {
+           navigate("/login");
+    }
+       }
+       fetchData();
   }, [navigate]);
 
   const handleLogOut = async (e) => {
     e.preventDefault();
-    // await logOut();
+    await logOut();
     handleClose();
     setValue(true);
     navigate("/login");
