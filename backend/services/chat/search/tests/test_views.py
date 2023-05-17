@@ -16,3 +16,14 @@ def test_search_view():
         response = client.get(reverse("search", args=("fiopapa",)))
         assert response.json() == [{"USERNAME": "fiopapa"}]
         assert response.status_code == 200
+
+
+@pytest.mark.search
+def test_all_users_view():
+    with patch("search.views.es") as mock_elastic:
+        mock_elastic.search.return_value = {
+            "hits": {"hits": [{"_source": {"USERNAME": "fiopapa"}}]}
+        }
+        response = client.get(reverse("users"))
+        assert response.json() == [{"USERNAME": "fiopapa"}]
+        assert response.status_code == 200
