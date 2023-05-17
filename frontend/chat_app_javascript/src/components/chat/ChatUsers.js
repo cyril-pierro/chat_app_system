@@ -19,53 +19,10 @@ export default function ChatUsers({
   classes,
   setChatWith,
   websocket,
+  users,
 }) {
   const [search, setSearch] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const daveAi = [
-    {
-      USERNAME: "DaveAI",
-      STAR: false,
-      IS_ACTIVE: true,
-    },
-  ];
-
-  // const [users, setUsers] = useState([]);
-  const [users, setUsers] = useState([
-    ...daveAi,
-    {
-      USERNAME: "david",
-      STAR: true,
-      // PROFILE_PIC: "https://material-ui.com/static/images/avatar/2.jpg",
-      IS_ACTIVE: true,
-    },
-    {
-      USERNAME: "ama",
-      STAR: false,
-      // PROFILE_PIC: "https://material-ui.com/static/images/avatar/3.jpg",
-      IS_ACTIVE: false,
-    },
-    {
-      USERNAME: "Remy Sharp",
-      STAR: true,
-      // PROFILE_PIC: "https://material-ui.com/static/images/avatar/4.jpg",
-      IS_ACTIVE: true,
-    },
-    {
-      USERNAME: "Alice",
-      STAR: false,
-      // PROFILE_PIC: "https://material-ui.com/static/images/avatar/5.jpg",
-      IS_ACTIVE: false,
-    },
-    {
-      USERNAME: "Cindy Baker",
-      STAR: true,
-      // PROFILE_PIC: "https://material-ui.com/static/images/avatar/6.jpg",
-      IS_ACTIVE: true,
-    },
-  ]);
-
-  const [errorMsg, setErrorMsg] = useState("");
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -79,14 +36,10 @@ export default function ChatUsers({
     setChatWith(users[index].USERNAME);
   };
   const handleSearch = async (event) => {
-    try {
-      setSearch(event.target.value);
-      if (search.length > 1) {
-        // const searchUsers = await SearchUser(search);
-        // setUsers([...searchUsers]);
-      }
-    } catch (e) {
-      setErrorMsg(e);
+    setSearch(event.target.value);
+    if (search.length > 1) {
+      const searchUsers = await SearchUser(search);
+      // setUsers([...searchUsers]);
     }
   };
 

@@ -2,7 +2,12 @@ import React, { useEffect, useState, useRef } from "react";
 import ChatArea from "../components/chat/ChatArea";
 import ChatUsers from "../components/chat/ChatUsers";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { logOut, getUsername } from "../utils/operations";
+import {
+  logOut,
+  getUsername,
+  SearchUser,
+  getAllUsers,
+} from "../utils/operations";
 
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
@@ -26,12 +31,46 @@ export default function Chat() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [chatWith, setChatWith] = useState("");
+  const users = useRef([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const classes = useStyles();
   const { setValue, value } = useOutletContext();
   const websocket = useRef(null);
 
+  // test sample of users
+  // {
+  //   USERNAME: "david",
+  //   STAR: true,
+  //   // PROFILE_PIC: "https://material-ui.com/static/images/avatar/2.jpg",
+  //   IS_ACTIVE: true,
+  // },
+  // {
+  //   USERNAME: "ama",
+  //   STAR: false,
+  //   // PROFILE_PIC: "https://material-ui.com/static/images/avatar/3.jpg",
+  //   IS_ACTIVE: false,
+  // },
+  // {
+  //   USERNAME: "Remy Sharp",
+  //   STAR: true,
+  //   // PROFILE_PIC: "https://material-ui.com/static/images/avatar/4.jpg",
+  //   IS_ACTIVE: true,
+  // },
+  // {
+  //   USERNAME: "Alice",
+  //   STAR: false,
+  //   // PROFILE_PIC: "https://material-ui.com/static/images/avatar/5.jpg",
+  //   IS_ACTIVE: false,
+  // },
+  // {
+  //   USERNAME: "Cindy Baker",
+  //   STAR: true,
+  //   // PROFILE_PIC: "https://material-ui.com/static/images/avatar/6.jpg",
+  //   IS_ACTIVE: true,
+  // },
+
+  // Call startup functions
   useEffect(() => {
     websocket.current = createWebSocket("ghana");
     websocket.current.onopen = () => {
@@ -39,10 +78,28 @@ export default function Chat() {
     };
     const currentWebSocket = websocket.current;
 
+    async function fetchData() {
+      const response_users = await getAllUsers();
+      if (response_users !== null) {
+        users.current = response_users;
+        console.log("Response", response_users);
+      }
+
+      const response = await getUsername();
+      if (response !== null) {
+        setUsername(response);
+      } else if (response === undefined) {
+        window.location.reload();
+      } else {
+        navigate("/login");
+      }
+    }
+    fetchData();
+
     return () => {
       currentWebSocket.close();
     };
-  }, [websocket]);
+  }, [users, navigate, websocket]);
 
   /** Define all handlers for operations here */
   const handleClose = () => {
@@ -57,19 +114,14 @@ export default function Chat() {
     setValue((prev) => !prev);
   };
 
-  useEffect(() => {
-    async function fetchData() {
-    const response = await getUsername();
-         if (response !== null) {
-           setUsername(response);
-         } else if (response === undefined) {
-           window.location.reload();
-         } else {
-           navigate("/login");
+  const handleFocus = () => {
+    // reestablish the connection when it's down
+    if (websocket.current?.readyState === WebSocket.CLOSED) {
+      websocket.current.onopen = () => {
+        console.log("connected");
+      };
     }
-       }
-       fetchData();
-  }, [navigate]);
+  };
 
   const handleLogOut = async (e) => {
     e.preventDefault();
@@ -189,13 +241,18 @@ export default function Chat() {
           component={Paper}
           className={classes.chatSection}
           bottom={0}
+          onFocus={handleFocus}
         >
-          <ChatUsers
-            username={username}
-            classes={classes}
-            setChatWith={setChatWith}
-            websocket={websocket}
-          />
+          {users.current.length > 0 ? (
+            <ChatUsers
+              username={username}
+              classes={classes}
+              setChatWith={setChatWith}
+              websocket={websocket}
+              users={users.current}
+            />
+          ) : null}
+
           {chatWith.length > 0 && chatWith !== username && chatWith !== null ? (
             <ChatArea
               classes={classes}

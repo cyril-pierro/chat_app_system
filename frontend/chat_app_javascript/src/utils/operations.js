@@ -9,6 +9,7 @@ import {
   ACCESS_TOKEN,
   REFRESH_TOKEN,
   SEARCH_USER_ROUTE,
+  GET_ALL_USERS,
 } from "../constants";
 import AppSettings from "../config";
 
@@ -121,6 +122,17 @@ export async function logOut() {
 export async function SearchUser(username) {
   return await chat_request
     .get(SEARCH_USER_ROUTE + username)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error?.response?.data;
+    });
+}
+
+export async function getAllUsers() {
+  return await chat_request
+    .get(GET_ALL_USERS)
     .then((response) => {
       return response.data;
     })

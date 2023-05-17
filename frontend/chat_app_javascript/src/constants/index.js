@@ -7,3 +7,4 @@ export const REFRESH_ROUTE = API_PREFIX + "refresh";
 export const ACCESS_TOKEN = "chat_app_access_token";
 export const REFRESH_TOKEN = "chat_app_refresh_token";
 export const SEARCH_USER_ROUTE = "/search/user/";
+export const GET_ALL_USERS = "/search/users/";

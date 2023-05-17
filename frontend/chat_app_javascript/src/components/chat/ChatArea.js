@@ -68,10 +68,6 @@ export default function ChatArea({ classes, username, chatWith, websocket }) {
     inputMessage.firstElementChild.control.value = "";
   };
 
-  const handleFocus = (e) => {
-    console.log("on focus");
-    console.log(e);
-  };
   const messageBody = () => {
     return (
       <Grid item xs={9}>
