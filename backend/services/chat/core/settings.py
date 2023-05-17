@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "search",
     "rest_framework",
     "corsheaders",
+    "django_elasticsearch_dsl",
 ]
 
 ASGI_APPLICATION = "core.asgi.application"
@@ -88,6 +89,12 @@ MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusAfterMiddleware",
     "corsheaders.middleware.CorsMiddleware",
 ]
+
+ELASTICSEARCH_DSL = {
+    "default": {
+        "hosts": f"{ELASTICSEARCH_HOST}:{ELASTICSEARCH_PORT}",
+    },
+}
 
 CORS_ORIGIN_ALLOW_ALL = True
 
