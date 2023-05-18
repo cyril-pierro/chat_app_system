@@ -11,10 +11,10 @@ create stream create_account_stream with (kafka_topic='created_account', value_f
 create stream user_to_account as select * from created_users_stream users inner join create_account_stream account within 7 days grace period 30 minutes on users.user_id = account.user_id;
 
 create stream elastic_users_stream_with_key with (kafka_topic='elasticsearch_users_with_key', value_format='json') as
-select users_user_id as user_id, users_username as username, users_star as star, account_profile_pic as profile_pic, account_is_active as is_active from user_to_account where users_is_email_verified = true;
+select users_user_id as user_id, CAST(users_user_id as varchar) as user_id_in_string,users_username as username, users_star as star, account_profile_pic as profile_pic, account_is_active as is_active from user_to_account where users_is_email_verified = true;
 
-create stream elasticsearch_users_stream_keyless(username varchar, star boolean, profile_pic varchar, is_active boolean) with (kafka_topic='elasticsearch_users_with_key', value_format='json');
 
-create stream elasticsearch_users_stream with (kafka_topic='elasticsearch_users', value_format='json') as select username, star, profile_pic, is_active from elasticsearch_users_stream_keyless;
+
+create stream elasticsearch_users_stream with (kafka_topic='elasticsearch_users', value_format='json') as select * from elastic_users_stream_with_key partition by user_id_in_string;
 
 select * from elasticsearch_users_stream emit changes;
