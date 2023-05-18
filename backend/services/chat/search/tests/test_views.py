@@ -21,6 +21,7 @@ def test_search_view():
 
 @pytest.mark.search
 def test_all_users_view():
+    """Test All users View"""
     with patch("search.views.es") as mock_elastic:
         mock_elastic.search.return_value = {
             "hits": {"hits": [{"_source": {"USERNAME": "fiopapa"}}]}
