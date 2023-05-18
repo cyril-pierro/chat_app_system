@@ -131,7 +131,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: backend/services/${{ matrix.services }}/.
+
           file: backend/services/${{ matrix.services }}/Dockerfile
 
           push: true
