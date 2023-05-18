@@ -1,0 +1,54 @@
+name: Chat Application Workflow
+run-name: ${{ github.actor }} is running Workflow
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  run_linters:
+    name: Run Linters on Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Lint Code
+        uses: github/super-linter/slim@v4
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_PYTHON_PYLINT: false
+          VALIDATE_PYTHON_ISORT: false
+          VALIDATE_MARKDOWN: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          KUBERNETES_KUBEVAL_OPTIONS: "--ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master"
+
+  get_services_modified:
+    if: github.event.pull_request.merged == true || ${{ github.event_name }} == 'push'
+    name: Get all Chat App Services Modified
+    needs: run_linters
+    runs-on: ubuntu-latest
+    outputs:
+      services: ${{ steps.services.outputs.changes }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - uses: dorny/paths-filter@v2
+        id: services
+        with:
+          filters: |
+            account:
+              - 'backend/services/account/**'
+            chat:
+              - 'backend/services/chat/**'
+            notification:
+              - 'backend/services/notification/**'
+            support:
+              - 'backend/services/support/**'
