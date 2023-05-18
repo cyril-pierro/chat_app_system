@@ -53,3 +53,46 @@ jobs:
               - 'backend/services/notification/**'
             support:
               - 'backend/services/support/**'
+
+  test_services_modified:
+    name: Test all Chat App Services Modified
+    needs:
+      - run_linters
+      - get_services_modified
+
+    if: ${{ needs.get_services_modified.outputs.services != '[]' && needs.get_services_modified.outputs.services != '' }}
+    runs-on: ubuntu-latest
+    strategy:
+      # Don't fail all jobs if a single job fails
+      fail-fast: false
+
+      matrix:
+        services: ${{ fromJson(needs.get_services_modified.outputs.services) }}
+
+    defaults:
+      run:
+        working-directory: backend/services/${{ matrix.services }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9.*"
+
+      - name: Install Project dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          pip install pytest
+          poetry config virtualenvs.create false
+          poetry install --no-interaction --no-ansi
+
+      - name: Run tests for Services
+        env:
+          VERSION: test
+          RELEASEID: test
+        run: |
+          pytest
