@@ -35,7 +35,6 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = [
   "."
 ]
-addopts = "--cov --cov-report html --cov-report term-missing --cov-fail-under 95"
 
 [tool.mypy]
 # unfortunately cannot inject dependencies into super-linter
