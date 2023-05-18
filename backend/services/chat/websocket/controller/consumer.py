@@ -255,6 +255,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         text_data_json = json.loads(text_data)
         self._user = text_data_json.get("from_author")
+        to_author = text_data_json.get("to_author")
+
         try:
             await self.command_centre(text_data_json)
             thread_for_bot = Thread(
@@ -262,7 +264,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 args=(text_data_json.get("from_author"), text_data_json["messages"]),
             )
 
-            thread_for_bot.start()
+            if to_author == "DaveAI":
+                thread_for_bot.start()
 
         except Exception as e:
             print(e)
