@@ -1,8 +1,6 @@
 # Support Service
 
-This is an AI model that interracts with users
-
-**MEET DAVE**
+This is an AI model that interracts with users Aka **DAVEAI**
 
 ## Example
 
