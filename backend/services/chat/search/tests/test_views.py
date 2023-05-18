@@ -9,6 +9,7 @@ client = Client()
 
 @pytest.mark.search
 def test_search_view():
+    """Test Search View"""
     with patch("search.views.es") as mock_elastic:
         mock_elastic.search.return_value = {
             "hits": {"hits": [{"_source": {"USERNAME": "fiopapa"}}]}
