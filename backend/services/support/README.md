@@ -1,6 +1,6 @@
 # Support Service
 
-This is an AI model that interracts with users Alias **DaveAI**
+This is an AI model that interracts with users alias **DaveAI**
 
 ## Example
 
