@@ -101,7 +101,6 @@ jobs:
       GRAFANA_ADMIN_USER: ""
       GRAFANA_ADMIN_PASSWORD: ""
       GRAFANA_SERVER_URL: ""
-      DJANGO_SETTINGS_MODULE: core.settings
     strategy:
       # Don't fail all jobs if a single job fails
       fail-fast: false
