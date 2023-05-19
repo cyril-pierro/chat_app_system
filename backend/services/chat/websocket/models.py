@@ -9,7 +9,7 @@ class Message(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) -> None:
         return self.message
 
     @staticmethod
@@ -18,7 +18,7 @@ class Message(models.Model):
     ) -> list[Any]:
         messages: list[Any] = Message.objects.raw(
             """SELECT * FROM websocket_message
-                        WHERE from_author= %s and to_author=%s or from_author=%s and to_author=%s # type :ignore
+                        WHERE from_author= %s and to_author=%s or from_author=%s and to_author=%s  # noqa
                         ORDER BY created_at ASC LIMIT 30""",
             [from_author, to_author, to_author, from_author],
         )
