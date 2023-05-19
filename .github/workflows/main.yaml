@@ -173,3 +173,5 @@ jobs:
           file: backend/services/${{ matrix.services }}/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/chat_app/${{ matrix.services }}:${{ github.sha }}
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.DOCKER_HUB_TOKEN }}
