@@ -139,7 +139,7 @@ jobs:
 
       - name: Run tests for Services
         run: |
-          pytest
+          pytest -vv
 
   deploy_services_modified:
     name: Deploy Services Modified
