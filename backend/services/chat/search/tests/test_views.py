@@ -8,7 +8,7 @@ client = Client()
 
 
 @pytest.mark.search
-def test_search_view():
+def test_search_view() -> None:
     """Test Search View"""
     with patch("search.views.es") as mock_elastic:
         mock_elastic.search.return_value = {
@@ -20,7 +20,7 @@ def test_search_view():
 
 
 @pytest.mark.search
-def test_all_users_view():
+def test_all_users_view() -> None:
     """Test All users View"""
     with patch("search.views.es") as mock_elastic:
         mock_elastic.search.return_value = {
