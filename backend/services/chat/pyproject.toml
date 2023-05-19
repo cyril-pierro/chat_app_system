@@ -26,6 +26,9 @@ djangorestframework = "^3.14.0"
 markdown = "^3.4.3"
 django-cors-headers = "^3.14.0"
 django-elasticsearch-dsl = "^7.3"
+opentelemetry-sdk = "^1.17.0"
+opentelemetry-instrumentation-django = "^0.38b0"
+opentelemetry-exporter-jaeger = "^1.17.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -36,8 +39,6 @@ pytest-django = "^4.5.2"
 pytest-asyncio = "^0.21.0"
 pytest-cov = "^4.0.0"
 pytest = "^7.3.1"
-sphinx = "^6.2.1"
-sphinx-rtd-theme = "^1.2.0"
 
 [build-system]
 requires = ["poetry-core"]

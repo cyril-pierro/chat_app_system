@@ -27,6 +27,7 @@ starlette-exporter = "^0.15.1"
 psycopg2 = "^2.9.6"
 werkzeug = "^2.3.2"
 python-dotenv = "^1.0.0"
+pydantic = {extras = ["email"], version = "^1.10.7"}
 
 
 [tool.poetry.group.dev.dependencies]
