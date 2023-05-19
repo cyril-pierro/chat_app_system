@@ -1,6 +1,6 @@
 # Notification Service
 
-This service is responsible sending messages and also serve as a connector to other services.
+This service is responsible sending messages and also serve as a connector to other services with the chat.
 
 
 ## It uses the following to start it up
@@ -21,4 +21,3 @@ This service is responsible sending messages and also serve as a connector to ot
 ```bash
    $ poetry run notification run
 ```
-
