@@ -42,19 +42,23 @@ This part of the project consists of the following:
      $ curl --location 'http://localhost:9095/connectors/' --header 'Content-Type: application/json'
              --data '{
          "name": "elasticsearch-sink",
-          "config": {
+         "config": {
              "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
              "tasks.max": "1",
              "topics": "elasticsearch_users",
-             "key.ignore": "true",
              "connection.url": "http://elasticsearch:9200",
              "type.name": "_doc",
+             "key.converter": "org.apache.kafka.connect.storage.StringConverter",
              "value.converter": "org.apache.kafka.connect.json.JsonConverter",
              "value.converter.schemas.enable": "false",
-        		"schema.ignore": "true"
-
-        }
-      }'
+             "schema.ignore": "true",
+             "key.ignore": "false",
+             "write.method": "UPSERT",
+             "transforms": "Cast",
+             "transforms.Cast.type": "org.apache.kafka.connect.transforms.Cast$Key",
+             "transforms.Cast.spec": "string"
+         }
+     }'
 
 
      ```
