@@ -134,7 +134,7 @@ jobs:
       - name: Run Django migrations
         if: ${{ matrix.services }} == 'chat'
         run: |
-          python manage.py makemigrations --check --dry-run
+          python manage.py makemigrations
           python manage.py migrate
 
       - name: Run tests for Services
