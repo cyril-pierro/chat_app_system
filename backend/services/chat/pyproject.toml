@@ -73,4 +73,4 @@ strict_equality = true
 ignore_errors = true
 
 [tool.black]
-experimental-string-processing = true
+preview = true
