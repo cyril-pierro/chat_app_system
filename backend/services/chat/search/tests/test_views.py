@@ -14,7 +14,7 @@ def test_search_view() -> None:
         mock_elastic.search.return_value = {
             "hits": {"hits": [{"_source": {"USERNAME": "fiopapa"}}]}
         }
-        response = client.get(reverse("search_user", args=("fiopapa",)))
+        response = client.get(reverse("user", args=("fiopapa",)))
         assert response.json() == [{"USERNAME": "fiopapa"}]
         assert response.status_code == 200
 
@@ -26,6 +26,6 @@ def test_all_users_view() -> None:
         mock_elastic.search.return_value = {
             "hits": {"hits": [{"_source": {"USERNAME": "fiopapa"}}]}
         }
-        response = client.get(reverse("get_all_users"))
+        response = client.get(reverse("users"))
         assert response.json() == [{"USERNAME": "fiopapa"}]
         assert response.status_code == 200
