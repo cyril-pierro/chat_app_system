@@ -3,7 +3,7 @@
 This service is responsible sending messages and also serve as a connector to other services with the chat.
 
 
-## It uses the following to start it up
+## It uses the following commands
 
 - Bash script (.sh file)
 - Command line option with poetry
