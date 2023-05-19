@@ -91,6 +91,12 @@ jobs:
           poetry config virtualenvs.create false
           poetry install --no-interaction --no-ansi
 
+      - name: Run Django migrations
+        if: ${{ matrix.services }} == 'chat'
+        run: |
+          python manage.py makemigrations --check --dry-run
+          python manage.py migrate
+
       - name: Run tests for Services
         env:
           # You can use github secrets for values
@@ -131,7 +137,7 @@ jobs:
           GRAFANA_ADMIN_USER: ""
           GRAFANA_ADMIN_PASSWORD: ""
           GRAFANA_SERVER_URL: ""
-
+          DJANGO_SETTINGS_MODULE: core.settings
         run: |
           pytest
 
