@@ -139,7 +139,7 @@ jobs:
 
       - name: Run tests for Services
         run: |
-          pytest -vv
+          pytest -vv --ds=core.settings --nomigrations
 
   deploy_services_modified:
     name: Deploy Services Modified
