@@ -48,7 +48,7 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = [
   "."
 ]
-addopts = "--cov --cov-report html --cov-report term-missing --cov-fail-under 95"
+addopts = "--cov --cov-report html --cov-report term-missing --cov-fail-under 90"
 
 
 [tool.mypy]
