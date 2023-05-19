@@ -17,9 +17,7 @@ class TestViews(APITestCase):
             mock_elastic.search.return_value = {
                 "hits": {"hits": [{"_source": {"USERNAME": "fiopapa"}}]}
             }
-            response = self.client.get(
-                reverse("search_users:search", args=("fiopapa",))
-            )
+            response = self.client.get(reverse("search", args=("fiopapa",)))
             assert response.json() == [{"USERNAME": "fiopapa"}]
             assert response.status_code == 200
 
@@ -30,6 +28,6 @@ class TestViews(APITestCase):
             mock_elastic.search.return_value = {
                 "hits": {"hits": [{"_source": {"USERNAME": "fiopapa"}}]}
             }
-            response = self.client.get(reverse("search_users:users"))
+            response = self.client.get(reverse("users"))
             assert response.json() == [{"USERNAME": "fiopapa"}]
             assert response.status_code == 200
