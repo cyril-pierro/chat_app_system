@@ -15,7 +15,7 @@ This part of the project consists of the following:
 
 
 
-![WORKFLOW](https://github.com/cyril-pierro/chat_app_system/blob/main/backend/resources/backend_workflow.jpg)
+![WORKFLOW](https://github.com/cyril-pierro/chat_app_system/blob/main/resources/backend_workflow.jpg)
 
 
 
@@ -23,7 +23,7 @@ This part of the project consists of the following:
 
 ## **TECH STACKS**
 
-![Tech Stack](https://github.com/cyril-pierro/chat_app_system/blob/main/backend/resources/resources.jpg)
+![Tech Stack](https://github.com/cyril-pierro/chat_app_system/blob/main/resources/resources.jpg)
 
 
 ## **Guidelines on how to start the application**
