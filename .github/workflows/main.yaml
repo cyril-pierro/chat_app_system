@@ -62,6 +62,46 @@ jobs:
 
     if: ${{ needs.get_services_modified.outputs.services != '[]' && needs.get_services_modified.outputs.services != '' }}
     runs-on: ubuntu-latest
+    env:
+      # You can use github secrets for values
+      TESTING: True
+      TEST_DATABASE_URL: "sqlite:///./testing.db"
+      DATABASE_URL: "sqlite:///./production.db"
+      LOG_FILENAME: "chat_application.log"
+      authjwt_secret_key: "test_secret_key"
+      authjwt_access_token_expires: 3
+      authjwt_refresh_token_expires: 5
+      authjwt_access_cookie_key: "test_cookie_access_key"
+      authjwt_refresh_cookie_key: "test_cookie_refresh_refresh"
+      authjwt_access_csrf_cookie_key: "test_access_csrf_cookie_key"
+      authjwt_refresh_csrf_cookie_key: "test_refresh_csrf_cookie_key"
+      REDIS_HOST: "localhost"
+      REDIS_PORT: 6379
+      BROKER_URL: "0.0.0.0:9092"
+      ADMIN_USERNAME: "test_admin"
+      ADMIN_PASSWORD: "test_admin_password"
+      ADMIN_EMAIL: "test_admin@test_email.com"
+      AUTH_MANAGEMENT_URL: "account_service_url"
+      SUPPORT_URL: "support_service_url"
+      ELASTICSEARCH_HOST: "localhost"
+      ELASTICSEARCH_PORT: 9000
+      JAEGER_HOST: "localhost"
+      JAEGER_PORT: 6831
+      SECRET_KEY: "django_secret_key"
+      CELERY_BROKER_URL: ""
+      CELERY_RESULT_URL: ""
+      STMP_SERVER: ""
+      EMAIL_PORT: ""
+      EMAIL_SENDER: ""
+      EMAIL_PASSWORD: ""
+      ACCOUNT_SERVICE_URL: ""
+      MYSQL_USERNAME: ""
+      MYSQL_PASSWORD: ""
+      MYSQL_HOST: ""
+      GRAFANA_ADMIN_USER: ""
+      GRAFANA_ADMIN_PASSWORD: ""
+      GRAFANA_SERVER_URL: ""
+      DJANGO_SETTINGS_MODULE: core.settings
     strategy:
       # Don't fail all jobs if a single job fails
       fail-fast: false
@@ -98,46 +138,6 @@ jobs:
           python manage.py migrate
 
       - name: Run tests for Services
-        env:
-          # You can use github secrets for values
-          TESTING: True
-          TEST_DATABASE_URL: "sqlite:///./testing.db"
-          DATABASE_URL: "sqlite:///./production.db"
-          LOG_FILENAME: "chat_application.log"
-          authjwt_secret_key: "test_secret_key"
-          authjwt_access_token_expires: 3
-          authjwt_refresh_token_expires: 5
-          authjwt_access_cookie_key: "test_cookie_access_key"
-          authjwt_refresh_cookie_key: "test_cookie_refresh_refresh"
-          authjwt_access_csrf_cookie_key: "test_access_csrf_cookie_key"
-          authjwt_refresh_csrf_cookie_key: "test_refresh_csrf_cookie_key"
-          REDIS_HOST: "localhost"
-          REDIS_PORT: 6379
-          BROKER_URL: "0.0.0.0:9092"
-          ADMIN_USERNAME: "test_admin"
-          ADMIN_PASSWORD: "test_admin_password"
-          ADMIN_EMAIL: "test_admin@test_email.com"
-          AUTH_MANAGEMENT_URL: "account_service_url"
-          SUPPORT_URL: "support_service_url"
-          ELASTICSEARCH_HOST: "localhost"
-          ELASTICSEARCH_PORT: 9000
-          JAEGER_HOST: "localhost"
-          JAEGER_PORT: 6831
-          SECRET_KEY: "django_secret_key"
-          CELERY_BROKER_URL: ""
-          CELERY_RESULT_URL: ""
-          STMP_SERVER: ""
-          EMAIL_PORT: ""
-          EMAIL_SENDER: ""
-          EMAIL_PASSWORD: ""
-          ACCOUNT_SERVICE_URL: ""
-          MYSQL_USERNAME: ""
-          MYSQL_PASSWORD: ""
-          MYSQL_HOST: ""
-          GRAFANA_ADMIN_USER: ""
-          GRAFANA_ADMIN_PASSWORD: ""
-          GRAFANA_SERVER_URL: ""
-          DJANGO_SETTINGS_MODULE: core.settings
         run: |
           pytest
 
