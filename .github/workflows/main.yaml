@@ -91,8 +91,45 @@ jobs:
 
       - name: Run tests for Services
         env:
-          VERSION: test
-          RELEASEID: test
+          # You can use github secrets for values
+          TESTING: True
+          TEST_DATABASE_URL: "sqlite:///./testing.db"
+          DATABASE_URL: "sqlite:///./production.db"
+          LOG_FILENAME: "chat_application.log"
+          authjwt_secret_key: "test_secret_key"
+          authjwt_access_token_expires: 3
+          authjwt_refresh_token_expires: 5
+          authjwt_access_cookie_key: "test_cookie_access_key"
+          authjwt_refresh_cookie_key: "test_cookie_refresh_refresh"
+          authjwt_access_csrf_cookie_key: "test_access_csrf_cookie_key"
+          authjwt_refresh_csrf_cookie_key: "test_refresh_csrf_cookie_key"
+          REDIS_HOST: "0.0.0.0"
+          REDIS_PORT: 8080
+          BROKER_URL: "0.0.0.0:9092"
+          ADMIN_USERNAME: "test_admin"
+          ADMIN_PASSWORD: "test_admin_password"
+          ADMIN_EMAIL: "test_admin@test_email.com"
+          AUTH_MANAGEMENT_URL: "account_service_url"
+          SUPPORT_URL: "support_service_url"
+          ELASTICSEARCH_HOST: ""
+          ELASTICSEARCH_PORT: 9000
+          JAEGER_HOST: ""
+          JAEGER_PORT: 6831
+          SECRET_KEY: "django_secret_key"
+          CELERY_BROKER_URL: ""
+          CELERY_RESULT_URL: ""
+          STMP_SERVER: ""
+          EMAIL_PORT: ""
+          EMAIL_SENDER: ""
+          EMAIL_PASSWORD: ""
+          ACCOUNT_SERVICE_URL: ""
+          MYSQL_USERNAME: ""
+          MYSQL_PASSWORD: ""
+          MYSQL_HOST: ""
+          GRAFANA_ADMIN_USER: ""
+          GRAFANA_ADMIN_PASSWORD: ""
+          GRAFANA_SERVER_URL: ""
+
         run: |
           pytest
 
