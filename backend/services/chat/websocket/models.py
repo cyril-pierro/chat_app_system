@@ -10,7 +10,8 @@ class Message(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return self.message
+        message: str = self.message
+        return message
 
     @staticmethod
     def last_20_messages_from_author_to_author(
