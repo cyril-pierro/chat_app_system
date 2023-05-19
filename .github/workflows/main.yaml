@@ -34,6 +34,7 @@ jobs:
     name: Run Linters on Code
     runs-on: ubuntu-latest
     needs: get_services_modified
+    if: ${{ needs.get_services_modified.outputs.services != '[]' && needs.get_services_modified.outputs.services != '' }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
