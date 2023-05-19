@@ -81,8 +81,8 @@ jobs:
       ADMIN_USERNAME: "test_admin"
       ADMIN_PASSWORD: "test_admin_password"
       ADMIN_EMAIL: "test_admin@test_email.com"
-      AUTH_MANAGEMENT_URL: "account_service_url"
-      SUPPORT_URL: "support_service_url"
+      AUTH_MANAGEMENT_URL: "http://account_service_url"
+      SUPPORT_URL: "http://support_service_url"
       ELASTICSEARCH_HOST: "localhost"
       ELASTICSEARCH_PORT: 9000
       JAEGER_HOST: "localhost"
