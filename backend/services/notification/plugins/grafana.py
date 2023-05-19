@@ -11,7 +11,6 @@ Attributes:
 import base64
 
 import requests
-
 from config import settings
 from interfaces import notification
 from tools import log
@@ -76,6 +75,3 @@ class Grafana(notification.NotificationController):
             grafana_logger.error(f"{response.text}")
         except Exception as e:
             grafana_logger.exception(e.args[0])
-
-
-# 7ea135d0278ac9680ace653090f7d03a30070a053ddbd8
