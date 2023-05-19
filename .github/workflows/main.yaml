@@ -86,6 +86,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install poetry
+          apt install redis -y
           pip install pytest; pip install pytest-cov
           poetry config virtualenvs.create false
           poetry install --no-interaction --no-ansi
@@ -104,17 +105,17 @@ jobs:
           authjwt_refresh_cookie_key: "test_cookie_refresh_refresh"
           authjwt_access_csrf_cookie_key: "test_access_csrf_cookie_key"
           authjwt_refresh_csrf_cookie_key: "test_refresh_csrf_cookie_key"
-          REDIS_HOST: "0.0.0.0"
-          REDIS_PORT: 8080
+          REDIS_HOST: "localhost"
+          REDIS_PORT: 6379
           BROKER_URL: "0.0.0.0:9092"
           ADMIN_USERNAME: "test_admin"
           ADMIN_PASSWORD: "test_admin_password"
           ADMIN_EMAIL: "test_admin@test_email.com"
           AUTH_MANAGEMENT_URL: "account_service_url"
           SUPPORT_URL: "support_service_url"
-          ELASTICSEARCH_HOST: ""
+          ELASTICSEARCH_HOST: "localhost"
           ELASTICSEARCH_PORT: 9000
-          JAEGER_HOST: ""
+          JAEGER_HOST: "localhost"
           JAEGER_PORT: 6831
           SECRET_KEY: "django_secret_key"
           CELERY_BROKER_URL: ""
