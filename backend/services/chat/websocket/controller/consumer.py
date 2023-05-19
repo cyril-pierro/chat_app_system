@@ -41,7 +41,9 @@ jaeger_exporter = JaegerExporter(
 trace.set_tracer_provider(TracerProvider(resource=resource))
 tracer = trace.get_tracer_provider().get_tracer(__name__)
 
-trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(jaeger_exporter))
+trace.get_tracer_provider().add_span_processor(
+    BatchSpanProcessor(jaeger_exporter)
+)  # noqa
 
 
 chat_consumer_logger = Log(__file__)
@@ -261,7 +263,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.command_centre(text_data_json)
             thread_for_bot = Thread(
                 target=self.between_callback_for_bot,
-                args=(text_data_json.get("from_author"), text_data_json["messages"]),
+                args=(
+                    text_data_json.get("from_author"),  # noqa
+                    text_data_json["messages"],
+                ),
             )
 
             if to_author == "DaveAI":
