@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.db import models
 
 
@@ -11,7 +13,9 @@ class Message(models.Model):
         return self.message
 
     @staticmethod
-    def last_20_messages_from_author_to_author(from_author, to_author):
+    def last_20_messages_from_author_to_author(
+        from_author: str, to_author: str
+    ) -> list[Any]:
         messages = Message.objects.raw(
             """SELECT * FROM websocket_message
                                         WHERE from_author= %s and to_author=%s or from_author=%s and to_author=%s order by created_at asc limit 30""",
