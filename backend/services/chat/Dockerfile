@@ -14,4 +14,4 @@ COPY ./ ./
 
 # Expose port and run application
 EXPOSE 8083
-ENTRYPOINT ["/bin/sh", "-c", "python manage.py migrate && gunicorn --env DJANGO_SETTINGS_MODULE=core.settings core.wsgi -b :8083"]
+ENTRYPOINT ["/bin/sh", "-c", "python manage.py migrate && python manage.py search_index --create && gunicorn --env DJANGO_SETTINGS_MODULE=core.settings core.wsgi -b :8083"]
