@@ -1,10 +1,9 @@
 from unittest.mock import patch
 
 import pytest
-from django.test import Client
+from rest_framework.test import APIClient
 
-client = Client()
-HEADER = "application/json"
+client = APIClient()
 
 
 @pytest.mark.search
@@ -14,8 +13,7 @@ def test_search_view() -> None:
         mock_elastic.search.return_value = {
             "hits": {"hits": [{"_source": {"USERNAME": "fiopapa"}}]}
         }
-        response = client.get("/search/user/fiopapa", content_type=HEADER)
-        print(HEADER)
+        response = client.get("/search/user/fiopapa")
         assert response.json() == [{"USERNAME": "fiopapa"}]
         assert response.status_code == 200
 
@@ -27,7 +25,6 @@ def test_all_users_view() -> None:
         mock_elastic.search.return_value = {
             "hits": {"hits": [{"_source": {"USERNAME": "fiopapa"}}]}
         }
-        response = client.get("/search/users/", content_type=HEADER)
-        print(HEADER)
+        response = client.get("/search/users/")
         assert response.json() == [{"USERNAME": "fiopapa"}]
         assert response.status_code == 200
