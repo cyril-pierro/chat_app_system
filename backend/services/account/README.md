@@ -2,7 +2,7 @@
 
 This service is responsible for the authentication and authorization of users of the chat application. It also supports user operations and account operations
 
-## It uses the following commands;
+## It uses the following commands
 
 - Bash script (.sh file)
 - Command line option with poetry
