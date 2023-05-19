@@ -7,7 +7,7 @@ This service is responsible for the authentication and authorization of users of
 - Bash script (.sh file)
 - Command line option with poetry
 
-**Note** Always migrate your database before running the Account application
+**Note** Always migrate your database before running the Account service
 
 ## For Bash
 
