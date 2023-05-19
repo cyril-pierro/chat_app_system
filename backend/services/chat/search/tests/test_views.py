@@ -4,6 +4,7 @@ import pytest
 from django.test import Client
 
 client = Client()
+HEADER = {"Content-type": "application/json"}
 
 
 @pytest.mark.search
@@ -13,7 +14,7 @@ def test_search_view() -> None:
         mock_elastic.search.return_value = {
             "hits": {"hits": [{"_source": {"USERNAME": "fiopapa"}}]}
         }
-        response = client.get("/search/user/fiopapa")
+        response = client.get("/search/user/fiopapa", headers=HEADER)
         assert response.json() == [{"USERNAME": "fiopapa"}]
         assert response.status_code == 200
 
@@ -25,6 +26,6 @@ def test_all_users_view() -> None:
         mock_elastic.search.return_value = {
             "hits": {"hits": [{"_source": {"USERNAME": "fiopapa"}}]}
         }
-        response = client.get("/search/users/")
+        response = client.get("/search/users/", headers=HEADER)
         assert response.json() == [{"USERNAME": "fiopapa"}]
         assert response.status_code == 200
