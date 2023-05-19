@@ -3,13 +3,13 @@
 
 Attributes:
     cli (function)
-        This command utility function is 
+        This command utility function is
         used to run custom console scripts
         for chat service
-        
+
 Examples:
     Here is an example on how to run the script
-    
+
     $ python scripts/runner.py run
         >>> # Runs the application server
 
@@ -55,7 +55,10 @@ def cli(port: Any, host: Any, command: Any) -> None:
             "gunicorn --env DJANGO_SETTINGS_MODULE=core.settings core.wsgi -b"
             f" {host}:{port}"
         ),
-        "migrate": "python manage.py migrate --pythonpath .",
+        "migrate": (
+            "python manage.py migrate --pythonpath . && python manage.py search_index"
+            " --create"
+        ),
     }
 
     action_to_run = command_action.get(command)
