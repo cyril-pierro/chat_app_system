@@ -74,7 +74,7 @@ class NewUsersConsumer(consumer.NotificationConsumer):
             await consumer.stop()
 
     @staticmethod
-    def start_process():
+    def start_process() -> None:
         """Start the consumer process"""
         email_controller = mail.Email()
         asyncio.run(NewUsersConsumer.consume(consume_with=email_controller))
