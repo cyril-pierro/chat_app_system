@@ -1,6 +1,7 @@
 # Chat Service
 
-This service is responsible connecting users through websockets. Mainly provides features for chatting
+This service is responsible connecting users through websockets.
+Mainly provides features for chatting
 and searching users in the system
 
 ## It uses the following to start it up
