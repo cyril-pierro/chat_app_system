@@ -37,7 +37,7 @@ class NewUsersConsumer(consumer.NotificationConsumer):
     """
 
     @staticmethod
-    async def consume(consume_with: nt.NotificationController = None):
+    async def consume(consume_with: nt.NotificationController = None)->None:
         """Listen to a particular topic
 
         Args:
