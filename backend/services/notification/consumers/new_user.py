@@ -1,8 +1,8 @@
 """New users Consumers in the system
 
-This module demonstrates how to consume or
-subscribe to a particular topic and the operation
-performed on that topic, mainly new users topic
+This module demonstrates how to subscribe to
+a particular topic and the operation performed
+on that topic, mainly new users topic
 
 Attributes:
     app_settings (object): Application Settings
