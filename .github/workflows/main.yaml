@@ -132,14 +132,14 @@ jobs:
           poetry install --no-interaction --no-ansi
 
       - name: Run Django migrations
-        if: ${{ matrix.services }} == 'chat'
+        if: ${{ matrix.services == 'chat' }}
         run: |
           python manage.py makemigrations
           python manage.py migrate
 
       - name: Run tests for Services
         run: |
-          pytest -vv --ds=core.settings --nomigrations
+          pytest -vv
 
   deploy_services_modified:
     name: Deploy Services Modified
