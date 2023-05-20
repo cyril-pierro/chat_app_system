@@ -58,9 +58,9 @@ class NewUsersConsumer(consumer.NotificationConsumer):
                 username = payload.get("username")
                 user_email = payload.get("email")
                 token = payload.get("token")
-                subject = "Welcome to Remcash App Integration"
+                subject = "Welcome to Chat App"
                 message = (
-                    "Welcome to our Remcash Platform,"
+                    "Welcome to our Chat App Platform,"
                     f"{str(username).capitalize()},"
                     "Click on the link to verify your email \n"
                     f"{CLICK_URL}?token={token}"
