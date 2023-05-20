@@ -15,7 +15,6 @@ import asyncio
 import json
 
 from aiokafka import AIOKafkaConsumer
-
 from config import settings
 from interfaces import consumer
 from interfaces import notification as nt
@@ -37,7 +36,7 @@ class NewUsersConsumer(consumer.NotificationConsumer):
     """
 
     @staticmethod
-    async def consume(consume_with: nt.NotificationController = None)->None:
+    async def consume(consume_with: nt.NotificationController = None) -> None:
         """Listen to a particular topic
 
         Args:
@@ -61,8 +60,8 @@ class NewUsersConsumer(consumer.NotificationConsumer):
                 subject = "Welcome to Chat App"
                 message = (
                     "Welcome to our Chat App Platform,"
-                    f"{str(username).capitalize()},"
-                    "Click on the link to verify your email \n"
+                    f"Hello, {str(username).capitalize()}, \n\n"
+                    "Click on this link to verify your email \n"
                     f"{CLICK_URL}?token={token}"
                 )
                 if consume_with is not None:
