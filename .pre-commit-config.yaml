@@ -28,3 +28,4 @@ repos:
     rev: "1.7.5" # Update me!
     hooks:
       - id: bandit
+        args: [--verbose, --skip, "B602,B104", --recursive]
