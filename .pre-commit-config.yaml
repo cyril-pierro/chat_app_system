@@ -29,3 +29,8 @@ repos:
     hooks:
       - id: bandit
         args: [--verbose, --skip, "B602,B104", --recursive]
+
+  - repo: https://github.com/sonatype-nexus-community/jake
+    rev: "v3.0.1"
+    hooks:
+      - id: scan
