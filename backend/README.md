@@ -32,7 +32,7 @@ This part of the project consists of the following:
 
 - Navigate to the dependencies directory or folder and run the following command
   ```bash
-     $ docker compose up
+     $ docker compose -f docker-compose-dependency.yaml up
   ```
 
 - Navigate to the streams directory and perform the following
