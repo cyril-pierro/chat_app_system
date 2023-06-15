@@ -176,6 +176,7 @@ jobs:
       - name: Run Scan
         run: |
           ./syft packages . -o spdx-json > bom.json
+          cat bom.json
           trivy sbom --exit-code 1 -s CRITICAL bom.json
 
   # deploy_services_modified:
