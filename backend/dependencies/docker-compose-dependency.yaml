@@ -45,6 +45,9 @@ services:
     restart: always
     ports:
       - "6381:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "chat_app_database" ]
+
     volumes:
       - "$PWD/data/postgres/postgres.conf:/etc/postgresql/postgres.conf:rw"
       - "$PWD/data/postgres/hba_file.conf:/etc/postgresql/hba_file.conf:rw"
@@ -73,7 +76,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD:-admin}
       - MYSQL_DATABASE=chat_app_database
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
 
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -121,7 +124,7 @@ services:
 
   apicurio:
     container_name: chat_app_apicurio
-    image:  apicurio/apicurio-registry-kafkasql:2.3.1.Final
+    image: apicurio/apicurio-registry-kafkasql:2.3.1.Final
     ports:
 
       - 8080:8080
@@ -153,8 +156,6 @@ services:
       - CONNECT_SCHEMA_NAME_ADJUSTMENT_MODE=avro
       - ENABLE_APICURIO_CONVERTERS=true
 
-
-
     depends_on:
       - kafka
       - postgres
@@ -180,6 +181,7 @@ services:
 
 volumes:
   grafana-data:
+
 
 networks:
   default:
