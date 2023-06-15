@@ -17,12 +17,5 @@ spec:
       containers:
         - name: chat-app-support
           image: cyrildavif/chat_app_support:bc6cf01
-          resources:
-            limits:
-              memory: 200Mi
-            requests:
-              cpu: 100m
-              memory: 200Mi
-
           ports:
             - containerPort: 8084
