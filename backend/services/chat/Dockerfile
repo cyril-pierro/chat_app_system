@@ -14,4 +14,4 @@ COPY ./ ./
 
 # Expose port and run application
 EXPOSE 8083
-ENTRYPOINT ["/bin/sh", "-c", "bash script/startup.sh"]
+ENTRYPOINT ["/bin/sh", "-c", "bash scripts/startup.sh"]
