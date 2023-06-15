@@ -177,6 +177,7 @@ jobs:
     needs:
       - get_services_modified
       - test_services_modified
+      - vulnerabilty_scan_project
 
     if: ${{ needs.get_services_modified.outputs.services != '[]' && needs.get_services_modified.outputs.services != '' }}
     runs-on: ubuntu-latest
