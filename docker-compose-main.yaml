@@ -137,9 +137,6 @@ services:
 
     networks:
       - default
-    depends_on:
-      db:
-        condition: service_healthy
 
   traefik:
     image: traefik:latest
