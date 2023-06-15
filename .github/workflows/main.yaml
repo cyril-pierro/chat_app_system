@@ -161,6 +161,9 @@ jobs:
       run:
         working-directory: backend/services/${{ matrix.services }}
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
       - name: Install scanning tools
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b .
