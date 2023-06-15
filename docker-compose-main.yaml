@@ -122,7 +122,7 @@ services:
     container_name: chat-app-support
     restart: always
     ports:
-      - "8000:8000"
+      - 8084:8084
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.support.rule=Host(`support.${PRIMARY_DOMAIN}`)"
