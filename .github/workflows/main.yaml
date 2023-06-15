@@ -179,48 +179,48 @@ jobs:
           cat bom.json
           trivy sbom --exit-code 1 -s CRITICAL bom.json
 
-  # deploy_services_modified:
-  #   name: Deploy Services Modified
-  #   needs:
-  #     - get_services_modified
-  #     - test_services_modified
-  #     - vulnerabilty_scan_project
+  deploy_services_modified:
+    name: Deploy Services Modified
+    needs:
+      - get_services_modified
+      - test_services_modified
+      - vulnerabilty_scan_project
 
-  #   if: ${{ needs.get_services_modified.outputs.services != '[]' && needs.get_services_modified.outputs.services != '' }}
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     # Don't fail all jobs if a single job fails
-  #     fail-fast: false
-  #     matrix:
-  #       services: ${{ fromJson(needs.get_services_modified.outputs.services) }}
+    if: ${{ needs.get_services_modified.outputs.services != '[]' && needs.get_services_modified.outputs.services != '' }}
+    runs-on: ubuntu-latest
+    strategy:
+      # Don't fail all jobs if a single job fails
+      fail-fast: false
+      matrix:
+        services: ${{ fromJson(needs.get_services_modified.outputs.services) }}
 
-  #   defaults:
-  #     run:
-  #       working-directory: backend/services/${{ matrix.services }}
+    defaults:
+      run:
+        working-directory: backend/services/${{ matrix.services }}
 
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-  #     - name: Docker Image tag
-  #       id: tag
-  #       run: echo "image_tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Docker Image tag
+        id: tag
+        run: echo "image_tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-  #     - name: Login to Docker Hub
-  #       uses: docker/login-action@v2
-  #       with:
-  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #         password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-  #     - name: Set up Docker Buildx
-  #       uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-  #     - name: Build and push
-  #       uses: docker/build-push-action@v4
-  #       with:
-  #         context: backend/services/${{ matrix.services }}/.
-  #         file: backend/services/${{ matrix.services }}/Dockerfile
-  #         push: true
-  #         tags: ${{ secrets.DOCKERHUB_USERNAME }}/chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
-  #         secrets: |
-  #           GIT_AUTH_TOKEN=${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: backend/services/${{ matrix.services }}/.
+          file: backend/services/${{ matrix.services }}/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.DOCKER_HUB_TOKEN }}
