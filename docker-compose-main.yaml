@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  chat_app_account:
+  account:
     image: cyrildavif/chat_app_account:8962333
     container_name: chat-app-account
     networks:
@@ -44,7 +44,7 @@ services:
       - redis
       - kafka
 
-  chat_app_chat:
+  chat:
     image: cyrildavif/chat_app_chat:ddcbe38
     container_name: chat-app-chat
     networks:
@@ -80,9 +80,9 @@ services:
       - elasticsearch
       - jaeger
       - redis
-      - chat_app_support
+      - support
 
-  chat_app_notification:
+  notification:
     image: cyrildavif/chat_app_notification:22a9377
     container_name: chat-app-notification
     networks:
@@ -117,7 +117,7 @@ services:
       - redis
       - grafana
 
-  chat_app_support:
+  support:
     image: cyrildavif/chat_app_support:bc6cf01
     container_name: chat-app-support
     restart: always
