@@ -26,6 +26,12 @@ This part of the project consists of the following:
 ![Tech Stack](https://github.com/cyril-pierro/chat_app_system/blob/main/resources/resources.jpg)
 
 
+
+## ADMIN PANEL SAMPLE
+
+![ADMIN PANEL](https://github.com/cyril-pierro/chat_app_system/blob/main/resources/admin_panel.png)
+
+
 ## **Guidelines on how to start the application**
 
 **NOTE** This project assumes you have docker already installed and have 12G storage space
