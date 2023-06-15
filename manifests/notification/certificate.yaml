@@ -1,0 +1,11 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: chat-app-notification
+  namespace: apps
+spec:
+  secretName: chat-app-notification-certificate
+  issuerRef:
+    name: letsencrypt-prod
+  dnsNames:
+    - notification.hivechat.com

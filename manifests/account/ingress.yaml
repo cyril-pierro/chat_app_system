@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: chat-app-account
+spec:
+  tls:
+    - hosts:
+        - account.hivechat.com
+      secretName: chat-app-account-certificate
+  rules:
+    - host: account.hivechat.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: chat-app-account-svc
+                port:
+                  number: 8081
