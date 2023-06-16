@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: chat-app-notification
 spec:
-  progressDeadlineSeconds: 2400
   selector:
     matchLabels:
       app: chat-app-notification
@@ -18,7 +17,7 @@ spec:
     spec:
       containers:
         - name: chat-app-notification
-          image: cyrildavif/chat_app_notification:22a9377
+          image: cyrildavif/chat_app_notification:8a9033f
           env:
             - name: notification-settings
               valueFrom:

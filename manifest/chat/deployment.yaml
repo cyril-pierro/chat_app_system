@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: chat-app-chat
 spec:
-  progressDeadlineSeconds: 2400
   selector:
     matchLabels:
       app: chat-app-chat
@@ -16,7 +15,7 @@ spec:
     spec:
       containers:
         - name: chat-app-chat
-          image: cyrildavif/chat_app_chat:ddcbe38
+          image: cyrildavif/chat_app_chat:f507881
           env:
             - name: chat-settings
               valueFrom:

@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: chat-app-account
 spec:
-  progressDeadlineSeconds: 2400
   selector:
     matchLabels:
       app: chat-app-account
