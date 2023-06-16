@@ -10,8 +10,8 @@ services:
       - 8081:8081
     environment:
       - TESTING=${TESTING}
-      - TEST_DATABASE_URL="sqlite:///./testing.db"
-      - DATABASE_URL="postgresql://admin:admin@postgres:5432/chat_app_database"
+      - TEST_DATABASE_URL=sqlite:///./testing.db
+      - DATABASE_URL=postgresql://admin:admin@postgres:5432/chat_app_database
       - LOG_FILENAME=${LOG_FILENAME}
       - authjwt_secret_key=${authjwt_secret_key}
       - authjwt_access_token_expires=20
@@ -48,7 +48,7 @@ services:
         condition: service_started
 
   chat:
-    image: cyrildavif/chat_app_chat:ddcbe38
+    image: cyrildavif/chat_app_chat:f507881
     container_name: chat-app-chat
     networks:
       - default
@@ -57,8 +57,8 @@ services:
     environment:
       - TESTING=${TESTING}
       - LOGFILE_NAME=${LOG_FILENAME}
-      - AUTH_MANAGEMENT_URL="http://account:8081"
-      - SUPPORT_URL="http://support:8084"
+      - AUTH_MANAGEMENT_URL=http://account:8081
+      - SUPPORT_URL=http://support:8084
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - ELASTICSEARCH_HOST=elasticsearch
@@ -81,7 +81,7 @@ services:
 
     depends_on:
       elasticsearch:
-        condition: service_started
+        condition: service_healthy
       jaeger:
         condition: service_started
       redis:
@@ -90,7 +90,7 @@ services:
         condition: service_started
 
   notification:
-    image: cyrildavif/chat_app_notification:22a9377
+    image: cyrildavif/chat_app_notification:eb461c2
     container_name: chat-app-notification
     networks:
       - default
