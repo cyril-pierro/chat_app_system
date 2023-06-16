@@ -90,7 +90,7 @@ services:
         condition: service_started
 
   notification:
-    image: cyrildavif/chat_app_notification:eb461c2
+    image: cyrildavif/chat_app_notification:8a9033f
     container_name: chat-app-notification
     networks:
       - default
