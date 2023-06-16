@@ -77,14 +77,14 @@ services:
     ports:
       - 6382:3306
     volumes:
-      - ${PWD}/data/my_cnf.cnf:/etc/mysql/conf.d/mysql.cnf:rw
+      - "$PWD/data/my_cnf.cnf:/etc/mysql/conf.d/mysql.cnf:rw"
     environment:
       - MYSQL_USER=${DATABASE_USER:-admin}
       - MYSQL_PASSWORD=${DATABASE_PASSWORD:-admin}
       - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD:-admin}
       - MYSQL_DATABASE=chat_app_database
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "mysqldb" ]
 
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -167,10 +167,14 @@ services:
       - ENABLE_APICURIO_CONVERTERS=true
 
     depends_on:
-      - kafka
-      - postgres
-      - apicurio
-      - elasticsearch
+      kafka:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      apicurio:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
 
   ksql_server:
     container_name: chat_app_ksql_server

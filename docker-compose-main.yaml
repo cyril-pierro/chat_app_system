@@ -82,6 +82,8 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
+      account:
+        condition: service_started
       jaeger:
         condition: service_started
       redis:
@@ -123,6 +125,8 @@ services:
       # - "traefik.http.middlewares.notification.redirectscheme.port=443"
 
     depends_on:
+      account:
+        condition: service_started
       kafka:
         condition: service_started
       redis:
