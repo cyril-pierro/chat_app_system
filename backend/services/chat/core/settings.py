@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+from typing import Union
 
 from dotenv import load_dotenv
 
@@ -27,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("TESTING")
+DEBUG: Union[str, None] = os.environ.get("TESTING")
 
 ALLOWED_HOSTS = ["*"]
 
@@ -59,7 +60,7 @@ INSTALLED_APPS = [
 ASGI_APPLICATION = "core.asgi.application"
 
 
-if DEBUG.lower() == "true":
+if DEBUG and DEBUG.lower() == "true":
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels.layers.InMemoryChannelLayer",
@@ -72,7 +73,9 @@ else:
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
-                "hosts": [f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"]
+                "hosts": [
+                    f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
+                ]  # noqa
             },
         }
     }
@@ -120,9 +123,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 DATABASES = {
     "default": {
         # "ENGINE": "django.db.backends.sqlite3",
@@ -131,10 +131,6 @@ DATABASES = {
         "TEST": {"NAME": BASE_DIR / "test_db.sqlite3"},
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -154,9 +150,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -166,13 +159,8 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = "static/"
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -185,10 +173,7 @@ JAEGER_PORT = os.environ.get("JAEGER_PORT")
 
 LOGGING = {
     "version": 1,
-    # The version number of our log
     "disable_existing_loggers": False,
-    # django uses some of its own loggers for internal operations. In case you want to disable them just replace the False above with true.
-    # A handler for WARNING. It is basically writing the WARNING messages into a file called WARNING.log
     "handlers": {
         "file": {
             "level": "WARNING",
@@ -196,11 +181,8 @@ LOGGING = {
             "filename": BASE_DIR / LOGFILE_NAME,
         },
     },
-    # A logger for WARNING which has a handler called 'file'. A logger can have multiple handler
     "loggers": {
-        # notice the blank '', Usually you would put built in loggers like django or root here based on your needs
         "": {
-            # notice how file variable is called in handler which has been defined above
             "handlers": ["file"],
             "level": "WARNING",
             "propagate": True,
