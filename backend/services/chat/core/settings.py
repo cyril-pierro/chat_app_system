@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 from dotenv import load_dotenv
 
@@ -74,12 +74,12 @@ else:
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
                 "hosts": [
-                    f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
-                ]  # noqa
+                    (f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}")  # noqa
+                ]
             },
         }
     }
-    LOGFILE_NAME = os.environ.get("LOGFILE_NAME")
+    LOGFILE_NAME: Optional[str] = os.environ.get("LOGFILE_NAME")
 
 MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
