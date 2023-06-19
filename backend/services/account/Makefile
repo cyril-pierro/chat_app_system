@@ -8,10 +8,10 @@ build_packages:
 
 build_docker_application:
 	docker build --no-cache -t chat_application_account .
-	docker run -it -p 8000:8000 chat_application_account
+	docker run -it -p 8081:8081 chat_application_account
 
 run_application_locally:
-	uvicorn main:app --reload --port 8000
+	uvicorn main:app --reload --port 8081
 
 
 .PHONY: all
