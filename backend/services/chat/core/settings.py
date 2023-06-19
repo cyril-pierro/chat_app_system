@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional
 
 from dotenv import load_dotenv
 
@@ -28,10 +28,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG: Union[str, None] = os.environ.get("TESTING")
+DEBUG: Optional[str] = str(os.environ.get("TESTING")).lower()
 
 ALLOWED_HOSTS = ["*"]
-
+LOGFILE_NAME: Optional[str] = ""
 REDIS_HOST = os.environ.get("REDIS_HOST")
 REDIS_PORT = os.environ.get("REDIS_PORT")
 REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
@@ -59,8 +59,7 @@ INSTALLED_APPS = [
 
 ASGI_APPLICATION = "core.asgi.application"
 
-
-if DEBUG and DEBUG.lower() == "true":
+if DEBUG == "true":
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels.layers.InMemoryChannelLayer",
@@ -69,17 +68,14 @@ if DEBUG and DEBUG.lower() == "true":
     LOGFILE_NAME = "test.log"
 
 else:
+    REDIS_URL = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"  # noqa
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {
-                "hosts": [
-                    (f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}")  # noqa
-                ]
-            },
+            "CONFIG": {"hosts": [(REDIS_URL)]},
         }
     }
-    LOGFILE_NAME: Optional[str] = os.environ.get("LOGFILE_NAME")
+    LOGFILE_NAME = os.environ.get("LOGFILE_NAME")
 
 MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
