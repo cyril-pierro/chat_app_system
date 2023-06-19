@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   account:
-    image: cyrildavif/chat_app_account:8962333
+    image: cyrildavif/chat_app_account:2bd5693
     container_name: chat-app-account
     networks:
       - default
@@ -22,6 +22,7 @@ services:
       - authjwt_refresh_csrf_cookie_key='yourrefreshcsrfcookiekey'
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - REDIS_PASSWORD=""
       - BROKER_URL=kafka:9092
       - ADMIN_USERNAME="admin"
       - ADMIN_PASSWORD="admin"
