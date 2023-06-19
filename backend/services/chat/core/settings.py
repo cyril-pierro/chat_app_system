@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional, Union
 
 from dotenv import load_dotenv
 
@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG: Optional[str] = str(os.environ.get("TESTING")).lower()
 
 ALLOWED_HOSTS = ["*"]
-LOGFILE_NAME: Optional[str] = ""
+LOGFILE_NAME: Union[Optional[str], str] = ""
 REDIS_HOST = os.environ.get("REDIS_HOST")
 REDIS_PORT = os.environ.get("REDIS_PORT")
 REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
@@ -68,8 +68,8 @@ if DEBUG == "true":
     LOGFILE_NAME = "test.log"
 
 else:
-    REDIS_URL = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"  # noqa
-    CHANNEL_LAYERS = {
+    REDIS_URL: str = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"  # noqa
+    CHANNEL_LAYERS: dict[str, Any] = {
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {"hosts": [(REDIS_URL)]},
