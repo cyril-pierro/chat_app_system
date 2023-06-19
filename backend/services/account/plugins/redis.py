@@ -8,7 +8,6 @@ Attributes:
 """
 
 import redis
-
 from config import setting
 
 settings = setting.AppSettings()
@@ -29,6 +28,7 @@ class DenyListStorage:
         self._redis_server = redis.Redis(
             host=settings.REDIS_HOST,
             port=settings.REDIS_PORT,
+            password=settings.REDIS_PASSWORD,
             db=0,
             decode_responses=True,
         )

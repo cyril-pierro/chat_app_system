@@ -23,6 +23,7 @@ class AppSettings(pydantic.BaseSettings):
             authjwt_denylist_token_checks (set): Tokens to check for deny list
             REDIS_HOST (str): The host name of the redis
             REDIS_PORT (int): The port number of the redis
+            REDIS_PASSWORD(str): The password for redis
             APP_TITLE (str): Application title
             APP_DESCRIPTION (str): Application description
             BROKER_URL (str): Kafka broker to connect to
@@ -48,6 +49,7 @@ class AppSettings(pydantic.BaseSettings):
     authjwt_denylist_token_checks: set = {"access", "refresh"}
     REDIS_HOST: str
     REDIS_PORT: int
+    REDIS_PASSWORD: str
     APP_TITLE: str = "Chat Application"
     APP_DESCRIPTION: str = "Management service for chat application"
     BROKER_URL: str
