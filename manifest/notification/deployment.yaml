@@ -18,12 +18,10 @@ spec:
       containers:
         - name: chat-app-notification
           image: cyrildavif/chat_app_notification:8a9033f
-          env:
-            - name: notification-settings
-              valueFrom:
-                configMapKeyRef:
-                  name: app-configuration
-                  key: notification.config
+          envFrom:
+            - configMapRef:
+                name: notification-config
+
           resources:
             limits:
               memory: 200Mi

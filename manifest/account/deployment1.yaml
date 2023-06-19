@@ -19,7 +19,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: account-config
-
           resources:
             limits:
               memory: 200Mi
@@ -29,10 +28,3 @@ spec:
 
           ports:
             - containerPort: 8081
-
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 8081
-            initialDelaySeconds: 5
-            periodSeconds: 5
