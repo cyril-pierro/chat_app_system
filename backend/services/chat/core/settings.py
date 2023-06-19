@@ -31,11 +31,11 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG: Optional[str] = str(os.environ.get("TESTING")).lower()
 
 ALLOWED_HOSTS = ["*"]
-LOGFILE_NAME: Union[Optional[str], str] = ""
+LOGFILE_NAME: str = ""
 REDIS_HOST = os.environ.get("REDIS_HOST")
 REDIS_PORT = os.environ.get("REDIS_PORT")
 REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
-
+CHANNEL_LAYERS: dict[str, Any]
 ELASTICSEARCH_HOST = os.environ.get("ELASTICSEARCH_HOST")
 ELASTICSEARCH_PORT = os.environ.get("ELASTICSEARCH_PORT")
 
@@ -69,7 +69,7 @@ if DEBUG == "true":
 
 else:
     REDIS_URL: str = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"  # noqa
-    CHANNEL_LAYERS: dict[str, Any] = {
+    CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {"hosts": [(REDIS_URL)]},
@@ -167,7 +167,7 @@ JAEGER_HOST = os.environ.get("JAEGER_HOST")
 JAEGER_PORT = os.environ.get("JAEGER_PORT")
 
 
-LOGGING = {
+LOGGING: dict[str, Any] = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
