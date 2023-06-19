@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ["*"]
 
 REDIS_HOST = os.environ.get("REDIS_HOST")
 REDIS_PORT = os.environ.get("REDIS_PORT")
+REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
 
 ELASTICSEARCH_HOST = os.environ.get("ELASTICSEARCH_HOST")
 ELASTICSEARCH_PORT = os.environ.get("ELASTICSEARCH_PORT")
@@ -58,7 +59,7 @@ INSTALLED_APPS = [
 ASGI_APPLICATION = "core.asgi.application"
 
 
-if DEBUG:
+if DEBUG.lower() == "true":
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels.layers.InMemoryChannelLayer",
@@ -71,7 +72,7 @@ else:
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
-                "hosts": [(REDIS_HOST, REDIS_PORT)],
+                "hosts": [f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"]
             },
         }
     }
