@@ -174,7 +174,7 @@ LOGGING: dict[str, Any] = {
         "file": {
             "level": "WARNING",
             "class": "logging.FileHandler",
-            "filename": BASE_DIR / LOGFILE_NAME,
+            "filename": str(BASE_DIR) / LOGFILE_NAME,
         },
     },
     "loggers": {
