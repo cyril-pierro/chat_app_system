@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: chat-app-account
+  namespace: apps
 spec:
   selector:
     matchLabels:
@@ -32,7 +33,7 @@ spec:
 
           livenessProbe:
             httpGet:
-              path: /
+              path: /docs
               port: 8081
             initialDelaySeconds: 5
             periodSeconds: 5
