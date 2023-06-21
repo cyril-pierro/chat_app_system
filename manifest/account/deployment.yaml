@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: chat-app-account
-          image: cyrildavif/chat_app_account:2bd5693
+          image: cyrildavif/chat_app_account:c018843
           envFrom:
             - configMapRef:
                 name: account-config
