@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from tools import log
 
 
-def sql_error_handler(func: object) -> Callable[..., object]:
+def sql_error_handler(func: Callable[..., object]) -> Callable[..., object]:
     """
     Check the error of an sql operation
     Args:
@@ -26,16 +26,18 @@ def sql_error_handler(func: object) -> Callable[..., object]:
     """
 
     @wraps(func)
-    def inner(*args, **kwargs) -> Callable[..., object]:
+    def inner(*args, **kwargs) -> Any:
         try:
             return func(*args, **kwargs)  # type: ignore
         except IntegrityError as e:
-            error_logger = log.Log(f"{func.__module__}.{func.__name__}")
+            error_logger = log.Log(
+                f"{func.__module__}.{func.__name__}")  # type: ignore
             error_logger.exception(e.args[0])
             raise exceptions.UserOperationsError(msg="Username already exist")
 
         except Exception as e:
-            error_logger = log.Log(f"{func.__module__}.{func.__name__}")
+            error_logger = log.Log(
+                f"{func.__module__}.{func.__name__}")  # type: ignore
             error_logger.exception(e.args[0])
             raise exceptions.ServerError(msg="Error processing request")
 
