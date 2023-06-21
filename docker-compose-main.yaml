@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   account:
-    image: cyrildavif/chat_app_account:2bd5693
+    image: cyrildavif/chat_app_account:c018843
     container_name: chat-app-account
     networks:
       - default
