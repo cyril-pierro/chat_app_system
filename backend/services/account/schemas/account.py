@@ -2,7 +2,8 @@
 
 This module contains all schemas related to account
 """
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, validator
+from utils import sql
 
 
 class CreateAccount(BaseModel):
@@ -17,6 +18,8 @@ class CreateAccount(BaseModel):
     username: str
     profile_pic: str
 
+    _check_username = validator("username", allow_reuse=True)(sql.check_sql_injection)
+
     class Config:
         orm_mode = True
 
@@ -30,6 +33,8 @@ class Login(BaseModel):
 
     username: str
     password: str
+
+    _check_username = validator("username", allow_reuse=True)(sql.check_sql_injection)
 
     class Config:
         orm_mode = True

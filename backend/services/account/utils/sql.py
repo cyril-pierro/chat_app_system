@@ -3,13 +3,13 @@ Sql module to handle all sql operations
 as a decorator or function
 """
 
+import re
 from functools import wraps
 from typing import Any
 
+from error import exceptions
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-
-from error import exceptions
 from tools import log
 
 
@@ -56,3 +56,15 @@ def add_object_to_database(db: Session, item: Any) -> bool:
     db.commit()
     db.refresh(item)
     return True
+
+
+def check_sql_injection(value: str) -> str:
+    """Perform validation on Username
+
+    Verify if username is valid
+    """
+    pattern = r"^[a-z0-9\._@]+\Z"
+    reg = re.compile(pattern)
+    if not bool(reg.match(value)):
+        raise ValueError(f"Invalid username {value}")
+    return value.lower()
