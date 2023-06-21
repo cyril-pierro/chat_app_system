@@ -26,9 +26,9 @@ def sql_error_handler(func: object) -> Callable[..., object]:
     """
 
     @wraps(func)
-    def inner(*args, **kwargs) -> Any:
+    def inner(*args, **kwargs) -> Callable[..., object]:
         try:
-            return func(*args, **kwargs)
+            return func(*args, **kwargs)  # type: ignore
         except IntegrityError as e:
             error_logger = log.Log(f"{func.__module__}.{func.__name__}")
             error_logger.exception(e.args[0])
