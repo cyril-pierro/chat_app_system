@@ -5,7 +5,7 @@ as a decorator or function
 
 import re
 from functools import wraps
-from typing import Any
+from typing import Any, Callable
 
 from error import exceptions
 from sqlalchemy.exc import IntegrityError
@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from tools import log
 
 
-def sql_error_handler(func: object) -> object:
+def sql_error_handler(func: object) -> Callable[..., object]:
     """
     Check the error of an sql operation
     Args:
@@ -26,7 +26,7 @@ def sql_error_handler(func: object) -> object:
     """
 
     @wraps(func)
-    def inner(*args, **kwargs):
+    def inner(*args, **kwargs) -> Any:
         try:
             return func(*args, **kwargs)
         except IntegrityError as e:
