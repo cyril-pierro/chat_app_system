@@ -22,7 +22,7 @@ class AppExceptionHandler:
     def operations(
         request: fastapi.Request,
         exec: exceptions.UserOperationsError,  # type: ignore
-    ):
+    ) -> fastapi.responses.JSONResponse:
         """Operations exception handler
 
         This method is responsible for handling
@@ -46,7 +46,7 @@ class AppExceptionHandler:
     def server_operation(
         request: fastapi.Request,
         exec: exceptions.ServerError,  # type: ignore
-    ):
+    ) -> fastapi.responses.JSONResponse:
         """Server operation Handler
 
         This method is responsible for handling
@@ -69,7 +69,7 @@ class AppExceptionHandler:
     def authjwt_exception_handler(
         request: fastapi.Request,
         exec: exc.AuthJWTException,  # type: ignore
-    ):
+    ) -> fastapi.responses.JSONResponse:
         """Auth jwt Exceptions Handler
 
         This method is responsible for handling
@@ -87,7 +87,9 @@ class AppExceptionHandler:
         )
 
     @staticmethod
-    def validation_error_handler(request: fastapi.Request, exec: ValidationError):
+    def validation_error_handler(
+        request: fastapi.Request, exec: ValidationError
+    ) -> fastapi.responses.JSONResponse:
         """Validation Error Handler
 
         This method is a custom error handler for
