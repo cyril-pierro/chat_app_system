@@ -10,17 +10,17 @@ Attributes:
 from typing import Union
 
 import fastapi
-from fastapi import staticfiles
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi_jwt_auth import exceptions as exc_jwt
-from starlette_exporter import PrometheusMiddleware, handle_metrics
-
 from api.v1.router import account, users
 from config import setting
 from core import setup as db_setup
 from error import exceptions
+from fastapi import staticfiles
+from fastapi.exceptions import RequestValidationError, ValidationError
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi_jwt_auth import exceptions as exc_jwt
 from handlers.exceptions import AppExceptionHandler
 from interfaces import builder
+from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 settings = setting.AppSettings()
 
@@ -85,6 +85,12 @@ class AppBuilder(builder.AppBuilderInterface):
         self._app.add_exception_handler(
             exc_jwt.AuthJWTException,
             AppExceptionHandler.authjwt_exception_handler,  # type: ignore
+        )
+        self._app.add_exception_handler(
+            ValidationError, AppExceptionHandler.validation_error_handler  # type: ignore
+        )
+        self._app.add_exception_handler(
+            RequestValidationError, AppExceptionHandler.validation_error_handler  # type: ignore
         )
 
     def register_middlewares(self) -> None:

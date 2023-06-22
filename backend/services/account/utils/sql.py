@@ -66,5 +66,5 @@ def check_sql_injection(value: str) -> str:
     pattern = r"^[a-z0-9\._@]+\Z"
     reg = re.compile(pattern)
     if not bool(reg.match(value)):
-        raise ValueError(f"Invalid username {value}")
+        raise ValueError(f"Invalid format {value} used")
     return value.lower()

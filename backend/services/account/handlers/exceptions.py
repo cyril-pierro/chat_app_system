@@ -7,9 +7,9 @@ Attributes:
     logger (object): A log utility for logging
 """
 import fastapi
-from fastapi_jwt_auth import exceptions as exc
-
 from error import exceptions
+from fastapi_jwt_auth import exceptions as exc
+from pydantic import ValidationError
 from tools.log import Log
 
 logger = Log(__file__)
@@ -85,3 +85,18 @@ class AppExceptionHandler:
         return fastapi.responses.JSONResponse(
             status_code=exec.status_code, content={"error": exec.message}
         )
+
+    @staticmethod
+    def validation_error_handler(request: fastapi.Request, exec: ValidationError):
+        """Validation Error Handler
+
+        This method is a custom error handler for
+        all validation errors raised by pydantic
+        """
+        error = exec.errors()[0]
+        field = error.get("loc")[-1]
+        message = error.get("msg")
+
+        error_msg = f"Invalid {field}: {message}"
+        logger.exception(message)
+        return fastapi.responses.JSONResponse(status_code=422, content=error_msg)
