@@ -21,7 +21,7 @@ class AppExceptionHandler:
     @staticmethod
     def operations(
         request: fastapi.Request,
-        exec: exceptions.UserOperationsError,  # type: ignore
+        exec: exceptions.UserOperationsError,
     ) -> fastapi.responses.JSONResponse:
         """Operations exception handler
 
@@ -37,7 +37,6 @@ class AppExceptionHandler:
         """
         logger.error(exec.msg)
         return fastapi.responses.JSONResponse(
-            # type: ignore
             content={"error": exec.msg},
             status_code=exec.status_code,
         )
@@ -45,7 +44,7 @@ class AppExceptionHandler:
     @staticmethod
     def server_operation(
         request: fastapi.Request,
-        exec: exceptions.ServerError,  # type: ignore
+        exec: exceptions.ServerError,
     ) -> fastapi.responses.JSONResponse:
         """Server operation Handler
 
@@ -68,7 +67,7 @@ class AppExceptionHandler:
     @staticmethod
     def authjwt_exception_handler(
         request: fastapi.Request,
-        exec: exc.AuthJWTException,  # type: ignore
+        exec: exc.AuthJWTException,
     ) -> fastapi.responses.JSONResponse:
         """Auth jwt Exceptions Handler
 
@@ -92,8 +91,8 @@ class AppExceptionHandler:
     ) -> fastapi.responses.JSONResponse:
         """Validation Error Handler
 
-        This method is a custom error handler for
-        all validation errors raised by pydantic
+        This method is serves a custom error handler
+        for all validation errors raised by pydantic
         """
         error = exec.errors()[0]
         field = error.get("loc")[-1]
