@@ -1,6 +1,6 @@
 ==================================
 Configuration of App with Ansible
-===================================
+==================================
 
 _NOTE_ This configuration uses docker compose files and assumes ansible has been installed already
 
