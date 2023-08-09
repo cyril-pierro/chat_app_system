@@ -1,0 +1,12 @@
+---
+- hosts: webservers
+  become: true
+  gather_facts: true
+
+  vars:
+    home_path_dir: /home/path/for/chat_app_system/repo
+    docker_path_dir: /var/docker/compose
+
+  roles:
+    - provision
+    - docker

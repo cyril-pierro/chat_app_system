@@ -1,0 +1,29 @@
+- name: Update apt repository
+  apt:
+    state: latest
+    # upgrade: dist
+
+- name: Copy docker compose files to server
+  tags: copy
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+
+  with_items:
+    - {
+        src: "{{ home_path_dir }}/chat_app_system/docker-compose-main.yaml",
+        dest: "{{ docker_path_dir }}/docker-compose-main.yaml",
+      }
+    - {
+        src: "{{ home_path_dir }}/chat_app_system/backend/dependencies/docker-compose-dependency.yaml",
+        dest: "{{ docker_path_dir }}/docker-compose-dependency.yaml",
+      }
+
+- name: Install docker in server environment
+  command: chdir={{ docker_path_dir }}/ {{ item }}
+  with_items:
+    - curl -fsSL https://get.docker.com -o get-docker.sh
+    - sh get-docker.sh
+    - rm get-docker.sh

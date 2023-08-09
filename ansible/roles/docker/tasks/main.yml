@@ -1,0 +1,4 @@
+- name: Run docker compose files
+  command: chdir={{ docker_path_dir }}/ {{ item }}
+  with_items:
+    - docker compose -f docker-compose-main.yaml -f ./backend/dependencies/docker-compose-dependency.yaml up -d
