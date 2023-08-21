@@ -256,9 +256,9 @@ jobs:
       - name: Modify Deployment File with New Image
         run: |
           ls -la
-          imageTag=$(echo $(grep "cyrildavif/chat_app" deployment.yaml) | cut -d ":" -f 3)
+          imageTag=$(echo $(grep cyrildavif/chat_app deployment.yaml) | cut -d ":" -f 3)
           tag=$(git rev-parse --short HEAD)
-          echo "New Image Tag-> $tag
+          echo "New Image Tag-> $tag"
           echo "Old imageTag ${imageTag}"
           sed -i "s/$imageTag/$tag/" deployment.yaml
 
