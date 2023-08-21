@@ -75,26 +75,27 @@ This part of the project consists of the following:
 
      ```bash
      $  $ curl --location 'http://localhost:9095/connectors/' --header 'Content-Type: application/json' --data '{
-     	 	"name": "postgres-source-connector",
-     		"config": {
-     			"connector.class": "io.debezium.connector.postgresql.PostgresConnector",
-             	"tasks.max": "1",
-                 "database.hostname": "postgres",
-                 "database.port": "5432",
-                 "database.user": "admin",
-                 "database.password": "admin",
-                 "database.dbname": "chat_app_database",
-                 "database.server.id": "184054",
-                 "topic.prefix": "users_topic",
-                 "schema.history.internal.kafka.bootstrap.servers": "kafka:9092",
-                 "schema.history.internal.kafka.topic": "schema-changes.chat_app_database",
-     			"value.converter": "io.apicurio.registry.utils.converter.AvroConverter",
-      			"value.converter.apicurio.registry.url": "http://apicurio:8080/apis /registry/v2",
-                 "value.converter.apicurio.registry.auto-register": true,
-                 "value.converter.apicurio.registry.find-latest": true,
-                 "value.converter.apicurio.registry.as-confluent": true,
-                 "value.converter.apicurio.registry.use-id": "contentId",
-                 "value.converter.apicurio.registry.headers.enabled": false
+       "name": "postgres-source-connector",
+       "config": {
+         "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+         "tasks.max": "1",
+         "database.hostname": "postgres",
+         "database.port": "5432",
+         "database.user": "admin",
+         "database.password": "admin",
+         "database.dbname": "chat_app_database",
+         "database.server.id": "184054",
+         "topic.prefix": "users_topic",
+         "schema.history.internal.kafka.bootstrap.servers": "kafka:9092",
+         "schema.history.internal.kafka.topic": "schema-changes.chat_app_database",
+         "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+         "value.converter": "io.apicurio.registry.utils.converter.AvroConverter",
+         "value.converter.apicurio.registry.url": "http://apicurio:8080/apis/registry/v2",
+         "value.converter.apicurio.registry.auto-register": true,
+         "value.converter.apicurio.registry.find-latest": true,
+         "value.converter.apicurio.registry.as-confluent": true,
+         "value.converter.apicurio.registry.use-id": "contentId",
+         "value.converter.apicurio.registry.headers.enabled": false
        }
      }'
      ```
