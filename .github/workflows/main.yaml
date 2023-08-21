@@ -256,12 +256,11 @@ jobs:
       - name: Modify Deployment File with New Image
         run: |
           ls -la
-          deploymentLocation=deployment.yaml
-          imageTag=$(echo $(grep cyrildavif/chat_app: $deploymentLocation) | cut -d ":" -f 3)
+          imageTag=$(echo $(grep "cyrildavif/chat_app" deployment.yaml) | cut -d ":" -f 3)
           tag=$(git rev-parse --short HEAD)
-          echo $tag
-          echo "Your imageTag ${imageTag}"
-          sed -i "s/$imageTag/$tag/" $deploymentLocation
+          echo "New Image Tag-> $tag
+          echo "Old imageTag ${imageTag}"
+          sed -i "s/$imageTag/$tag/" deployment.yaml
 
       - name: Add and Commit
         uses: EndBug/add-and-commit@v9
