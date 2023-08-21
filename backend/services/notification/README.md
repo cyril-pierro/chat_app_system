@@ -1,6 +1,6 @@
 # Notification Service
 
-This service is responsible for sending messages and also serve as a connector to other services with the chat.
+This service is responsible for sending messages and also serves as a connector to other services within the chat system.
 
 
 ## It uses the following commands
