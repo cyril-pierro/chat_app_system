@@ -235,7 +235,7 @@ jobs:
     #   - vulnerabilty_scan_project
     #   - deploy_services_modified
 
-    # if: ${{ needs.get_services_modified.outputs.services != '[]' && needs.get_services_modified.outputs.services != '' }}
+    if: ${{ needs.get_services_modified.outputs.services != '[]' && needs.get_services_modified.outputs.services != '' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
