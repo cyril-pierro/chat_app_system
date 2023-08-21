@@ -51,6 +51,7 @@ jobs:
           VALIDATE_PYTHON_ISORT: false
           VALIDATE_MARKDOWN: false
           VALIDATE_JSCPD: false
+          VALIDATE_ANSIBLE: false
           VALIDATE_NATURAL_LANGUAGE: false
           KUBERNETES_KUBEVAL_OPTIONS: "--ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master"
 
