@@ -1,6 +1,6 @@
 # Account Service
 
-This service is responsible for the authentication and authorization of users in the chat application. It also supports user operations and account operations
+This service is responsible for the authentication and authorization of users in the chat application. It also supports user and account operations
 
 ## It uses the following commands
 
