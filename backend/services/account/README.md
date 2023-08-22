@@ -1,5 +1,5 @@
 # Account Service
-testing workflow
+
 This service is responsible for the authentication and authorization of users in the chat application. It also supports user and account operations
 
 ## It uses the following commands
