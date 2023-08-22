@@ -266,5 +266,6 @@ jobs:
         with:
           add: "**/*.yaml"
           author_name: ${{ github.actor }}
-          author_email: mail@example.com
+          pull: "--rebase"
+          author_email: workflow@github.com.com
           message: "update deployment manifest file"
