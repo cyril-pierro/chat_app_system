@@ -10,8 +10,5 @@ data:
   STMP_SERVER: "youremailserverip"
   EMAIL_PORT: "youremailserverport"
   EMAIL_SENDER: "youremailaddress"
-  EMAIL_PASSWORD: "youremailpassword"
   ACCOUNT_SERVICE_URL: "http://chat-app-account-svc:8081"
-  GRAFANA_ADMIN_USER: "admin"
-  GRAFANA_ADMIN_PASSWORD: "admin"
   GRAFANA_SERVER_URL: "http://grafana:3000"

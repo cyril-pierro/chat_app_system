@@ -20,6 +20,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: chat-config
+            - secretRef:
+              name: chat-secrets
 
           resources:
             limits:

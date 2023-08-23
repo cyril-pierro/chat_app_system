@@ -22,6 +22,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: notification-config
+            - secretRef:
+                name: notification-secrets
 
           resources:
             limits:
