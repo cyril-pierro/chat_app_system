@@ -14,4 +14,3 @@ data:
   ELASTICSEARCH_PORT: "9200"
   JAEGER_HOST: "jaeger"
   JAEGER_PORT: "6831"
-  SECRET_KEY: "yourdjangosecretkey"
