@@ -206,7 +206,7 @@ jobs:
 
       - name: Docker Image tag
         id: tag
-        run: echo image_tag="$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: echo image_tag='$(git rev-parse --short HEAD)' >> $GITHUB_OUTPUT
 
       - name: Install Docker environment
         run: |
@@ -224,9 +224,9 @@ jobs:
           echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
           sudo apt-get update
           sudo apt-get install trivy
-          echo "Docker Scanning of Base Image"
+          echo Docker Scanning of Base Image
           docker scout cves chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }} --only-severity high -e
-          echo "Docker scanning of the built Image"
+          echo Docker scanning of the built Image
           trivy image --severity CRITICAL chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
 
       - name: Push Image to Docker Registry
@@ -283,9 +283,9 @@ jobs:
         run: |
           imageTag=$(echo $(grep cyrildavif/chat_app deployment.yaml) | cut -d ":" -f 3)
           tag=$(git rev-parse --short HEAD)
-          echo "New Image Tag-> $tag"
-          echo "Old imageTag ${imageTag}"
-          sed -i "s/$imageTag/$tag/" deployment.yaml
+          echo 'New Image Tag-> $tag'
+          echo 'Old imageTag ${imageTag}'
+          sed -i 's/$imageTag/$tag/' deployment.yaml
 
       - name: Add and Commit
         uses: EndBug/add-and-commit@v9
