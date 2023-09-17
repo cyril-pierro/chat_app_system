@@ -24,11 +24,11 @@ uvicorn = "^0.21.1"
 redis = "^4.5.4"
 aiokafka = "^0.8.0"
 starlette-exporter = "^0.15.1"
-psycopg2 = "^2.9.6"
 werkzeug = "^2.3.2"
 python-dotenv = "^1.0.0"
 pydantic = {extras = ["email"], version = "^1.10.7"}
 httpx = "^0.24.1"
+psycopg2-binary = "^2.9.7"
 
 
 [tool.poetry.group.dev.dependencies]
