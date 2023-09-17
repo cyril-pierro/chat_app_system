@@ -227,7 +227,7 @@ jobs:
           echo Login To Docker Hub
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
           echo Docker Scanning of Base Image
-          docker scout cves chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}--only-severity high -e
+          docker scout cves --only-severity high -e chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
           echo Docker scanning of the built Image
           trivy image --severity CRITICAL chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
 
