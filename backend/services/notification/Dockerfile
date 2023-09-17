@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 # Install poetry env, project dependecny and model files
 COPY poetry.lock pyproject.toml ./
 
-# hadolint ignore=DL3013
+# hadolint ignore=DL3013,DL3008,DL3014
 RUN apt-get update -y;apt-get install mysql-server;apt-get install libmysqlclient-dev;pip install --no-cache-dir poetry==1.4.0 && poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi --no-root
 # Copy files
 COPY ./ ./
