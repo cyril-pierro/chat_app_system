@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: chat-app-notification
-          image: cyrildavif/chat_app_notification:9607c91
+          image: cyrildavif/chat_app_notification:e13dca6
           envFrom:
             - configMapRef:
                 name: notification-config
