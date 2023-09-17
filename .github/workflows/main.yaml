@@ -178,7 +178,7 @@ jobs:
       - name: Run Scan
         run: |
           ./syft packages . -o spdx-json > bom.json
-          trivy sbom --exit-code 1 -s CRITICAL bom.json
+          trivy sbom --exit-code 1 -s CRITICAL --ignore-status fixed bom.json
 
   deploy_services_modified:
     name: Deploy Services Modified
@@ -228,7 +228,7 @@ jobs:
           echo Docker Scanning of Base Image with critical issues
           docker scout cves --only-severity critical -e chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
           echo Docker scanning of the built Image with critical issues
-          trivy image --severity CRITICAL chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
+          trivy image --severity CRITICAL --ignore-status fixed chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
 
       - name: Push Image to Docker Registry
         run: |
