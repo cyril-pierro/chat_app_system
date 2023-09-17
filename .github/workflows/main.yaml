@@ -268,9 +268,9 @@ jobs:
         run: |
           imageTag=$(echo $(grep cyrildavif/chat_app deployment.yaml) | cut -d ":" -f 3)
           tag=$(git rev-parse --short HEAD)
-          echo 'New Image Tag-> $tag'
-          echo 'Old imageTag ${imageTag}'
-          sed -i 's/$imageTag/$tag/' deployment.yaml
+          echo "New Image Tag-> $tag"
+          echo "Old imageTag ${imageTag}"
+          sed -i "s/$imageTag/$tag/" deployment.yaml
 
       - name: Add and Commit
         uses: EndBug/add-and-commit@v9
@@ -278,5 +278,5 @@ jobs:
           add: "**/*.yaml"
           author_name: ${{ github.actor }}
           pull: "--rebase --autostash"
-          author_email: workflow@github.com.com
+          author_email: ${{ github.event.pusher.email }}
           message: "update deployment manifest file"
