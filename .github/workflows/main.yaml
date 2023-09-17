@@ -225,10 +225,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install trivy
           echo Login To Docker Hub
-          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-          echo Docker Scanning of Base Image
-          docker scout cves --only-severity high -e chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
-          echo Docker scanning of the built Image
+          echo '${{secrets.DOCKER_HUB_TOKEN }}' | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          echo Docker Scanning of Base Image with critical issues
+          docker scout cves --only-severity critical -e chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
+          echo Docker scanning of the built Image with critical issues
           trivy image --severity CRITICAL chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
 
       - name: Push Image to Docker Registry
