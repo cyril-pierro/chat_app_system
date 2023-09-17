@@ -16,7 +16,7 @@ jobs:
       services: ${{ steps.services.outputs.changes }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - uses: dorny/paths-filter@v2
         id: services
@@ -37,7 +37,7 @@ jobs:
     if: ${{ needs.get_services_modified.outputs.services != '[]' && needs.get_services_modified.outputs.services != '' }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -117,7 +117,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup python
         uses: actions/setup-python@v2
@@ -164,7 +164,7 @@ jobs:
         working-directory: backend/services/${{ matrix.services }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install scanning tools
         run: |
@@ -178,7 +178,6 @@ jobs:
       - name: Run Scan
         run: |
           ./syft packages . -o spdx-json > bom.json
-          cat bom.json
           trivy sbom --exit-code 1 -s CRITICAL bom.json
 
   deploy_services_modified:
@@ -202,7 +201,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Docker Image tag
         id: tag
