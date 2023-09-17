@@ -219,8 +219,16 @@ jobs:
       
       - name: Run Vulnerability Scan on Image
         run: |
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+          echo "Docker Scanning of Base Image"
           docker scout cves chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }} --only-severity high -e
-      
+          echo "Docker scanning of the built Image"
+          trivy image --severity CRITICAL chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
+
       - name: Push Image to Docker Registry
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
