@@ -143,8 +143,8 @@ jobs:
         run: |
           pytest -vv
 
-  vulnerabilty_scan_project:
-    name: Security Scan for project
+  vulnerabilty_scan_for_packages:
+    name: Security Scan for project dependencies
     needs:
       - run_linters
       - get_services_modified
