@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: chat-app-support
-          image: cyrildavif/chat_app_support:bc6cf01
+          image: cyrildavif/chat_app_support:d4610c6
           ports:
             - containerPort: 8084
