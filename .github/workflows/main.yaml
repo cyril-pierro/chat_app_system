@@ -216,6 +216,11 @@ jobs:
         run: |
           docker build -t chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }} .
       
+      - name: Login to Docker Hub
+        run:  |
+          echo Login To Docker Hub
+          echo '${{secrets.DOCKER_HUB_TOKEN }}' | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
       - name: Run Vulnerability Scan on Image
         if: ${{ matrix.services != 'support' }}
         run: |
@@ -224,8 +229,6 @@ jobs:
           curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s --
           sudo apt update
           sudo apt install trivy
-          echo Login To Docker Hub
-          echo '${{secrets.DOCKER_HUB_TOKEN }}' | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
           sudo apt clean; sudo apt autoremove -y
           echo Docker Scanning of Base Image for critical issues
           docker scout cves --only-severity critical -e chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
