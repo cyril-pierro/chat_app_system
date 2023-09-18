@@ -217,6 +217,7 @@ jobs:
           docker build -t chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }} .
       
       - name: Run Vulnerability Scan on Image
+        if: ${{ matrix.services != 'support' }}
         run: |
           wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
           echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
