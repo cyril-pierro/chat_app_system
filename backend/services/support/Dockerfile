@@ -1,6 +1,6 @@
 # Pull base image
 FROM python:3.9-slim-bookworm
-#
+
 # Create work directory
 WORKDIR /usr/src/app
 
