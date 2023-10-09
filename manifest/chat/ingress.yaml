@@ -4,20 +4,20 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
-  name: chat-app-notification
+  name: chat-app-chat
 spec:
   tls:
     - hosts:
-        - notification.hivechat.com
-      secretName: chat-app-notification-certificate
+        - chat.hivechat.com
+      secretName: chat-app-chat-certificate
   rules:
-    - host: notification.hivechat.com
+    - host: chat.hivechat.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: chat-app-notification-svc
+                name: chat-app-chat-svc
                 port:
-                  number: 8082
+                  number: 8083

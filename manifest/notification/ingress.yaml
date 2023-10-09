@@ -20,4 +20,4 @@ spec:
               service:
                 name: chat-app-chat-svc
                 port:
-                  number: 8083
+                  number: 8082
