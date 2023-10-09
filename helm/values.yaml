@@ -28,35 +28,36 @@ dnsNames:
 
 # application dependencies
 dependencies:
-  kafkaBrokerUrl: "kafka:9092"
-  redisHost: "redis"
-  redisPort: "6379"
-  redisPassword: ""
-  elasticsearchHost: "elasticsearch"
-  elasticsearchPort:  "9200"
-  jaegerHost: "jaeger"
-  jaegerPort: "6831"
+  kafkaBrokerUrl: kafka:9092
+  redisHost: redis
+  redisPort: 6379
+  redisPassword: 
+  elasticsearchHost: elasticsearch
+  elasticsearchPort: 9200
+  jaegerHost: jaeger
+  jaegerPort: 6831
 
 # configuration for application services
 config:
   account:
-    testing: "false"
-    databaseUrl: "sqlite:///./testing.db"
-    accessTokenExpiration: "20"
-    refreshTokenExpiration: "1440"
-    adminEmail: "admin@admin.com"
+    testing: false
+    databaseUrl: sqlite:///./testing.db
+    accessTokenExpiration: 20
+    refreshTokenExpiration: 1440
+    adminEmail: admin@admin.com
   chat:
-    testing: "false"
+    testing: false
   notification:
-    celery_url: "redis://redis:6379/0"
-    celery_result_url: "redis://redis:6379/0"
-    stmp_server_ip: "stmp.server.ip"
-    stmp_server_port: "456"
-    smtp_email: "admin@gmail.com"
-    grafana_url: "http://grafana:3000"
+    celery_url: redis://redis:6379/0
+    celery_result_url: redis://redis:6379/0
+    stmp_server_ip: stmp.server.ip
+    stmp_server_port: 456
+    smtp_email: admin@gmail.com
+    grafana_url: http://grafana:3000
     
 # ingress configuration
 ingress:
+  enabled: false
   class: nginx
 
 # LetsEncrypt email address
@@ -69,11 +70,11 @@ image:
   repository: nginx
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: 
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: 
+fullnameOverride: 
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -82,7 +83,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: 
 
 podAnnotations: {}
 

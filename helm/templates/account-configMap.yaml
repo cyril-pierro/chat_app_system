@@ -4,14 +4,14 @@ metadata:
   name: account-config
   namespace: {{ .Values.namespace}}
 data:
-  TESTING: {{ .Values.config.account.testing }}
-  TEST_DATABASE_URL: {{ .Values.config.account.databaseUrl}}
-  DATABASE_URL: {{ .Values.config.account.databaseUrl}}
+  TESTING: {{ .Values.config.account.testing | quote}}
+  TEST_DATABASE_URL: {{ .Values.config.account.databaseUrl | quote}}
+  DATABASE_URL: {{ .Values.config.account.databaseUrl | quote }}
   LOG_FILENAME: "chat_application.log"
-  authjwt_access_token_expires: {{ .Values.config.account.accessTokenExpiration}}
-  authjwt_refresh_token_expires: {{ .Values.config.account.refreshTokenExpiration}}
-  REDIS_HOST: {{ .Values.dependencies.redisHost}}
-  REDIS_PORT: {{ .Values.dependencies.redisPort}}
-  REDIS_PASSWORD: {{ .Values.dependencies.redisPassword}}
-  BROKER_URL: {{ .Values.dependencies.kafkaBrokerUrl}}
-  ADMIN_EMAIL: {{ .Values.config.account.adminEmail}}
+  authjwt_access_token_expires: {{ .Values.config.account.accessTokenExpiration | quote}}
+  authjwt_refresh_token_expires: {{ .Values.config.account.refreshTokenExpiration | quote}}
+  REDIS_HOST: {{ .Values.dependencies.redisHost | quote}}
+  REDIS_PORT: {{ .Values.dependencies.redisPort | quote}}
+  REDIS_PASSWORD: {{ .Values.dependencies.redisPassword | quote}}
+  BROKER_URL: {{ .Values.dependencies.kafkaBrokerUrl | quote}}
+  ADMIN_EMAIL: {{ .Values.config.account.adminEmail | quote }}
