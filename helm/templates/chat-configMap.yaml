@@ -10,7 +10,7 @@ data:
   SUPPORT_URL: "http://chat-app-support-svc:8084"
   REDIS_HOST: {{ .Values.dependencies.redisHost | quote}}
   REDIS_PORT: {{ .Values.dependencies.redisPort | quote}}
-  REDIS_PASSWORD: {{ .Values.dependencies.redisPassword | quote}}
+  REDIS_PASSWORD: {{ include "redis.password" .}}
   ELASTICSEARCH_HOST: {{ .Values.dependencies.elasticsearchHost | quote}}
   ELASTICSEARCH_PORT: {{ .Values.dependencies.elasticsearchPort | quote}}
   JAEGER_HOST: {{ .Values.dependencies.jaegerHost | quote}}

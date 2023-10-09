@@ -1,3 +1,12 @@
+{{- define "redis.password" -}}
+{{- if .Values.dependencies.redisPassword }}
+{{- printf "%s" .Values.dependencies.redisPassword | quote}}
+{{- else }}
+{{- print "" }}
+{{- end}}
+{{- end }}
+
+
 {{/*
 Expand the name of the chart.
 */}}

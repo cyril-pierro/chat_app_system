@@ -12,6 +12,6 @@ data:
   authjwt_refresh_token_expires: {{ .Values.config.account.refreshTokenExpiration | quote}}
   REDIS_HOST: {{ .Values.dependencies.redisHost | quote}}
   REDIS_PORT: {{ .Values.dependencies.redisPort | quote}}
-  REDIS_PASSWORD: {{ .Values.dependencies.redisPassword | quote}}
+  REDIS_PASSWORD: {{ include "redis.password" .}}
   BROKER_URL: {{ .Values.dependencies.kafkaBrokerUrl | quote}}
   ADMIN_EMAIL: {{ .Values.config.account.adminEmail | quote }}
