@@ -36,22 +36,34 @@ dependencies:
   elasticsearchPort: 9200
   jaegerHost: jaeger
   jaegerPort: 6831
+  mysqlUser: mysql
+  mysqlPassword: mysqlPassword
+  mysqlHost: mysql
 
 # configuration for application services
 config:
   account:
     testing: false
     databaseUrl: sqlite:///./testing.db
+    accessTokenKey: "your_access_token"
+    accessCookieKey: "your_cookie_key"
+    refreshCookieKey: "your_refresh_cookie"
+    csrfKey: "your_csrf_key"
+    csrfRefreshKey: "your_csrf_refresh_key"
     accessTokenExpiration: 20
     refreshTokenExpiration: 1440
+    adminUsername: "admin"
+    adminPassword: "admin"
     adminEmail: admin@admin.com
   chat:
     testing: false
+    secret_key: "your_secret_key"
   notification:
     celery_url: redis://redis:6379/0
     celery_result_url: redis://redis:6379/0
     stmp_server_ip: stmp.server.ip
     stmp_server_port: 456
+    stmp_server_password: server_password
     smtp_email: admin@gmail.com
     grafana_url: http://grafana:3000
     
