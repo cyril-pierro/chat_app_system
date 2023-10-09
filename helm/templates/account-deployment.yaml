@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-app-account
+  namespace: {{ .Values.namespace}}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: chat-app-account
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: chat-app-account
+    spec:
+      containers:
+        - name: chat-app-account
+          image: cyrildavif/chat_app_account:d69bd10
+          envFrom:
+            - configMapRef:
+                name: account-config
+            - secretRef:
+              name: account-secrets
+          resources:
+            limits:
+              cpu: 100m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+
+          ports:
+            - containerPort: {{ .Values.service.account.port }}
+
+          livenessProbe:
+            httpGet:
+              path: /docs
+              port: {{ .Values.service.account.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5

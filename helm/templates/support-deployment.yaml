@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-app-support
+  namespace: {{ .Values.namespace}}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: chat-app-support
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: chat-app-support
+    spec:
+      containers:
+        - name: chat-app-support
+          image: cyrildavif/chat_app_support:d4610c6
+          ports:
+            - containerPort: {{ .Values.service.support.port}}

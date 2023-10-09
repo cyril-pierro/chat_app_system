@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.class}}
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: chat-app-account
+spec:
+  tls:
+    - hosts:
+        - {{ .Values.dnsNames.name.account }}
+      secretName: chat-app-account-certificate
+  rules:
+    - host: {{ .Values.dnsNames.name.account }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: chat-app-account-svc
+                port:
+                  number: {{ .Values.service.account.port }}

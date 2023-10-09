@@ -1,0 +1,11 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: chat-app-notification
+  namespace: {{ .Values.namespace}}
+spec:
+  secretName: chat-app-notification-certificate
+  issuerRef:
+    name: letsencrypt-prod
+  dnsNames:
+    - {{ .Values.dnsNames.name.notification}}
