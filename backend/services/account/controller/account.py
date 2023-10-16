@@ -29,7 +29,7 @@ class AccountOperations(acc_interface.AccountOperationsInterface):
             OperationError: sql Error
         """
         new_account = acc_model.UserAccount(user_id=user_id)
-        sql.add_object_to_database(new_account)
+        sql.add_object_to_database(item=new_account)
 
     @session.db_session
     def get_account_with_user_id(
@@ -69,7 +69,7 @@ class AccountOperations(acc_interface.AccountOperationsInterface):
         user_account = self.get_account_with_user_id(user_id)
         user_account.is_active = True
         user_account.updated_at = datetime.now()
-        sql.add_object_to_database(user_account)
+        sql.add_object_to_database(item=user_account)
 
     @sql.sql_error_handler
     def set_account_as_inactive(self, user_id: int) -> None:
@@ -82,7 +82,7 @@ class AccountOperations(acc_interface.AccountOperationsInterface):
         user_account = self.get_account_with_user_id(user_id)
         user_account.is_active = False
         user_account.updated_at = datetime.now()
-        sql.add_object_to_database(user_account)
+        sql.add_object_to_database(item=user_account)
 
     @sql.sql_error_handler
     def set_account_profile_pic(self, user_id: int, profile_pic: str) -> None:
@@ -96,7 +96,7 @@ class AccountOperations(acc_interface.AccountOperationsInterface):
         """
         user_account = self.get_account_with_user_id(user_id)
         user_account.profile_pic = profile_pic
-        sql.add_object_to_database(user_account)
+        sql.add_object_to_database(item=user_account)
 
     def is_user_account_active(self, user_id: int) -> bool:
         """Checks if a User account is active

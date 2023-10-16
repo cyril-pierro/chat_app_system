@@ -109,7 +109,7 @@ class UserOperations(UserOperationsInterface):
         hash_password = Users.generate_hash_password(password)
         user_found = self.get_user_by(user_id)
         user_found.hash_password = hash_password
-        sql.add_object_to_database(self._db, user_found)
+        sql.add_object_to_database(item=user_found)
 
     @sql.sql_error_handler
     def reset_user_email(self, user_id: int, email: str) -> None:
@@ -123,7 +123,7 @@ class UserOperations(UserOperationsInterface):
         """
         user_found = self.get_user_by(user_id)
         user_found.email = email
-        sql.add_object_to_database(user_found)
+        sql.add_object_to_database(item=user_found)
 
     @sql.sql_error_handler
     def reset_user_username(self, user_id: int, username: str) -> None:
@@ -136,7 +136,7 @@ class UserOperations(UserOperationsInterface):
         """
         user_found = self.get_user_by(user_id)
         user_found.username = username
-        sql.add_object_to_database(user_found)
+        sql.add_object_to_database(item=user_found)
 
     @sql.sql_error_handler
     def get_username(self, user_id: int) -> str:
@@ -159,7 +159,7 @@ class UserOperations(UserOperationsInterface):
         """
         user_found = self.get_user_by(user_id)
         user_found.is_email_verified = True
-        sql.add_object_to_database(user_found)
+        sql.add_object_to_database(item=user_found)
 
     def check_if_email_is_verified(self, user_id: int) -> None:
         """Checks if the user email is verified
@@ -194,4 +194,4 @@ class UserOperations(UserOperationsInterface):
             )
         assigned_admin = self.get_user_by(admin_username)
         assigned_admin.is_admin = True
-        sql.add_object_to_database(assigned_admin)
+        sql.add_object_to_database(item=assigned_admin)
