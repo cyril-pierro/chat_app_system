@@ -3,6 +3,7 @@
 This module contains all schemas related to account
 """
 from pydantic import BaseModel, EmailStr, validator
+
 from utils import sql
 
 
@@ -18,7 +19,9 @@ class CreateAccount(BaseModel):
     username: str
     profile_pic: str
 
-    _check_username = validator("username", allow_reuse=True)(sql.check_sql_injection)
+    _check_username = validator("username", allow_reuse=True)(
+        sql.check_sql_injection
+    )  # type: ignore
 
     class Config:
         orm_mode = True
@@ -34,7 +37,9 @@ class Login(BaseModel):
     username: str
     password: str
 
-    _check_username = validator("username", allow_reuse=True)(sql.check_sql_injection)
+    _check_username = validator("username", allow_reuse=True)(
+        sql.check_sql_injection
+    )  # type: ignore
 
     class Config:
         orm_mode = True
@@ -52,3 +57,9 @@ class LoginOut(BaseModel):
 
     access_token: str
     refresh_token: str
+
+
+class LogOut(BaseModel):
+    """LogOut Schema"""
+
+    message: str

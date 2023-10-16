@@ -8,6 +8,7 @@ Attributes:
 """
 
 import redis
+
 from config import setting
 
 settings = setting.AppSettings()

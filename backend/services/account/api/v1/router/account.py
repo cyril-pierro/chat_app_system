@@ -1,13 +1,11 @@
 import fastapi
 from fastapi import responses
 from prometheus_client import Gauge
-from sqlalchemy.orm import Session
 
 from controller import account as acc
 from controller import auth as authorized
 from controller import users
 from schemas import account, error
-from utils import session
 
 router = fastapi.APIRouter()
 gauge = Gauge(
@@ -19,11 +17,13 @@ gauge = Gauge(
 @router.post(
     "/login",
     response_model=account.LoginOut,
-    responses={404: {"model": error.UnAuthorizedError}},
+    responses={
+        401: {"model": error.NotFound},
+        422: {"model": error.InvalidPayload},
+        500: {"model": error.InternalServerError},
+    },
 )
-async def login(
-    login: account.Login, db: Session = fastapi.Depends(session.create)  # noqa: E501
-):
+async def login(login: account.Login):  # noqa: E501
     """
     This API Route is used to log a User
     into the System
@@ -34,9 +34,9 @@ async def login(
 
 
     """
-    user_operation = users.UserOperations(db)
+    user_operation = users.UserOperations()
     user_id = user_operation.verify_user(login)
-    acc.AccountOperations(db).set_account_as_active(user_id)
+    acc.AccountOperations().set_account_as_active(user_id)
     auth = authorized.Auth()
     access_token = auth.create_access_token(subject=user_id)
     refresh_token = auth.create_refresh_token(subject=user_id)
@@ -47,11 +47,17 @@ async def login(
 
 @router.post(
     "/logout",
+    response_model=account.LogOut,
+    responses={
+        401: {"model": error.NotFound},
+        404: {"model": error.UnAuthorizedError},
+        422: {"model": error.InvalidPayload},
+        500: {"model": error.InternalServerError},
+    },
 )
 async def logout(
     _: str = fastapi.Depends(authorized.bearerschema),
     authorize: authorized.Auth = fastapi.Depends(),
-    db: Session = fastapi.Depends(session.create),
 ):
     """
     This API route is used to logout a
@@ -60,10 +66,10 @@ async def logout(
     authorize.jwt_required()
     user_id = authorize.get_jwt_subject()
     token_id = authorize.get_raw_jwt().get("jti")
-    user_operation = users.UserOperations(db)
+    user_operation = users.UserOperations()
     user_operation.check_if_email_is_verified(user_id)
     authorized.redis_connection.set_value(token_id, "true")
-    acc.AccountOperations(db).set_account_as_inactive(user_id)
+    acc.AccountOperations().set_account_as_inactive(user_id)
     gauge.dec()
     return responses.JSONResponse(
         content={"message": "logout successfully"}, status_code=200
@@ -73,7 +79,11 @@ async def logout(
 @router.post(
     "/refresh",
     responses={
-        404: {"model": error.InvalidRefreshToken},
+        401: {"model": error.NotFound},
+        404: {"model": error.UnAuthorizedError},
+        422: {"model": error.InvalidPayload},
+        403: {"model": error.InvalidRefreshToken},
+        500: {"model": error.InternalServerError},
     },
 )
 async def get_new_access_token(
@@ -94,11 +104,15 @@ async def get_new_access_token(
 
 @router.get(
     "/verify/account",
-    responses={404: {"model": error.UnAuthorizedError}},
+    responses={
+        401: {"model": error.NotFound},
+        404: {"model": error.UnAuthorizedError},
+        422: {"model": error.InvalidPayload},
+        500: {"model": error.InternalServerError},
+    },
 )
 async def verify_user_account(
     token: str,
-    db: Session = fastapi.Depends(session.create),
     authorize: authorized.Auth = fastapi.Depends(),  # noqa: E501
 ):
     """
@@ -108,7 +122,7 @@ async def verify_user_account(
     Takes a token parameter
     """
     user_id = authorize.get_raw_jwt(token)["sub"]
-    user_operation = users.UserOperations(db)
+    user_operation = users.UserOperations()
     user_operation.set_email_as_verified(user_id)
     return responses.FileResponse(
         "static/index.html",

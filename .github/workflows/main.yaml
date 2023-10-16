@@ -4,9 +4,10 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+      - refactor
+  # pull_request:
+  #   branches:
+  #     - main
 jobs:
   get_services_modified:
     if: github.event.pull_request.merged == true || ${{ github.event_name }} == 'push'
@@ -138,6 +139,10 @@ jobs:
         run: |
           python manage.py makemigrations
           python manage.py migrate
+    
+      - name: Run Account migrations
+        if: ${{ matrix.services == 'account' }}
+        run: alembic upgrade head
 
       - name: Run tests for Services
         run: |

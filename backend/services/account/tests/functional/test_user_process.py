@@ -15,7 +15,9 @@ import pytest
         )
     ],
 )
-def test_user_workflow_process(client, user_operations, workflow_user, expected_json):
+def test_user_workflow_process(
+    client, user_operations, account_operations, workflow_user, expected_json
+):
     # user first registers in the system
     response = client.post("/register", json=workflow_user)
     assert response.json() == expected_json
@@ -24,7 +26,7 @@ def test_user_workflow_process(client, user_operations, workflow_user, expected_
     # user verifies email
     user_found = user_operations.get_user_by("workflow_user")
     user_operations.set_email_as_verified(user_found.id)
-
+    account_operations.create_account(user_found.id)
     # user logs in into the system
     # with his credentials
     test_login_credientials = {

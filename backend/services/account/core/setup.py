@@ -9,8 +9,8 @@ Attributes:
 from typing import Any
 
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+# from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 from config import setting
 
@@ -29,7 +29,7 @@ class DatabaseSetup:
         """Construct an Database Operator"""
         if settings.TESTING:
             self._engine = create_engine(
-                settings.TEST_DATABASE_URL,  # type: ignore
+                settings.DATABASE_URL,  # type: ignore
                 connect_args={"check_same_thread": False},
             )
         else:

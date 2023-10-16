@@ -21,5 +21,11 @@ test_user_unverified = {
     "email": "test_unverified@test.com",
 }
 
+test_register_user = {
+    "username": "test_register",
+    "password": "test_password",
+    "email": "test_register@test.com",
+}
+
 test_login_data = {"username": "test_user", "password": "test_password"}
 test_admin_login_data = {"username": "test_admin", "password": "test_password_admin"}

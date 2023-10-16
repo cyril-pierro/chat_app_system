@@ -4,6 +4,7 @@ This module contains all schemas relating to users
 """
 
 from pydantic import BaseModel, EmailStr, validator
+
 from utils import sql
 
 
@@ -19,7 +20,9 @@ class RegisterUser(BaseModel):
     email: EmailStr
     password: str
 
-    _check_username = validator("username", allow_reuse=True)(sql.check_sql_injection)
+    _check_username = validator("username", allow_reuse=True)(
+        sql.check_sql_injection  # type: ignore
+    )
 
     class Config:
         orm_mode = True
@@ -35,7 +38,9 @@ class User(BaseModel):
     username: str
     email: EmailStr
 
-    _check_username = validator("username", allow_reuse=True)(sql.check_sql_injection)
+    _check_username = validator("username", allow_reuse=True)(
+        sql.check_sql_injection  # type: ignore
+    )
 
     class Config:
         orm_mode = True
@@ -50,7 +55,9 @@ class AdminUser(BaseModel):
 
     username: str
 
-    _check_username = validator("username", allow_reuse=True)(sql.check_sql_injection)
+    _check_username = validator("username", allow_reuse=True)(
+        sql.check_sql_injection  # type: ignore
+    )
 
     class Config:
         orm_mode = True
@@ -72,7 +79,9 @@ class ChangeUsername(BaseModel):
     """
 
     username: str
-    _check_username = validator("username", allow_reuse=True)(sql.check_sql_injection)
+    _check_username = validator("username", allow_reuse=True)(
+        sql.check_sql_injection  # type: ignore
+    )
 
 
 class ChangePassword(BaseModel):

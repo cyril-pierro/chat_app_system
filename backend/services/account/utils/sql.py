@@ -7,10 +7,13 @@ import re
 from functools import wraps
 from typing import Any, Callable
 
-from error import exceptions
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+
+from error import exceptions
 from tools import log
+
+from .session import db_session
 
 
 def sql_error_handler(func: Callable[..., object]) -> Any:
@@ -33,7 +36,10 @@ def sql_error_handler(func: Callable[..., object]) -> Any:
             error_logger = log.Log(f"{func.__module__}.{func.__name__}")
             error_logger.exception(e.args[0])
             raise exceptions.UserOperationsError(msg="Username already exist")
-
+        except exceptions.UserOperationsError as e:
+            error_logger = log.Log(f"{func.__module__}.{func.__name__}")
+            error_logger.exception(e.msg)
+            raise exceptions.UserOperationsError(msg=e.msg)
         except Exception as e:
             error_logger = log.Log(f"{func.__module__}.{func.__name__}")
             error_logger.exception(e.args[0])
@@ -42,7 +48,8 @@ def sql_error_handler(func: Callable[..., object]) -> Any:
     return inner
 
 
-def add_object_to_database(db: Session, item: Any) -> bool:
+@db_session
+def add_object_to_database(item: Any, db: Session = None) -> bool:
     """
     Add an item to the database
     Args:
@@ -52,9 +59,10 @@ def add_object_to_database(db: Session, item: Any) -> bool:
     returns:
         bool
     """
-    db.add(item)
+    new_item = db.merge(item)
+    db.add(new_item)
     db.commit()
-    db.refresh(item)
+    db.refresh(new_item)
     return True
 
 

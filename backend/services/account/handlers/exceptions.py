@@ -7,9 +7,10 @@ Attributes:
     logger (object): A log utility for logging
 """
 import fastapi
-from error import exceptions
 from fastapi_jwt_auth import exceptions as exc
 from pydantic import ValidationError
+
+from error import exceptions
 from tools.log import Log
 
 logger = Log(__file__)
@@ -100,4 +101,6 @@ class AppExceptionHandler:
 
         error_msg = f"Invalid {field}: {message}"
         logger.exception(message)
-        return fastapi.responses.JSONResponse(status_code=422, content=error_msg)
+        return fastapi.responses.JSONResponse(
+            status_code=422, content=error_msg  # type: ignore
+        )
