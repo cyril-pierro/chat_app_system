@@ -68,7 +68,7 @@ class UserOperations(UserOperationsInterface):
     @session.db_session
     def get_user_by(
         self, db: orm.Session, id_or_username: Union[str, int]
-    ) -> Users:  # type: ignore
+    ) -> Users:  # noqa
         """Get a user by either username or id
 
         Args:
