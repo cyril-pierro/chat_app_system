@@ -48,7 +48,7 @@ class AccountOperations(acc_interface.AccountOperationsInterface):
         """
         user_account = (
             db.query(acc_model.UserAccount)
-            .filter(acc_model.UserAccount.user_id == user_id)  # type: ignore
+            .filter(acc_model.UserAccount.user_id == user_id)
             .first()
         )
         if user_account is None:

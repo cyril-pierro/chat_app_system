@@ -39,7 +39,7 @@ class UserOperations(UserOperationsInterface):
 
         new_user = Users(
             username=user.username,
-            hash_password=hash_password,  # type: ignore
+            hash_password=hash_password,
             email=user.email,
         )
         sql.add_object_to_database(new_user)
@@ -58,11 +58,12 @@ class UserOperations(UserOperationsInterface):
         self.check_if_email_is_verified(user_found.id)
 
         verify_password = Users.verify_password(
-            user_found.hash_password, user.password  # type: ignore
+            hash_password=user_found.hash_password, password=user.password
         )
         if not verify_password:
             raise exceptions.UserOperationsError(msg="Invalid password")
-        return user_found.id
+        user_id: int = user_found.id
+        return user_id
 
     @session.db_session
     def get_user_by(
@@ -80,21 +81,17 @@ class UserOperations(UserOperationsInterface):
         """
         if isinstance(id_or_username, str):
             user_found = (
-                db.query(Users)
-                .filter(Users.username == id_or_username)  # type: ignore
-                .first()
+                db.query(Users).filter(Users.username == id_or_username).first()  # noqa
             )
         else:
             user_found = (
-                db.query(Users)
-                .filter(Users.id == id_or_username)  # type: ignore
-                .first()
-            )
+                db.query(Users).filter(Users.id == id_or_username).first()
+            )  # noqa
 
         if user_found is None:
             raise exceptions.UserOperationsError(
-                msg="User not found", status_code=404  # type: ignore
-            )
+                msg="User not found", status_code=404
+            )  # noqa
         return user_found
 
     @sql.sql_error_handler
@@ -147,7 +144,8 @@ class UserOperations(UserOperationsInterface):
             str
         """
         user_found = self.get_user_by(user_id)
-        return user_found.username
+        user_name: str = user_found.username
+        return user_name
 
     @sql.sql_error_handler
     def set_email_as_verified(self, user_id: int) -> None:
