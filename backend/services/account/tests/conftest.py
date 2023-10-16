@@ -24,9 +24,11 @@ from controller.users import UserOperations
 from core.setup import Base
 from schemas.users import RegisterUser
 from utils import sql
-from utils.session import create
 
 from . import test_data
+
+# from utils.session import create
+
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # this is to include backend dir in sys.path so that we can import from db,main.py
@@ -81,13 +83,13 @@ def client(
     the `get_db` dependency that is injected into routes.
     """
 
-    def _get_test_db():
-        try:
-            yield db_session
-        finally:
-            pass
+    # def _get_test_db():
+    #     try:
+    #         yield db_session
+    #     finally:
+    #         pass
 
-    app.dependency_overrides[create] = _get_test_db
+    # app.dependency_overrides[create] = _get_test_db
     with TestClient(app) as client:
         yield client
 
