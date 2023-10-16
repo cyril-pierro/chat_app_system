@@ -29,7 +29,7 @@ class DatabaseSetup:
         """Construct an Database Operator"""
         if settings.TESTING:
             self._engine = create_engine(
-                settings.TEST_DATABASE_URL,  # type: ignore
+                settings.DATABASE_URL,  # type: ignore
                 connect_args={"check_same_thread": False},
             )
         else:

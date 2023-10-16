@@ -10,7 +10,6 @@ class AppSettings(pydantic.BaseSettings):
     """Application Settings
     Attributes:
             DATABASE_URL (str) : Production database url
-            TEST_DATABASE_URL (str): Test database url
             TESTING (bool): Test or Production environment
             LOG_FILENAME (str): Log file name
             API_PREFIX (str): API router prefix name
@@ -34,7 +33,6 @@ class AppSettings(pydantic.BaseSettings):
     """
 
     DATABASE_URL: str
-    TEST_DATABASE_URL: str
     TESTING: bool
     LOG_FILENAME: str
     API_PREFIX: str = "/api/v1"
