@@ -7,10 +7,13 @@ import re
 from functools import wraps
 from typing import Any, Callable
 
-from error import exceptions
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+
+from error import exceptions
 from tools import log
+
+from .session import db_session
 
 
 def sql_error_handler(func: Callable[..., object]) -> Any:
@@ -42,6 +45,7 @@ def sql_error_handler(func: Callable[..., object]) -> Any:
     return inner
 
 
+@db_session
 def add_object_to_database(db: Session, item: Any) -> bool:
     """
     Add an item to the database
@@ -52,6 +56,7 @@ def add_object_to_database(db: Session, item: Any) -> bool:
     returns:
         bool
     """
+
     db.add(item)
     db.commit()
     db.refresh(item)

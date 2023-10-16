@@ -13,15 +13,16 @@ import sys
 from typing import Any, Generator
 
 import pytest
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 from api.v1.router import account, users
 from controller.account import AccountOperations
 from controller.users import UserOperations
 from core.setup import Base
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
 from schemas.users import RegisterUser
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from utils import sql
 from utils.session import create
 
@@ -92,13 +93,13 @@ def client(
 
 
 @pytest.fixture(scope="function")
-def user_operations(db_session):
-    return UserOperations(db_session)
+def user_operations():
+    return UserOperations()
 
 
 @pytest.fixture(scope="function")
-def account_operations(db_session):
-    return AccountOperations(db_session)
+def account_operations():
+    return AccountOperations()
 
 
 @pytest.fixture(scope="function")
@@ -119,13 +120,13 @@ def already_registered_user_unverified(user_operations):
 
 
 @pytest.fixture(scope="function")
-def already_registered_admin(db_session, user_operations):
+def already_registered_admin(user_operations):
     registered_admin_data = test_data.test_admin_data
     test_user = RegisterUser(**registered_admin_data)
     registered_user = user_operations.register_user(test_user)
     user_operations.set_email_as_verified(registered_user.id)
     registered_user.is_admin = True
-    sql.add_object_to_database(db_session, registered_user)
+    sql.add_object_to_database(registered_user)
     return registered_user
 
 

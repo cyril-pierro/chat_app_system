@@ -1,6 +1,7 @@
 import pytest
-import tests.test_data as test_data
 from fastapi_jwt_auth.exceptions import RevokedTokenError
+
+import tests.test_data as test_data
 
 
 @pytest.mark.route_account
