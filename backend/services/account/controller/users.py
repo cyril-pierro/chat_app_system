@@ -42,7 +42,7 @@ class UserOperations(UserOperationsInterface):
             hash_password=hash_password,
             email=user.email,
         )
-        sql.add_object_to_database(new_user)
+        sql.add_object_to_database(item=new_user)
         return new_user
 
     def verify_user(self, user: account.Login) -> int:
