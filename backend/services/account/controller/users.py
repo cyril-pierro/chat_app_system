@@ -11,7 +11,7 @@ from error import exceptions
 from interfaces.users import UserOperationsInterface
 from models.users import Users
 from schemas import account, users
-from utils import sql
+from utils import session, sql
 
 
 class UserOperations(UserOperationsInterface):
@@ -21,19 +21,9 @@ class UserOperations(UserOperationsInterface):
     available to a user
 
     Attributes:
-        _db (object): database session
+        db (object): database session
             Session for database operations
     """
-
-    def __init__(self, db: orm.Session) -> None:
-        """Construct a User operation
-
-        Args:
-            db (object): database session
-        Returns:
-            None
-        """
-        self._db = db
 
     @sql.sql_error_handler
     def register_user(self, user: users.RegisterUser) -> Users:
@@ -52,7 +42,7 @@ class UserOperations(UserOperationsInterface):
             hash_password=hash_password,  # type: ignore
             email=user.email,
         )
-        sql.add_object_to_database(self._db, new_user)
+        sql.add_object_to_database(new_user)
         return new_user
 
     def verify_user(self, user: account.Login) -> int:
@@ -74,7 +64,10 @@ class UserOperations(UserOperationsInterface):
             raise exceptions.UserOperationsError(msg="Invalid password")
         return user_found.id
 
-    def get_user_by(self, id_or_username: Union[str, int]) -> Users:
+    @session.db_session
+    def get_user_by(
+        self, db: orm.Session, id_or_username: Union[str, int]
+    ) -> Users:  # type: ignore
         """Get a user by either username or id
 
         Args:
@@ -87,13 +80,13 @@ class UserOperations(UserOperationsInterface):
         """
         if isinstance(id_or_username, str):
             user_found = (
-                self._db.query(Users)
+                db.query(Users)
                 .filter(Users.username == id_or_username)  # type: ignore
                 .first()
             )
         else:
             user_found = (
-                self._db.query(Users)
+                db.query(Users)
                 .filter(Users.id == id_or_username)  # type: ignore
                 .first()
             )
@@ -130,7 +123,7 @@ class UserOperations(UserOperationsInterface):
         """
         user_found = self.get_user_by(user_id)
         user_found.email = email
-        sql.add_object_to_database(self._db, user_found)
+        sql.add_object_to_database(user_found)
 
     @sql.sql_error_handler
     def reset_user_username(self, user_id: int, username: str) -> None:
@@ -143,7 +136,7 @@ class UserOperations(UserOperationsInterface):
         """
         user_found = self.get_user_by(user_id)
         user_found.username = username
-        sql.add_object_to_database(self._db, user_found)
+        sql.add_object_to_database(user_found)
 
     @sql.sql_error_handler
     def get_username(self, user_id: int) -> str:
@@ -166,7 +159,7 @@ class UserOperations(UserOperationsInterface):
         """
         user_found = self.get_user_by(user_id)
         user_found.is_email_verified = True
-        sql.add_object_to_database(self._db, user_found)
+        sql.add_object_to_database(user_found)
 
     def check_if_email_is_verified(self, user_id: int) -> None:
         """Checks if the user email is verified
@@ -201,4 +194,4 @@ class UserOperations(UserOperationsInterface):
             )
         assigned_admin = self.get_user_by(admin_username)
         assigned_admin.is_admin = True
-        sql.add_object_to_database(self._db, assigned_admin)
+        sql.add_object_to_database(assigned_admin)
