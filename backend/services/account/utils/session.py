@@ -15,14 +15,14 @@ class DBSessionManager:
 
     def __init__(self):
         """Initialize the session manager"""
-        db_init = setup.DatabaseSetup()
-        self.db = db_init.get_session()
+        self.db_init = setup.DatabaseSetup()
+        self.db = self.db_init.get_session()
 
     def __enter__(self) -> orm.Session:
         """Return a database session"""
         return self.db()
 
-    def __exit__(self, exc_type, exc_value, trace):
+    def __exit__(self, exc_type, exc_value, exc_trace):
         """Close the database session"""
         self.db().close()
 
@@ -34,6 +34,7 @@ def db_session(func):
     def inner_function(*args, **kwargs):
         """Initialize the session"""
         with DBSessionManager() as db:
-            return func(db=db, *args, **kwargs)
+            kwargs["db"] = db
+            return func(*args, **kwargs)
 
     return inner_function

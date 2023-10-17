@@ -61,13 +61,13 @@ class UserOperations(UserOperationsInterface):
             hash_password=user_found.hash_password, password=user.password
         )
         if not verify_password:
-            raise exceptions.UserOperationsError(msg="Invalid password")
+            raise exceptions.UserOperationsError(msg="Invalid credentials")
         user_id: int = user_found.id
         return user_id
 
     @session.db_session
     def get_user_by(
-        self, db: orm.Session, id_or_username: Union[str, int]
+        self, id_or_username: Union[str, int], db: orm.Session = None
     ) -> Users:  # noqa
         """Get a user by either username or id
 
@@ -90,7 +90,7 @@ class UserOperations(UserOperationsInterface):
 
         if user_found is None:
             raise exceptions.UserOperationsError(
-                msg="User not found", status_code=404
+                msg="Invalid Credentials", status_code=400
             )  # noqa
         return user_found
 

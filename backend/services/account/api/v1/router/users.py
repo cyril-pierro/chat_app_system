@@ -41,7 +41,8 @@ async def register_user(
     user = user_operation.register_user(login)
     account_operation.create_account(user.id)
     auth = authorized.Auth()
-    token = auth.create_access_token(subject=user.id)
+    subject = user_operation.get_user_by(user.username)
+    token = auth.create_access_token(subject=subject.id)
     msg_sender.send_message(
         "new_users",
         {

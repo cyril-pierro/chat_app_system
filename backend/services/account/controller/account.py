@@ -33,7 +33,7 @@ class AccountOperations(acc_interface.AccountOperationsInterface):
 
     @session.db_session
     def get_account_with_user_id(
-        self, db: orm.Session, user_id: int
+        self, user_id: int, db: orm.Session = None
     ) -> acc_model.UserAccount:
         """Get an Account with a specific user id
         Args:
