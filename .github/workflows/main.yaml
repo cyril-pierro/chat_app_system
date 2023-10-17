@@ -139,6 +139,11 @@ jobs:
         run: |
           python manage.py makemigrations
           python manage.py migrate
+    
+    - name: Run Account migrations
+        if: ${{ matrix.services == 'account' }}
+        run: |
+          alembic upgrade head
 
       - name: Run tests for Services
         run: |
