@@ -42,7 +42,7 @@ def start_application():
     return app
 
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./testing_db.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./testing.db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -51,8 +51,10 @@ engine = create_engine(
 # Use connect_args parameter only with sqlite
 SessionTesting = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+scope = "package"
 
-@pytest.fixture(scope="function")
+
+@pytest.fixture(scope=scope)
 def app() -> Generator[FastAPI, Any, None]:
     """
     Create a fresh database on each test case.
@@ -63,7 +65,7 @@ def app() -> Generator[FastAPI, Any, None]:
     Base.metadata.drop_all(engine)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope=scope)
 def db_session(app: FastAPI) -> Generator[SessionTesting, Any, None]:
     connection = engine.connect()
     transaction = connection.begin()
@@ -74,7 +76,7 @@ def db_session(app: FastAPI) -> Generator[SessionTesting, Any, None]:
     connection.close()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope=scope)
 def client(
     app: FastAPI, db_session: SessionTesting
 ) -> Generator[TestClient, Any, None]:
@@ -94,26 +96,28 @@ def client(
         yield client
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope=scope)
 def user_operations():
     return UserOperations()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope=scope)
 def account_operations():
     return AccountOperations()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope=scope)
 def already_registered_user(user_operations):
     registered_user_data = test_data.test_user_data
     test_user = RegisterUser(**registered_user_data)
     registered_user = user_operations.register_user(test_user)
-    user_operations.set_email_as_verified(registered_user.id)
-    return registered_user
+    user = user_operations.get_user_by(registered_user.username)
+    user_operations.set_email_as_verified(user.id)
+    user_verified = user_operations.get_user_by(user.username)
+    return user_verified
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope=scope)
 def already_registered_user_unverified(user_operations):
     registered_user_data = test_data.test_user_unverified
     test_user = RegisterUser(**registered_user_data)
@@ -121,38 +125,28 @@ def already_registered_user_unverified(user_operations):
     return registered_user
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope=scope)
 def already_registered_admin(user_operations):
     registered_admin_data = test_data.test_admin_data
     test_user = RegisterUser(**registered_admin_data)
     registered_user = user_operations.register_user(test_user)
-    user_operations.set_email_as_verified(registered_user.id)
+    admin = user_operations.get_user_by(registered_user.username)
+    user_operations.set_email_as_verified(admin.id)
     registered_user.is_admin = True
     sql.add_object_to_database(registered_user)
-    return registered_user
+    admin_verified = user_operations.get_user_by(admin.id)
+    return admin_verified
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope=scope)
 def already_created_account(account_operations, already_registered_user):
     account_operations.create_account(already_registered_user.id)
     account = account_operations.get_account_with_user_id(already_registered_user.id)
     return account
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope=scope)
 def already_created_admin_account(account_operations, already_registered_admin):
     account_operations.create_account(already_registered_admin.id)
     account = account_operations.get_account_with_user_id(already_registered_admin.id)
     return account
-
-
-@pytest.fixture(scope="function")
-def already_logged_in_response(client, already_created_account):
-    login_response = client.post("/login", json=test_data.test_login_data)
-    return login_response
-
-
-@pytest.fixture(scope="function")
-def already_logged_in_admin_response(client, already_created_admin_account):
-    login_response = client.post("/login", json=test_data.test_admin_login_data)
-    return login_response

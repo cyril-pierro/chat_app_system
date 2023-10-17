@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from error import exceptions
@@ -9,7 +11,7 @@ from ... import test_data
 
 
 @pytest.mark.user_operations
-@pytest.mark.parametrize("register_user_data", [(test_data.test_user_data)])
+@pytest.mark.parametrize("register_user_data", [(test_data.test_register_user)])
 def test_register_user(user_operations, register_user_data):
     test_user = RegisterUser(**register_user_data)
     saved_user = user_operations.register_user(test_user)
@@ -25,25 +27,27 @@ def test_register_user(user_operations, register_user_data):
 
 @pytest.mark.user_operations
 @pytest.mark.parametrize("login_data", [(test_data.test_login_data)])
-def test_verify_user(user_operations, already_registered_user, login_data):
+def test_verify_user(user_operations, login_data):
     login_user_scheme = Login(**login_data)
-    user_operations.set_email_as_verified(already_registered_user.id)
+    user = user_operations.get_user_by(login_user_scheme.username)
+    user_operations.set_email_as_verified(user.id)
     login_user_id = user_operations.verify_user(login_user_scheme)
-    assert login_user_id == already_registered_user.id
+    assert login_user_id == user.id
 
 
 @pytest.mark.user_operations
-def test_get_user_by_username(user_operations, already_registered_user):
-    get_user_if_user_exists = user_operations.get_user_by(
-        already_registered_user.username
-    )
-    assert get_user_if_user_exists.username == already_registered_user.username
+def test_get_user_by_username(user_operations):
+    username = test_data.test_user_data.get("username")
+    get_user_if_user_exists = user_operations.get_user_by(username)
+    assert get_user_if_user_exists.username == username
 
 
 @pytest.mark.user_operations
-def test_get_user_by_id(user_operations, already_registered_user):
-    get_user_if_user_exists = user_operations.get_user_by(already_registered_user.id)
-    assert get_user_if_user_exists.id == already_registered_user.id
+def test_get_user_by_id(user_operations):
+    username = test_data.test_user_data.get("username")
+    get_user_by_name = user_operations.get_user_by(username)
+    get_user_if_user_exists = user_operations.get_user_by(get_user_by_name.id)
+    assert get_user_if_user_exists.id == get_user_by_name.id
 
 
 @pytest.mark.user_operations
@@ -54,37 +58,62 @@ def test_get_user_by_raises_exception(user_operations):
 
 
 @pytest.mark.user_operations
-def test_reset_user_password(user_operations, already_registered_user):
-    new_password = "testing_123"
-    user_operations.reset_user_password(already_registered_user.id, new_password)
-    get_user_if_user_exists = user_operations.get_user_by(already_registered_user.id)
-
-    assert Users.verify_password(get_user_if_user_exists.hash_password, new_password)
+def test_invalid_password(user_operations):
+    with pytest.raises(exceptions.UserOperationsError):
+        username = test_data.test_user_data.get("username")
+        password = "fake_password"
+        login_data = {"username": username, "password": password}
+        login_user_scheme = Login(**login_data)
+        user_operations.verify_user(login_user_scheme)
 
 
 @pytest.mark.user_operations
-def test_reset_user_username(user_operations, already_registered_user):
+def test_unauthorized_registration(user_operations):
+    with pytest.raises(exceptions.UserOperationsError):
+        username = test_data.test_user_data.get("username")
+        user = user_operations.get_user_by(username)
+        user_operations.set_user_as_admin(user.id, "fake_admin")
+
+
+@pytest.mark.user_operations
+def test_reset_user_password(user_operations):
+    new_password = "testing_123"
+    username = test_data.test_user_data.get("username")
+    get_user_if_user_exists = user_operations.get_user_by(username)
+    user_operations.reset_user_password(get_user_if_user_exists.id, new_password)
+    get_user_after_password_reset = user_operations.get_user_by(username)
+    assert Users.verify_password(
+        get_user_after_password_reset.hash_password, new_password
+    )
+
+
+@pytest.mark.user_operations
+def test_reset_user_username(user_operations):
     new_username = "testing_username"
-    user_operations.reset_user_username(already_registered_user.id, new_username)
-    get_user_if_user_exists = user_operations.get_user_by(already_registered_user.id)
+    username = test_data.test_user_data.get("username")
+    get_user_if_user_exists = user_operations.get_user_by(username)
+    user_operations.reset_user_username(get_user_if_user_exists.id, new_username)
+    get_user_after_username_reset = user_operations.get_user_by(new_username)
+    get_user_if_user_exists = user_operations.get_user_by(
+        get_user_after_username_reset.id
+    )
 
     assert get_user_if_user_exists.username == new_username
 
 
 @pytest.mark.user_operations
-def test_reset_user_email(user_operations, already_registered_user):
+def test_reset_user_email(user_operations):
     new_email = "testing@gmail.com"
-    user_operations.reset_user_username(already_registered_user.id, new_email)
-    get_user_if_user_exists = user_operations.get_user_by(already_registered_user.id)
-
-    assert get_user_if_user_exists.username == new_email
+    username = "testing_username"
+    get_user_if_user_exists = user_operations.get_user_by(username)
+    user_operations.reset_user_email(get_user_if_user_exists.id, new_email)
+    get_user_after_email_reset = user_operations.get_user_by(get_user_if_user_exists.id)
+    assert get_user_after_email_reset.email == new_email
 
 
 @pytest.mark.user_operations
-def test_get_username(user_operations, already_registered_user):
-    found_username = user_operations.get_username(already_registered_user.id)
-
-    assert already_registered_user.username == found_username
+def test_get_username(already_registered_user):
+    assert already_registered_user.username == test_data.test_user_data.get("username")
 
 
 @pytest.mark.user_operations
@@ -108,10 +137,14 @@ def test_check_if_email_is_verified_error(
 
 @pytest.mark.user_operations
 def test_set_user_as_admin(
-    user_operations, already_registered_admin, already_registered_user
+    user_operations,
 ):
+    username = os.environ["ADMIN_USERNAME"]
+    get_admin_details_if_exists = user_operations.get_user_by(username)
+    username = "testing_username"
+    get_user_if_user_exists = user_operations.get_user_by(username)
     user_operations.set_user_as_admin(
-        already_registered_admin.id, already_registered_user.username
+        get_admin_details_if_exists.id, get_user_if_user_exists.username
     )
-    user_found = user_operations.get_user_by(already_registered_user.id)
+    user_found = user_operations.get_user_by(get_user_if_user_exists.id)
     assert user_found.is_admin == True

@@ -1,6 +1,10 @@
+import os
+
 import pytest
 
 from tests import test_data
+
+LOGIN_URL = "/login"
 
 
 @pytest.mark.route_users
@@ -14,12 +18,16 @@ def test_register_route(client, expected_json):
 
 
 @pytest.mark.route_users
-def test_change_email_route(client, already_logged_in_response):
+def test_change_email_route(client, user_operations, account_operations):
     new_email = "test1@email.com"
+    username = test_data.test_login_data.get("username")
+    user = user_operations.get_user_by(username)
+    user_operations.set_email_as_verified(user.id)
+    account_operations.create_account(user.id)
 
-    headers = {
-        "Authorization": f"Bearer {already_logged_in_response.json()['access_token']}"
-    }
+    login_response = client.post("/login", json=test_data.test_login_data)
+
+    headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
     # change email
     change_email_response = client.post(
         "/change/email", headers=headers, json={"email": new_email}
@@ -29,12 +37,12 @@ def test_change_email_route(client, already_logged_in_response):
 
 
 @pytest.mark.route_users
-def test_change_username_route(client, already_logged_in_response):
+def test_change_username_route(client):
+    login_response = client.post(LOGIN_URL, json=test_data.test_login_data)
+
     new_username = "test_new_username"
 
-    headers = {
-        "Authorization": f"Bearer {already_logged_in_response.json()['access_token']}"
-    }
+    headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
     # change username
     change_username_response = client.post(
         "/change/username", headers=headers, json={"username": new_username}
@@ -46,11 +54,12 @@ def test_change_username_route(client, already_logged_in_response):
 
 
 @pytest.mark.route_users
-def test_change_password_route(client, already_logged_in_response):
+def test_change_password_route(client):
+    login_response = client.post(
+        LOGIN_URL, json={"username": "test_new_username", "password": "test_password"}
+    )
     new_password = "test_user_password"
-    headers = {
-        "Authorization": f"Bearer {already_logged_in_response.json()['access_token']}"
-    }
+    headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
     # get password
     change_password_response = client.post(
         "/change/password",
@@ -75,18 +84,18 @@ def test_change_password_route(client, already_logged_in_response):
 
 
 @pytest.mark.route_users
-def test_admin_route(
-    client, already_logged_in_admin_response, already_logged_in_response
-):
-    headers = {
-        "Authorization": (
-            f"Bearer {already_logged_in_admin_response.json()['access_token']}"
-        )
-    }
+def test_admin_route(client):
+    admin_username = os.environ["ADMIN_USERNAME"]
+    admin_password = os.environ["ADMIN_PASSWORD"]
+
+    login_response = client.post(
+        LOGIN_URL, json={"username": admin_username, "password": admin_password}
+    )
+    headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
 
     add_admin_response = client.post(
         "/admin",
-        json={"username": "test_user"},
+        json={"username": "test_new_username"},
         headers=headers,
     )
     assert add_admin_response.status_code == 200
