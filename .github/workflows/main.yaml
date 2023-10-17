@@ -220,6 +220,11 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }} .
+      
+      - name: Login to Docker Hub
+        run:  |
+          echo Login To Docker Hub
+          echo '${{secrets.DOCKER_HUB_TOKEN }}' | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: Run Vulnerability Scan on Image
         if: ${{ matrix.services != 'support' }}
@@ -234,11 +239,6 @@ jobs:
           docker scout cves --only-severity critical -e chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
           echo Docker scanning of the built Image for critical issues
           trivy image --severity CRITICAL --ignore-status fixed chat_app_${{ matrix.services }}:${{ steps.tag.outputs.image_tag }}
-      
-      - name: Login to Docker Hub
-        run:  |
-          echo Login To Docker Hub
-          echo '${{secrets.DOCKER_HUB_TOKEN }}' | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: Push Image to Docker Registry
         run: |
